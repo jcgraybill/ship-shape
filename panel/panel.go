@@ -5,7 +5,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/jcgraybill/ship-shape/panel/label"
 	"github.com/jcgraybill/ship-shape/planet"
 	"github.com/jcgraybill/ship-shape/util"
 	"golang.org/x/image/font"
@@ -27,7 +27,7 @@ type Panel struct {
 	intOpts  *ebiten.DrawImageOptions
 
 	ttf   font.Face
-	label string
+	label *label.Label
 }
 
 func New(w, h int) *Panel {
@@ -55,8 +55,9 @@ func generateImage(w, h int) *ebiten.Image {
 func (p *Panel) Image() *ebiten.Image {
 	p.interior.Fill(color.Black)
 
-	if p.label != "" {
-		text.Draw(p.interior, p.label, p.ttf, 4, 16, color.White)
+	if p.label != nil {
+		p.label.Draw(p.interior)
+
 	}
 	p.image.DrawImage(p.interior, p.intOpts)
 	return p.image
@@ -70,6 +71,9 @@ func (p *Panel) MouseButton(x, y int) bool {
 	if p.x < x && p.x+p.w > x {
 		if p.y < y && p.y+p.h > y {
 			fmt.Println(fmt.Sprintf("panel %d %d", x-p.x, y-p.y))
+			if p.label != nil {
+				p.label.MouseButton(x-p.x, y-p.y)
+			}
 			return true
 		}
 	}
@@ -77,9 +81,9 @@ func (p *Panel) MouseButton(x, y int) bool {
 }
 
 func (p *Panel) ShowPlanet(planet *planet.Planet) {
-	p.label = fmt.Sprintf("planet: %s\ngravity: %d\nwater: %d", planet.Name(), planet.Gravity, planet.Water)
+	p.label = label.New(4, 16, p.w-4, p.h-16, fmt.Sprintf("planet: %s\ngravity: %d\nwater: %d", planet.Name(), planet.Gravity, planet.Water))
 }
 
 func (p *Panel) Clear() {
-	p.label = ""
+	p.label = nil
 }
