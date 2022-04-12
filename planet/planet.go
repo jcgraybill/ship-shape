@@ -22,6 +22,7 @@ type Planet struct {
 	image            *ebiten.Image
 	highlightedImage *ebiten.Image
 	name             string
+	display          *ebiten.DrawImageOptions
 }
 
 func New(x, y int, water, gravity uint8) *Planet {
@@ -45,6 +46,8 @@ func New(x, y int, water, gravity uint8) *Planet {
 	p.highlightedImage = p.generateHighlightedImage()
 	p.highlighted = false
 	p.name = p.generateName()
+	p.display = &ebiten.DrawImageOptions{}
+	p.display.GeoM.Translate(float64(p.x-planetSize/2), float64(p.y-planetSize/2))
 	return &p
 }
 
@@ -76,8 +79,8 @@ func (p *Planet) generateHighlightedImage() *ebiten.Image {
 	return image
 }
 
-func (p *Planet) Location() (float64, float64) {
-	return float64(p.x - planetSize/2), float64(p.y - planetSize/2)
+func (p *Planet) Location() *ebiten.DrawImageOptions {
+	return p.display
 }
 
 func (p *Planet) Center() (int, int) {

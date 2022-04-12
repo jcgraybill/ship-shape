@@ -1,15 +1,14 @@
 package util
 
 /*
-	src := emptyImage.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
 	v, i := util.Rectangle(50, 50, 120, 120, color.RGBA{0x00, 0x80, 0x00, 0xff})
-	screen.DrawTriangles(v, i, src, nil)
+	screen.DrawTriangles(v, i, util.Src, nil)
 	v, i = util.Circle(120, 300, 60, color.RGBA{0x80, 0x00, 0x00, 0xff})
-	screen.DrawTriangles(v, i, src, nil)
+	screen.DrawTriangles(v, i, util.Src, nil)
 	v, i = util.Line(400, 100, 600, 200, 2, color.RGBA{0x00, 0x00, 0xff, 0xff})
-	screen.DrawTriangles(v, i, src, nil)
+	screen.DrawTriangles(v, i, util.Src, nil)
 	v, i = util.Triangle(400, 200, 100, 100, color.RGBA{0xff, 0x00, 0xff, 0xff})
-	screen.DrawTriangles(v, i, src, nil)
+	screen.DrawTriangles(v, i, util.Src, nil)
 
 */
 import (
