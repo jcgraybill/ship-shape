@@ -1,0 +1,125 @@
+package planet
+
+import (
+	"fmt"
+	"image/color"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/jcgraybill/ship-shape/util"
+)
+
+const (
+	planetSize       = 32
+	basePlanetRadius = 8
+	basePlanetColor  = 0x7f
+)
+
+type Planet struct {
+	x, y             int
+	Water, Gravity   uint8
+	highlighted      bool
+	image            *ebiten.Image
+	highlightedImage *ebiten.Image
+	name             string
+}
+
+func New(x, y int, water, gravity uint8) *Planet {
+	var p Planet
+
+	p.x, p.y = x, y
+
+	if water == 0 {
+		p.Water = uint8(rand.Intn(255))
+	} else {
+		p.Water = water
+	}
+
+	if gravity == 0 {
+		p.Gravity = uint8(rand.Intn(255))
+	} else {
+		p.Gravity = gravity
+	}
+
+	p.image = p.generatePlanetImage()
+	p.highlightedImage = p.generateHighlightedImage()
+	p.highlighted = false
+	p.name = p.generateName()
+	return &p
+}
+
+func (p *Planet) generatePlanetImage() *ebiten.Image {
+	image := ebiten.NewImage(planetSize, planetSize)
+
+	radius := float32(basePlanetRadius + p.Gravity/32)
+
+	waterColor := color.RGBA{R: 0x00, G: 0x00, B: 0xff, A: 0xff}
+
+	planetColor := color.RGBA{}
+	planetColor.R = basePlanetColor + uint8(int(waterColor.R)*int(p.Water)/(255*2))
+	planetColor.G = basePlanetColor + uint8(int(waterColor.G)*int(p.Water)/(255*2))
+	planetColor.B = basePlanetColor + uint8(int(waterColor.B)*int(p.Water)/(255*2))
+	planetColor.A = 0xff
+
+	v, i := util.Circle(planetSize/2, planetSize/2, radius, planetColor)
+	image.DrawTriangles(v, i, util.Src, nil)
+	return image
+}
+
+func (p *Planet) generateHighlightedImage() *ebiten.Image {
+	image := ebiten.NewImage(planetSize, planetSize)
+	radius := float32(basePlanetRadius+p.Gravity/32) + 1
+
+	v, i := util.Circle(planetSize/2, planetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
+	image.DrawTriangles(v, i, util.Src, nil)
+	image.DrawImage(p.image, nil)
+	return image
+}
+
+func (p *Planet) Location() (float64, float64) {
+	return float64(p.x - planetSize/2), float64(p.y - planetSize/2)
+}
+
+func (p *Planet) Center() (int, int) {
+	return p.x, p.y
+}
+
+func (p *Planet) Image() *ebiten.Image {
+	if p.highlighted {
+		return p.highlightedImage
+	} else {
+		return p.image
+	}
+}
+
+func (p *Planet) Highlighted() bool {
+	return p.highlighted
+}
+
+func (p *Planet) Highlight() {
+	p.highlighted = true
+}
+
+func (p *Planet) Unhighlight() {
+	p.highlighted = false
+}
+
+func (p *Planet) In(x, y int) bool {
+	if p.x-planetSize/2 < x && p.x+planetSize/2 > x {
+		if p.y-planetSize/2 < y && p.y+planetSize/2 > y {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *Planet) generateName() string {
+	var n string
+	letters := []string{"alpha", "beta", "gamma", "delta", "epsilon", "zêta", "êta", "thêta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omikron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"}
+	n = fmt.Sprintf("%s-%d", letters[rand.Intn(len(letters))], rand.Intn(1000))
+	return n
+}
+
+func (p *Planet) Name() string {
+	return p.name
+}

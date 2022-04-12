@@ -1,6 +1,19 @@
-package main
+package util
 
+/*
+	src := emptyImage.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
+	v, i := util.Rectangle(50, 50, 120, 120, color.RGBA{0x00, 0x80, 0x00, 0xff})
+	screen.DrawTriangles(v, i, src, nil)
+	v, i = util.Circle(120, 300, 60, color.RGBA{0x80, 0x00, 0x00, 0xff})
+	screen.DrawTriangles(v, i, src, nil)
+	v, i = util.Line(400, 100, 600, 200, 2, color.RGBA{0x00, 0x00, 0xff, 0xff})
+	screen.DrawTriangles(v, i, src, nil)
+	v, i = util.Triangle(400, 200, 100, 100, color.RGBA{0xff, 0x00, 0xff, 0xff})
+	screen.DrawTriangles(v, i, src, nil)
+
+*/
 import (
+	"image"
 	"image/color"
 	"math"
 
@@ -8,7 +21,16 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-func rectangle(x, y, w, h float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
+var Src *ebiten.Image
+
+func init() {
+	emptyImage := ebiten.NewImage(3, 3)
+	emptyImage.Fill(color.White)
+	Src = emptyImage.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
+
+}
+
+func Rectangle(x, y, w, h float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
 	r := float32(clr.R) / 0xff
 	g := float32(clr.G) / 0xff
 	b := float32(clr.B) / 0xff
@@ -62,7 +84,7 @@ func rectangle(x, y, w, h float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
 	}, []uint16{0, 1, 2, 1, 2, 3}
 }
 
-func circle(x float32, y float32, radius float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
+func Circle(x float32, y float32, radius float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
 	var path vector.Path
 
 	path.MoveTo(x, y)
@@ -81,7 +103,7 @@ func circle(x float32, y float32, radius float32, clr color.RGBA) ([]ebiten.Vert
 
 }
 
-func line(x0, y0, x1, y1, width float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
+func Line(x0, y0, x1, y1, width float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
 
 	theta := math.Atan2(float64(y1-y0), float64(x1-x0))
 	theta += math.Pi / 2
@@ -137,7 +159,7 @@ func line(x0, y0, x1, y1, width float32, clr color.RGBA) ([]ebiten.Vertex, []uin
 	}, []uint16{0, 1, 2, 1, 2, 3}
 }
 
-func triangle(x, y, w, h float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
+func Triangle(x, y, w, h float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
 	r := float32(clr.R) / 0xff
 	g := float32(clr.G) / 0xff
 	b := float32(clr.B) / 0xff
