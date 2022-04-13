@@ -3,7 +3,6 @@ package util
 import (
 	"image/color"
 	"math/rand"
-	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"golang.org/x/image/font"
@@ -37,7 +36,7 @@ func StarField(w, h int) *ebiten.Image {
 }
 
 func Font() font.Face {
-	ttbytes, err := os.ReadFile(ttf)
+	ttbytes, err := GameData(ttf)
 	if err == nil {
 		tt, err := opentype.Parse(ttbytes)
 		if err == nil {
