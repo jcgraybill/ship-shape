@@ -13,6 +13,7 @@ import (
 const (
 	starriness = 3000
 	ttf        = "fonts/OpenSans_SemiCondensed-Regular.ttf"
+	DPI        = 72
 )
 
 func StarField(w, h int) *ebiten.Image {
@@ -42,7 +43,7 @@ func Font() font.Face {
 		if err == nil {
 			fontface, err := opentype.NewFace(tt, &opentype.FaceOptions{
 				Size:    12,
-				DPI:     72,
+				DPI:     DPI,
 				Hinting: font.HintingFull,
 			})
 			if err == nil {

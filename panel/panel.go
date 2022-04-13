@@ -5,10 +5,9 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/jcgraybill/ship-shape/panel/button"
 	"github.com/jcgraybill/ship-shape/panel/label"
 	"github.com/jcgraybill/ship-shape/planet"
-	"github.com/jcgraybill/ship-shape/util"
-	"golang.org/x/image/font"
 )
 
 const (
@@ -26,8 +25,13 @@ type Panel struct {
 	interior *ebiten.Image
 	intOpts  *ebiten.DrawImageOptions
 
-	ttf   font.Face
-	label *label.Label
+	elements []ui
+}
+
+type ui interface {
+	MouseButton(int, int) bool
+	Draw() (*ebiten.Image, *ebiten.DrawImageOptions)
+	Height() int
 }
 
 func New(w, h int) *Panel {
@@ -41,8 +45,8 @@ func New(w, h int) *Panel {
 	p.interior = ebiten.NewImage(p.w-border*2, p.h-border*2)
 	p.intOpts = &ebiten.DrawImageOptions{}
 	p.intOpts.GeoM.Translate(float64(border), float64(border))
-	p.ttf = util.Font()
 	p.display.GeoM.Translate(float64(p.x), float64(p.y))
+	p.elements = make([]ui, 0)
 	return &p
 }
 
@@ -55,9 +59,8 @@ func generateImage(w, h int) *ebiten.Image {
 func (p *Panel) Image() *ebiten.Image {
 	p.interior.Fill(color.Black)
 
-	if p.label != nil {
-		p.label.Draw(p.interior)
-
+	for _, ui := range p.elements {
+		p.interior.DrawImage(ui.Draw())
 	}
 	p.image.DrawImage(p.interior, p.intOpts)
 	return p.image
@@ -71,8 +74,8 @@ func (p *Panel) MouseButton(x, y int) bool {
 	if p.x < x && p.x+p.w > x {
 		if p.y < y && p.y+p.h > y {
 			fmt.Println(fmt.Sprintf("panel %d %d", x-p.x, y-p.y))
-			if p.label != nil {
-				p.label.MouseButton(x-p.x, y-p.y)
+			for _, ui := range p.elements {
+				ui.MouseButton(x-p.x, y-p.y)
 			}
 			return true
 		}
@@ -81,9 +84,11 @@ func (p *Panel) MouseButton(x, y int) bool {
 }
 
 func (p *Panel) ShowPlanet(planet *planet.Planet) {
-	p.label = label.New(4, 16, p.w-4, p.h-16, fmt.Sprintf("planet: %s\ngravity: %d\nwater: %d", planet.Name(), planet.Gravity, planet.Water))
+	p.elements = append(p.elements, label.New(2, 2, p.w-4, p.h-4, fmt.Sprintf("planet: %s\ngravity: %d\nwater: %d", planet.Name(), planet.Gravity, planet.Water)))
+	p.elements = append(p.elements, button.New(2, 8+p.elements[0].Height(), p.w-4, p.h-4, "build habitat"))
+	p.elements = append(p.elements, button.New(2, 16+p.elements[0].Height()+p.elements[1].Height(), p.w-4, p.h-4, "build desalinization plant"))
 }
 
 func (p *Panel) Clear() {
-	p.label = nil
+	p.elements = nil
 }
