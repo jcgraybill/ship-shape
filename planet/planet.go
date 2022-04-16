@@ -5,30 +5,35 @@ import (
 	"image/color"
 	"math/rand"
 
+	"golang.org/x/image/font"
+
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/jcgraybill/ship-shape/util"
 )
 
 const (
-	planetSize       = 32
 	basePlanetRadius = 8
 	basePlanetColor  = 0x7f
 )
 
 type Planet struct {
-	x, y             int
-	Water, Gravity   uint8
-	highlighted      bool
-	image            *ebiten.Image
-	highlightedImage *ebiten.Image
-	name             string
-	display          *ebiten.DrawImageOptions
+	x, y                int
+	Water, Habitability uint8
+	highlighted         bool
+	image               *ebiten.Image
+	highlightedImage    *ebiten.Image
+	name                string
+	display             *ebiten.DrawImageOptions
+	ttf                 font.Face
+	visible             bool
 }
 
-func New(x, y int, water, gravity uint8) *Planet {
+func New(x, y int, water, habitability uint8) *Planet {
 	var p Planet
 
 	p.x, p.y = x, y
+	p.visible = true
 
 	if water == 0 {
 		p.Water = uint8(rand.Intn(255))
@@ -36,10 +41,10 @@ func New(x, y int, water, gravity uint8) *Planet {
 		p.Water = water
 	}
 
-	if gravity == 0 {
-		p.Gravity = uint8(rand.Intn(255))
+	if habitability == 0 {
+		p.Habitability = uint8(rand.Intn(255))
 	} else {
-		p.Gravity = gravity
+		p.Habitability = habitability
 	}
 
 	p.image = p.generatePlanetImage()
@@ -47,14 +52,15 @@ func New(x, y int, water, gravity uint8) *Planet {
 	p.highlighted = false
 	p.name = p.generateName()
 	p.display = &ebiten.DrawImageOptions{}
-	p.display.GeoM.Translate(float64(p.x-planetSize/2), float64(p.y-planetSize/2))
+	p.display.GeoM.Translate(float64(p.x-util.PlanetSize/2), float64(p.y-util.PlanetSize/2))
+	p.ttf = util.Font()
 	return &p
 }
 
 func (p *Planet) generatePlanetImage() *ebiten.Image {
-	image := ebiten.NewImage(planetSize, planetSize)
+	image := ebiten.NewImage(util.PlanetSize, util.PlanetSize)
 
-	radius := float32(basePlanetRadius + p.Gravity/32)
+	radius := float32(basePlanetRadius + p.Habitability/32)
 
 	waterColor := color.RGBA{R: 0x00, G: 0x00, B: 0xff, A: 0xff}
 
@@ -64,16 +70,16 @@ func (p *Planet) generatePlanetImage() *ebiten.Image {
 	planetColor.B = basePlanetColor + uint8(int(waterColor.B)*int(p.Water)/(255*2))
 	planetColor.A = 0xff
 
-	v, i := util.Circle(planetSize/2, planetSize/2, radius, planetColor)
+	v, i := util.Circle(util.PlanetSize/2, util.PlanetSize/2, radius, planetColor)
 	image.DrawTriangles(v, i, util.Src, nil)
 	return image
 }
 
 func (p *Planet) generateHighlightedImage() *ebiten.Image {
-	image := ebiten.NewImage(planetSize, planetSize)
-	radius := float32(basePlanetRadius+p.Gravity/32) + 1
+	image := ebiten.NewImage(util.PlanetSize, util.PlanetSize)
+	radius := float32(basePlanetRadius+p.Habitability/32) + 1
 
-	v, i := util.Circle(planetSize/2, planetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
+	v, i := util.Circle(util.PlanetSize/2, util.PlanetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
 	image.DrawTriangles(v, i, util.Src, nil)
 	image.DrawImage(p.image, nil)
 	return image
@@ -107,9 +113,9 @@ func (p *Planet) Unhighlight() {
 	p.highlighted = false
 }
 
-func (p *Planet) In(x, y int) bool {
-	if p.x-planetSize/2 < x && p.x+planetSize/2 > x {
-		if p.y-planetSize/2 < y && p.y+planetSize/2 > y {
+func (p *Planet) MouseButton(x, y int) bool {
+	if p.visible && p.x-util.PlanetSize/2 < x && p.x+util.PlanetSize/2 > x {
+		if p.y-util.PlanetSize/2 < y && p.y+util.PlanetSize/2 > y {
 			return true
 		}
 	}
@@ -125,4 +131,21 @@ func (p *Planet) generateName() string {
 
 func (p *Planet) Name() string {
 	return p.name
+}
+
+func (p *Planet) Draw(image *ebiten.Image) {
+	if p.visible {
+		image.DrawImage(p.Image(), p.Location())
+		cx, cy := p.Center()
+		textBounds := text.BoundString(p.ttf, p.Name())
+		text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, color.White)
+	}
+}
+
+func (p *Planet) ReplaceWithStructure() {
+	p.visible = false
+}
+
+func (p *Planet) Describe() string {
+	return fmt.Sprintf("planet: %s\nhabitability: %d\nwater: %d", p.Name(), p.Habitability, p.Water)
 }

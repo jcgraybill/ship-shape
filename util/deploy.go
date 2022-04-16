@@ -11,5 +11,5 @@ func GameData(path string) ([]byte, error) {
 	return gd.ReadFile(path)
 }
 
-//go:embed fonts
+//go:embed fonts audio
 var gd embed.FS

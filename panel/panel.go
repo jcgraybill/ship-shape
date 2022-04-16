@@ -1,19 +1,18 @@
 package panel
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/panel/button"
 	"github.com/jcgraybill/ship-shape/panel/label"
-	"github.com/jcgraybill/ship-shape/planet"
 )
 
 const (
 	panelWidth   = 160
 	panelPadding = 10
 	border       = 1
+	buffer       = 2
 )
 
 type Panel struct {
@@ -73,7 +72,6 @@ func (p *Panel) Location() *ebiten.DrawImageOptions {
 func (p *Panel) MouseButton(x, y int) bool {
 	if p.x < x && p.x+p.w > x {
 		if p.y < y && p.y+p.h > y {
-			fmt.Println(fmt.Sprintf("panel %d %d", x-p.x, y-p.y))
 			for _, ui := range p.elements {
 				ui.MouseButton(x-p.x, y-p.y)
 			}
@@ -83,10 +81,21 @@ func (p *Panel) MouseButton(x, y int) bool {
 	return false
 }
 
-func (p *Panel) ShowPlanet(planet *planet.Planet) {
-	p.elements = append(p.elements, label.New(2, 2, p.w-4, p.h-4, fmt.Sprintf("planet: %s\ngravity: %d\nwater: %d", planet.Name(), planet.Gravity, planet.Water)))
-	p.elements = append(p.elements, button.New(2, 8+p.elements[0].Height(), p.w-4, p.h-4, "build habitat"))
-	p.elements = append(p.elements, button.New(2, 16+p.elements[0].Height()+p.elements[1].Height(), p.w-4, p.h-4, "build desalinization plant"))
+func (p *Panel) AddLabel(text string) {
+	p.elements = append(p.elements, label.New(buffer, p.firstAvailableSpot(), p.w-buffer*2, p.h-buffer*2, text))
+}
+
+func (p *Panel) AddButton(text string, callback func()) {
+	p.elements = append(p.elements, button.New(buffer, p.firstAvailableSpot(), p.w-buffer*2, p.h-buffer*2, text, callback))
+}
+
+func (p *Panel) firstAvailableSpot() int {
+	i := buffer
+	for _, element := range p.elements {
+		i += element.Height()
+		i += buffer * 4
+	}
+	return i
 }
 
 func (p *Panel) Clear() {

@@ -48,7 +48,6 @@ func New(x, y, w, h int, message string) *Label {
 func (l *Label) MouseButton(x, y int) bool {
 	if l.x < x && l.x+l.w > x {
 		if l.y < y && l.y+l.h > y {
-			fmt.Println(fmt.Sprintf("label %d %d", x-l.x, y-l.y))
 			return true
 		}
 	}

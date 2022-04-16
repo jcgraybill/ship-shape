@@ -10,9 +10,8 @@ import (
 )
 
 const (
-	starriness = 3000
-	ttf        = "fonts/OpenSans_SemiCondensed-Regular.ttf"
-	DPI        = 72
+	ttf = "fonts/OpenSans_SemiCondensed-Regular.ttf"
+	DPI = 72
 )
 
 func StarField(w, h int) *ebiten.Image {
