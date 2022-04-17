@@ -8,9 +8,9 @@ type StructureData struct {
 }
 
 var data = []byte(`{ 
-	"habitat": { "DisplayName": "habitat","Cost": 8 }, 
-	"water": { "DisplayName": "water purification plant","Cost": 16 },
-	"admin": { "DisplayName": "administrative center", "Cost": 32 }
+	"home": { "DisplayName": "home planet", "Cost": 32 },
+	"outpost": { "DisplayName": "outpost","Cost": 8 }, 
+	"water": { "DisplayName": "hydrologic extractor","Cost": 16 }
 	}`)
 
 func GetStructureData() (map[string]StructureData, error) {

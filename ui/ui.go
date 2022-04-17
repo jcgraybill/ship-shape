@@ -1,4 +1,4 @@
-package util
+package ui
 
 import (
 	"image/color"
@@ -7,11 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
-)
-
-const (
-	ttf = "fonts/OpenSans_SemiCondensed-Regular.ttf"
-	DPI = 72
 )
 
 func StarField(w, h int) *ebiten.Image {

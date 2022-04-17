@@ -9,7 +9,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
-	"github.com/jcgraybill/ship-shape/util"
+	"github.com/jcgraybill/ship-shape/ui"
 )
 
 const (
@@ -52,13 +52,13 @@ func New(x, y int, water, habitability uint8) *Planet {
 	p.highlighted = false
 	p.name = p.generateName()
 	p.display = &ebiten.DrawImageOptions{}
-	p.display.GeoM.Translate(float64(p.x-util.PlanetSize/2), float64(p.y-util.PlanetSize/2))
-	p.ttf = util.Font()
+	p.display.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
+	p.ttf = ui.Font()
 	return &p
 }
 
 func (p *Planet) generatePlanetImage() *ebiten.Image {
-	image := ebiten.NewImage(util.PlanetSize, util.PlanetSize)
+	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 
 	radius := float32(basePlanetRadius + p.Habitability/32)
 
@@ -70,17 +70,17 @@ func (p *Planet) generatePlanetImage() *ebiten.Image {
 	planetColor.B = basePlanetColor + uint8(int(waterColor.B)*int(p.Water)/(255*2))
 	planetColor.A = 0xff
 
-	v, i := util.Circle(util.PlanetSize/2, util.PlanetSize/2, radius, planetColor)
-	image.DrawTriangles(v, i, util.Src, nil)
+	v, i := ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, planetColor)
+	image.DrawTriangles(v, i, ui.Src, nil)
 	return image
 }
 
 func (p *Planet) generateHighlightedImage() *ebiten.Image {
-	image := ebiten.NewImage(util.PlanetSize, util.PlanetSize)
-	radius := float32(basePlanetRadius+p.Habitability/32) + 1
+	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
+	radius := float32(basePlanetRadius+p.Habitability/32) + ui.Border
 
-	v, i := util.Circle(util.PlanetSize/2, util.PlanetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
-	image.DrawTriangles(v, i, util.Src, nil)
+	v, i := ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
+	image.DrawTriangles(v, i, ui.Src, nil)
 	image.DrawImage(p.image, nil)
 	return image
 }
@@ -114,8 +114,8 @@ func (p *Planet) Unhighlight() {
 }
 
 func (p *Planet) MouseButton(x, y int) bool {
-	if p.visible && p.x-util.PlanetSize/2 < x && p.x+util.PlanetSize/2 > x {
-		if p.y-util.PlanetSize/2 < y && p.y+util.PlanetSize/2 > y {
+	if p.visible && p.x-ui.PlanetSize/2 < x && p.x+ui.PlanetSize/2 > x {
+		if p.y-ui.PlanetSize/2 < y && p.y+ui.PlanetSize/2 > y {
 			return true
 		}
 	}
@@ -143,6 +143,7 @@ func (p *Planet) Draw(image *ebiten.Image) {
 }
 
 func (p *Planet) ReplaceWithStructure() {
+	p.Unhighlight()
 	p.visible = false
 }
 

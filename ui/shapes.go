@@ -1,4 +1,4 @@
-package util
+package ui
 
 /*
 	v, i := util.Rectangle(50, 50, 120, 120, color.RGBA{0x00, 0x80, 0x00, 0xff})

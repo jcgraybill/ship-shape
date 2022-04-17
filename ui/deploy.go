@@ -1,7 +1,7 @@
 //go:build deploy
 // +build deploy
 
-package util
+package ui
 
 import (
 	"embed"

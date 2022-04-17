@@ -7,11 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/jcgraybill/ship-shape/planet"
-	"github.com/jcgraybill/ship-shape/util"
-)
-
-const (
-	buffer = 2
+	"github.com/jcgraybill/ship-shape/ui"
 )
 
 type Structure struct {
@@ -26,37 +22,40 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	var s Structure
 	s.data = sd
 	s.planet = p
+	p.ReplaceWithStructure()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(p.Center())
 
 	s.display = &ebiten.DrawImageOptions{}
 	s.display.GeoM.Translate(float64(s.x), float64(s.y))
-	p.ReplaceWithStructure()
+
 	return &s
 }
 
 func (s *Structure) generateImage(planetCenterX, planetCenterY int) (*ebiten.Image, int, int, int, int) {
 	var x, y, w, h int
-	ttf := util.Font()
+	ttf := ui.Font()
 	textBounds := text.BoundString(ttf, s.data.DisplayName)
-	image := ebiten.NewImage(buffer+textBounds.Dx()+buffer, buffer+textBounds.Dy()+buffer+util.PlanetSize+buffer)
+	image := ebiten.NewImage(ui.Buffer+textBounds.Dx()+ui.Buffer, ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer)
 	image.Fill(color.White)
 
-	interior := ebiten.NewImage(buffer/2+textBounds.Dx()+buffer/2, buffer/2+textBounds.Dy()+buffer+util.PlanetSize+buffer/2)
+	// TODO create this box the same way as panels/buttons, using ui.Border and ui.Buffer
+
+	interior := ebiten.NewImage(ui.Buffer/2+textBounds.Dx()+ui.Buffer/2, ui.Buffer/2+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer/2)
 	interior.Fill(color.Black)
 	opts := &ebiten.DrawImageOptions{}
-	opts.GeoM.Translate(buffer/2, buffer/2)
-	text.Draw(interior, s.data.DisplayName, ttf, buffer/2, int(ttf.Metrics().Ascent/util.DPI)+buffer/2, color.White)
+	opts.GeoM.Translate(ui.Buffer/2, ui.Buffer/2)
+	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer/2, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer/2, color.White)
 
 	popts := &ebiten.DrawImageOptions{}
-	popts.GeoM.Translate(float64(buffer/2), float64(buffer/2+textBounds.Dy()+buffer))
+	popts.GeoM.Translate(float64(ui.Buffer/2), float64(ui.Buffer/2+textBounds.Dy()+ui.Buffer))
 	interior.DrawImage(s.planet.Image(), popts)
 
 	image.DrawImage(interior, opts)
 
-	x = planetCenterX - util.PlanetSize/2 - buffer
-	y = planetCenterY - util.PlanetSize/2 - buffer - textBounds.Dy() - buffer
-	w = buffer + textBounds.Dx() + buffer
-	h = buffer + textBounds.Dy() + buffer + util.PlanetSize + buffer
+	x = planetCenterX - ui.PlanetSize/2 - ui.Buffer
+	y = planetCenterY - ui.PlanetSize/2 - ui.Buffer - textBounds.Dy() - ui.Buffer
+	w = ui.Buffer + textBounds.Dx() + ui.Buffer
+	h = ui.Buffer + textBounds.Dy() + ui.Buffer + ui.PlanetSize + ui.Buffer
 	return image, x, y, w, h
 }
 
@@ -72,6 +71,8 @@ func (s *Structure) MouseButton(x, y int) bool {
 func (s *Structure) Draw(image *ebiten.Image) {
 	image.DrawImage(s.Image(), s.Location())
 }
+
+//TODO not all these need to be public
 
 func (s *Structure) Location() *ebiten.DrawImageOptions {
 	return s.display

@@ -6,13 +6,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/panel/button"
 	"github.com/jcgraybill/ship-shape/panel/label"
+	"github.com/jcgraybill/ship-shape/ui"
 )
 
 const (
 	panelWidth   = 160
 	panelPadding = 10
-	border       = 1
-	buffer       = 2
 )
 
 type Panel struct {
@@ -24,11 +23,12 @@ type Panel struct {
 	interior *ebiten.Image
 	intOpts  *ebiten.DrawImageOptions
 
-	elements []ui
+	elements []widget
 }
 
-type ui interface {
-	MouseButton(int, int) bool
+type widget interface {
+	LeftMouseButtonPress(int, int) bool
+	LeftMouseButtonRelease(int, int) bool
 	Draw() (*ebiten.Image, *ebiten.DrawImageOptions)
 	Height() int
 }
@@ -41,11 +41,11 @@ func New(w, h int) *Panel {
 	p.h = h - panelPadding*2
 	p.image = generateImage(p.w, p.h)
 	p.display = &ebiten.DrawImageOptions{}
-	p.interior = ebiten.NewImage(p.w-border*2, p.h-border*2)
+	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
 	p.intOpts = &ebiten.DrawImageOptions{}
-	p.intOpts.GeoM.Translate(float64(border), float64(border))
+	p.intOpts.GeoM.Translate(float64(ui.Border), float64(ui.Border))
 	p.display.GeoM.Translate(float64(p.x), float64(p.y))
-	p.elements = make([]ui, 0)
+	p.elements = make([]widget, 0)
 	return &p
 }
 
@@ -69,11 +69,11 @@ func (p *Panel) Location() *ebiten.DrawImageOptions {
 	return p.display
 }
 
-func (p *Panel) MouseButton(x, y int) bool {
+func (p *Panel) LeftMouseButtonPress(x, y int) bool {
 	if p.x < x && p.x+p.w > x {
 		if p.y < y && p.y+p.h > y {
-			for _, ui := range p.elements {
-				ui.MouseButton(x-p.x, y-p.y)
+			for _, widget := range p.elements {
+				widget.LeftMouseButtonPress(x-p.x, y-p.y)
 			}
 			return true
 		}
@@ -81,19 +81,34 @@ func (p *Panel) MouseButton(x, y int) bool {
 	return false
 }
 
+func (p *Panel) LeftMouseButtonRelease(x, y int) bool {
+	if p.x < x && p.x+p.w > x {
+		if p.y < y && p.y+p.h > y {
+			for _, widget := range p.elements {
+				widget.LeftMouseButtonRelease(x-p.x, y-p.y)
+			}
+			return true
+		}
+	}
+	for _, widget := range p.elements {
+		widget.LeftMouseButtonRelease(-1, -1)
+	}
+	return false
+}
+
 func (p *Panel) AddLabel(text string) {
-	p.elements = append(p.elements, label.New(buffer, p.firstAvailableSpot(), p.w-buffer*2, p.h-buffer*2, text))
+	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2, p.h-ui.Buffer*2, text))
 }
 
 func (p *Panel) AddButton(text string, callback func()) {
-	p.elements = append(p.elements, button.New(buffer, p.firstAvailableSpot(), p.w-buffer*2, p.h-buffer*2, text, callback))
+	p.elements = append(p.elements, button.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2, p.h-ui.Buffer*2, text, callback))
 }
 
 func (p *Panel) firstAvailableSpot() int {
-	i := buffer
+	i := ui.Buffer
 	for _, element := range p.elements {
 		i += element.Height()
-		i += buffer * 4
+		i += ui.Buffer * 4
 	}
 	return i
 }
