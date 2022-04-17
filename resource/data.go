@@ -21,7 +21,7 @@ const (
 var data = []byte(`[
 	{ "DisplayName": "habitability", "Color": {"R": 0, "G": 0, "B": 255, "A": 255} },
 	{ "DisplayName": "water",        "Color": {"R": 0, "G": 255, "B": 0, "A": 0} },
-	{ "DisplayName": "iron",         "Color": {"R": 255, "G": 0, "B": 0, "A": 0} },
+	{ "DisplayName": "iron",         "Color": {"R": 255, "G": 0, "B": 0, "A": 0} }
 	]`)
 
 func GetResourceData() ([ResourceDataLength]ResourceData, error) {
