@@ -38,8 +38,8 @@ func handleLeftMouseButtonPress(g *Game) {
 			if planet.MouseButton(ebiten.CursorPosition()) {
 				planet.Highlight()
 				g.panel.AddLabel(planet.Describe())
-				g.panel.AddButton("build "+g.structureData["water"].DisplayName, generateConstructionCallback(g, planet, "water"))
-				g.panel.AddButton("build "+g.structureData["outpost"].DisplayName, generateConstructionCallback(g, planet, "outpost"))
+				g.panel.AddButton("build "+g.structureData[structure.Water].DisplayName, generateConstructionCallback(g, planet, structure.Water))
+				g.panel.AddButton("build "+g.structureData[structure.Outpost].DisplayName, generateConstructionCallback(g, planet, structure.Outpost))
 			} else {
 				planet.Unhighlight()
 			}
@@ -54,7 +54,7 @@ func handleLeftMouseButtonPress(g *Game) {
 	}
 }
 
-func generateConstructionCallback(g *Game, p *planet.Planet, structureType string) func() {
+func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) func() {
 	return func() {
 		g.panel.Clear()
 		structure := structure.New(g.structureData[structureType], p)

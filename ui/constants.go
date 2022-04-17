@@ -8,8 +8,12 @@ const (
 	H = 480
 
 	Buffer = 4
-	Border = 2
+	Border = 1
 
-	ttf = "fonts/OpenSans_SemiCondensed-Regular.ttf"
-	DPI = 72
+	PanelWidth           = 160
+	PanelExternalPadding = 10
+
+	ttf      = "fonts/OpenSans_SemiCondensed-Regular.ttf"
+	fontSize = 13
+	DPI      = 72
 )

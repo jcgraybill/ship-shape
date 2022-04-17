@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/planet"
+	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
 	"golang.org/x/image/font"
@@ -20,7 +21,8 @@ type Game struct {
 	planets       []*planet.Planet
 	structures    []*structure.Structure
 	panel         *panel.Panel
-	structureData map[string]structure.StructureData
+	structureData [structure.StructureDataLength]structure.StructureData
+	resourceData  [resource.ResourceDataLength]resource.ResourceData
 }
 
 func init() {
@@ -31,6 +33,11 @@ func init() {
 func main() {
 	ebiten.SetWindowSize(ui.W, ui.H)
 	ebiten.SetWindowTitle("ship shape")
+
+	rd, err := resource.GetResourceData()
+	if err != nil {
+		panic(err)
+	}
 
 	planets := make([]*planet.Planet, 3)
 	planets[0] = planet.New(100, 100, 255, 1)
@@ -44,7 +51,7 @@ func main() {
 	}
 
 	structures := make([]*structure.Structure, 1)
-	structures[0] = structure.New(sd["home"], planets[2])
+	structures[0] = structure.New(sd[structure.Home], planets[2])
 
 	g := Game{
 		count:         0,
@@ -53,6 +60,7 @@ func main() {
 		planets:       planets,
 		panel:         panel,
 		structureData: sd,
+		resourceData:  rd,
 		structures:    structures,
 	}
 

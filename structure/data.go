@@ -7,14 +7,22 @@ type StructureData struct {
 	Cost        int
 }
 
-var data = []byte(`{ 
-	"home": { "DisplayName": "home planet", "Cost": 32 },
-	"outpost": { "DisplayName": "outpost","Cost": 8 }, 
-	"water": { "DisplayName": "hydrologic extractor","Cost": 16 }
-	}`)
+const StructureDataLength = 3
 
-func GetStructureData() (map[string]StructureData, error) {
-	var sd map[string]StructureData
+const (
+	Home int = iota
+	Outpost
+	Water
+)
+
+var data = []byte(`[ 
+	{ "DisplayName": "home planet", "Cost": 32 },
+	{ "DisplayName": "outpost","Cost": 8 }, 
+	{ "DisplayName": "hydrology plant","Cost": 16 }
+	]`)
+
+func GetStructureData() ([StructureDataLength]StructureData, error) {
+	var sd [StructureDataLength]StructureData
 	err := json.Unmarshal(data, &sd)
 	return sd, err
 }

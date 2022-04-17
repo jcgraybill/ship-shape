@@ -11,5 +11,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, s := range g.structures {
 		s.Draw(screen)
 	}
-	screen.DrawImage(g.panel.Image(), g.panel.Location())
+
+	g.panel.Draw(screen)
 }

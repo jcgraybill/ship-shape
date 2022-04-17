@@ -2,7 +2,6 @@ package button
 
 import (
 	"bytes"
-	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -11,10 +10,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/jcgraybill/ship-shape/ui"
-)
-
-const (
-	border = 1
 )
 
 type Button struct {
@@ -33,32 +28,27 @@ func New(x, y, w, h int, message string, action func()) *Button {
 		x:       x,
 		y:       y,
 		w:       w,
-		h:       h,
 		action:  action,
 		pressed: false,
 	}
+
 	ttf := ui.Font()
 	textBounds := text.BoundString(ttf, message)
-	if textBounds.Dx() > w || textBounds.Dy() > h {
-		//TODO: text is larger than bounding box
-		fmt.Println("TODO: text is larger than bounding box")
-	} else {
-		b.w, b.h = w, textBounds.Dy()
-	}
+	b.h = textBounds.Dy() + ui.Buffer*2 + ui.Border + 2
 
-	image := ebiten.NewImage(w-border*2, textBounds.Dy()+border*4)
+	image := ebiten.NewImage(b.w, b.h)
 	image.Fill(color.White)
 
-	interior := ebiten.NewImage(w-border*4, textBounds.Dy()+border*2)
+	interior := ebiten.NewImage(b.w-ui.Border*2, b.h-ui.Border*2)
 	interior.Fill(color.Black)
+	text.Draw(interior, message, ttf, b.w/2-textBounds.Dx()/2, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, color.White)
 	opts := &ebiten.DrawImageOptions{}
-	opts.GeoM.Translate(border, border)
-	text.Draw(interior, message, ttf, w/2-textBounds.Dx()/2, int(ttf.Metrics().Ascent/ui.DPI)+border, color.White)
+	opts.GeoM.Translate(ui.Border, ui.Border)
 	image.DrawImage(interior, opts)
 	b.image = image
 
 	b.opts = &ebiten.DrawImageOptions{}
-	b.opts.GeoM.Translate(float64(x), float64(y))
+	b.opts.GeoM.Translate(float64(b.x), float64(b.y))
 
 	audioContext := audio.CurrentContext()
 	audioBytes, err := ui.GameData("audio/button.wav")

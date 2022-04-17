@@ -35,7 +35,7 @@ func Font() font.Face {
 		tt, err := opentype.Parse(ttbytes)
 		if err == nil {
 			fontface, err := opentype.NewFace(tt, &opentype.FaceOptions{
-				Size:    12,
+				Size:    fontSize,
 				DPI:     DPI,
 				Hinting: font.HintingFull,
 			})

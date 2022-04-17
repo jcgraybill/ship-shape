@@ -9,19 +9,14 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-const (
-	panelWidth   = 160
-	panelPadding = 10
-)
-
 type Panel struct {
-	x, y    int
-	w, h    int
-	image   *ebiten.Image
-	display *ebiten.DrawImageOptions
+	x, y           int
+	w, h           int
+	background     *ebiten.Image
+	displayOptions *ebiten.DrawImageOptions
 
-	interior *ebiten.Image
-	intOpts  *ebiten.DrawImageOptions
+	interior               *ebiten.Image
+	interiorDisplayOptions *ebiten.DrawImageOptions
 
 	elements []widget
 }
@@ -35,38 +30,30 @@ type widget interface {
 
 func New(w, h int) *Panel {
 	var p Panel
-	p.x = w - panelWidth - panelPadding
-	p.y = panelPadding
-	p.w = panelWidth
-	p.h = h - panelPadding*2
-	p.image = generateImage(p.w, p.h)
-	p.display = &ebiten.DrawImageOptions{}
+	p.x = w - ui.PanelWidth - ui.PanelExternalPadding
+	p.y = ui.PanelExternalPadding
+	p.w = ui.PanelWidth
+	p.h = h - ui.PanelExternalPadding*2
+	p.background = ebiten.NewImage(p.w, p.h)
+	p.background.Fill(color.White)
+	p.displayOptions = &ebiten.DrawImageOptions{}
 	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
-	p.intOpts = &ebiten.DrawImageOptions{}
-	p.intOpts.GeoM.Translate(float64(ui.Border), float64(ui.Border))
-	p.display.GeoM.Translate(float64(p.x), float64(p.y))
+	p.interiorDisplayOptions = &ebiten.DrawImageOptions{}
+	p.interiorDisplayOptions.GeoM.Translate(float64(ui.Border), float64(ui.Border))
+	p.displayOptions.GeoM.Translate(float64(p.x), float64(p.y))
 	p.elements = make([]widget, 0)
 	return &p
 }
 
-func generateImage(w, h int) *ebiten.Image {
-	img := ebiten.NewImage(w, h)
-	img.Fill(color.White)
-	return img
-}
-
-func (p *Panel) Image() *ebiten.Image {
+func (p *Panel) Draw(image *ebiten.Image) {
 	p.interior.Fill(color.Black)
-
 	for _, ui := range p.elements {
 		p.interior.DrawImage(ui.Draw())
 	}
-	p.image.DrawImage(p.interior, p.intOpts)
-	return p.image
-}
+	p.background.DrawImage(p.interior, p.interiorDisplayOptions)
 
-func (p *Panel) Location() *ebiten.DrawImageOptions {
-	return p.display
+	image.DrawImage(p.background, p.displayOptions)
+
 }
 
 func (p *Panel) LeftMouseButtonPress(x, y int) bool {
@@ -97,18 +84,18 @@ func (p *Panel) LeftMouseButtonRelease(x, y int) bool {
 }
 
 func (p *Panel) AddLabel(text string) {
-	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2, p.h-ui.Buffer*2, text))
+	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text))
 }
 
 func (p *Panel) AddButton(text string, callback func()) {
-	p.elements = append(p.elements, button.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2, p.h-ui.Buffer*2, text, callback))
+	p.elements = append(p.elements, button.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, callback))
 }
 
 func (p *Panel) firstAvailableSpot() int {
 	i := ui.Buffer
 	for _, element := range p.elements {
 		i += element.Height()
-		i += ui.Buffer * 4
+		i += ui.Buffer
 	}
 	return i
 }

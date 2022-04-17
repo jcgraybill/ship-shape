@@ -35,27 +35,29 @@ func (s *Structure) generateImage(planetCenterX, planetCenterY int) (*ebiten.Ima
 	var x, y, w, h int
 	ttf := ui.Font()
 	textBounds := text.BoundString(ttf, s.data.DisplayName)
-	image := ebiten.NewImage(ui.Buffer+textBounds.Dx()+ui.Buffer, ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer)
+	contentWidth := textBounds.Dx()
+	if contentWidth < ui.PlanetSize {
+		contentWidth = ui.PlanetSize
+	}
+	image := ebiten.NewImage(ui.Border+ui.Buffer+contentWidth+ui.Buffer+ui.Border, ui.Border+ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer+ui.Border)
 	image.Fill(color.White)
 
-	// TODO create this box the same way as panels/buttons, using ui.Border and ui.Buffer
-
-	interior := ebiten.NewImage(ui.Buffer/2+textBounds.Dx()+ui.Buffer/2, ui.Buffer/2+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer/2)
+	interior := ebiten.NewImage(ui.Buffer+contentWidth+ui.Buffer, ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer)
 	interior.Fill(color.Black)
 	opts := &ebiten.DrawImageOptions{}
-	opts.GeoM.Translate(ui.Buffer/2, ui.Buffer/2)
-	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer/2, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer/2, color.White)
+	opts.GeoM.Translate(ui.Border, ui.Border)
+	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, color.White)
 
 	popts := &ebiten.DrawImageOptions{}
-	popts.GeoM.Translate(float64(ui.Buffer/2), float64(ui.Buffer/2+textBounds.Dy()+ui.Buffer))
+	popts.GeoM.Translate(float64(ui.Buffer), float64(ui.Buffer+textBounds.Dy()+ui.Buffer))
 	interior.DrawImage(s.planet.Image(), popts)
 
 	image.DrawImage(interior, opts)
 
-	x = planetCenterX - ui.PlanetSize/2 - ui.Buffer
-	y = planetCenterY - ui.PlanetSize/2 - ui.Buffer - textBounds.Dy() - ui.Buffer
-	w = ui.Buffer + textBounds.Dx() + ui.Buffer
-	h = ui.Buffer + textBounds.Dy() + ui.Buffer + ui.PlanetSize + ui.Buffer
+	x = planetCenterX - ui.PlanetSize/2 - ui.Buffer - ui.Border
+	y = planetCenterY - ui.PlanetSize/2 - ui.Buffer - textBounds.Dy() - ui.Buffer - ui.Border
+	w = ui.Border + ui.Buffer + contentWidth + ui.Buffer + ui.Border
+	h = ui.Border + ui.Buffer + textBounds.Dy() + ui.Buffer + ui.PlanetSize + ui.Buffer + ui.Border
 	return image, x, y, w, h
 }
 
