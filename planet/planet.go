@@ -24,7 +24,7 @@ type Planet struct {
 	image               *ebiten.Image
 	highlightedImage    *ebiten.Image
 	name                string
-	display             *ebiten.DrawImageOptions
+	displayOpts         *ebiten.DrawImageOptions
 	ttf                 font.Face
 	visible             bool
 }
@@ -51,8 +51,8 @@ func New(x, y int, water, habitability uint8) *Planet {
 	p.highlightedImage = p.generateHighlightedImage()
 	p.highlighted = false
 	p.name = p.generateName()
-	p.display = &ebiten.DrawImageOptions{}
-	p.display.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
+	p.displayOpts = &ebiten.DrawImageOptions{}
+	p.displayOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
 	p.ttf = ui.Font()
 	return &p
 }
@@ -85,10 +85,6 @@ func (p *Planet) generateHighlightedImage() *ebiten.Image {
 	return image
 }
 
-func (p *Planet) Location() *ebiten.DrawImageOptions {
-	return p.display
-}
-
 func (p *Planet) Center() (int, int) {
 	return p.x, p.y
 }
@@ -99,10 +95,6 @@ func (p *Planet) Image() *ebiten.Image {
 	} else {
 		return p.image
 	}
-}
-
-func (p *Planet) Highlighted() bool {
-	return p.highlighted
 }
 
 func (p *Planet) Highlight() {
@@ -135,7 +127,7 @@ func (p *Planet) Name() string {
 
 func (p *Planet) Draw(image *ebiten.Image) {
 	if p.visible {
-		image.DrawImage(p.Image(), p.Location())
+		image.DrawImage(p.Image(), p.displayOpts)
 		cx, cy := p.Center()
 		textBounds := text.BoundString(p.ttf, p.Name())
 		text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, color.White)

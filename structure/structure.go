@@ -11,11 +11,11 @@ import (
 )
 
 type Structure struct {
-	x, y, w, h int
-	image      *ebiten.Image
-	display    *ebiten.DrawImageOptions
-	planet     *planet.Planet
-	data       StructureData
+	x, y, w, h  int
+	image       *ebiten.Image
+	displayOpts *ebiten.DrawImageOptions
+	planet      *planet.Planet
+	data        StructureData
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {
@@ -25,8 +25,8 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	p.ReplaceWithStructure()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(p.Center())
 
-	s.display = &ebiten.DrawImageOptions{}
-	s.display.GeoM.Translate(float64(s.x), float64(s.y))
+	s.displayOpts = &ebiten.DrawImageOptions{}
+	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
 
 	return &s
 }
@@ -69,27 +69,9 @@ func (s *Structure) MouseButton(x, y int) bool {
 }
 
 func (s *Structure) Draw(image *ebiten.Image) {
-	image.DrawImage(s.Image(), s.Location())
-}
-
-//TODO not all these need to be public
-
-func (s *Structure) Location() *ebiten.DrawImageOptions {
-	return s.display
-}
-
-func (s *Structure) Image() *ebiten.Image {
-	return s.image
-}
-
-func (s *Structure) Name() string {
-	return s.data.DisplayName
-}
-
-func (s *Structure) Planet() *planet.Planet {
-	return s.planet
+	image.DrawImage(s.image, s.displayOpts)
 }
 
 func (s *Structure) Describe() string {
-	return fmt.Sprintf("%s\nplanet: %s\nhabitability: %d\nwater: %d", s.Name(), s.Planet().Name(), s.Planet().Habitability, s.Planet().Water)
+	return fmt.Sprintf("%s\nplanet: %s\nhabitability: %d\nwater: %d", s.data.DisplayName, s.planet.Name(), s.planet.Habitability, s.planet.Water)
 }
