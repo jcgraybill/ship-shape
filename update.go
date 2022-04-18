@@ -51,7 +51,7 @@ func handleLeftMouseButtonPress(g *Game) {
 
 		for _, structure := range g.structures {
 			if structure.MouseButton(ebiten.CursorPosition()) {
-				g.panel.AddLabel(structure.Name())
+				showStructure(g.panel, structure, g.resourceData)
 				showPlanet(g.panel, structure.Planet(), g.resourceData)
 			}
 		}
@@ -63,7 +63,7 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 	return func() {
 		g.panel.Clear()
 		structure := structure.New(g.structureData[structureType], p)
-		g.panel.AddLabel(structure.Name())
+		showStructure(g.panel, structure, g.resourceData)
 		showPlanet(g.panel, structure.Planet(), g.resourceData)
 		g.structures = append(g.structures, structure)
 	}
@@ -74,5 +74,14 @@ func showPlanet(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataL
 	for resource, level := range p.Resources() {
 		panel.AddLabel(rd[resource].DisplayName)
 		panel.AddBar(level, rd[resource].Color)
+	}
+}
+
+func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
+	panel.AddLabel(s.Name())
+	if s.Storage().Storage > 0 {
+		panel.AddLabel("storage:")
+		panel.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[s.Storage().Resource].DisplayName, s.Storage().Amount, s.Storage().Storage))
+		panel.AddBar(s.Storage().Amount, rd[s.Storage().Resource].Color)
 	}
 }

@@ -1,6 +1,7 @@
 package structure
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -15,6 +16,7 @@ type Structure struct {
 	displayOpts *ebiten.DrawImageOptions
 	planet      *planet.Planet
 	data        StructureData
+	storage     Storage
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {
@@ -23,6 +25,14 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	s.planet = p
 	p.ReplaceWithStructure()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(p.Center())
+
+	s.storage = Storage{
+		Resource: s.data.Storage.Resource,
+		Storage:  s.data.Storage.Storage,
+		Amount:   s.data.Storage.Amount,
+	}
+
+	fmt.Println(s.storage)
 
 	s.displayOpts = &ebiten.DrawImageOptions{}
 	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
@@ -79,4 +89,8 @@ func (s *Structure) Name() string {
 
 func (s *Structure) Planet() *planet.Planet {
 	return s.planet
+}
+
+func (s *Structure) Storage() Storage {
+	return s.storage
 }

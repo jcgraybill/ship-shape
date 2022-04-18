@@ -3,6 +3,7 @@ package structure
 import (
 	"embed"
 	"encoding/json"
+	"fmt"
 )
 
 const (
@@ -19,12 +20,19 @@ const (
 type StructureData struct {
 	DisplayName string
 	Produces    Production
+	Storage     Storage
 }
 
 type Production struct {
 	Resource int
 	Rate     uint8
 	Requires map[int]int
+}
+
+type Storage struct {
+	Resource int
+	Storage  uint8
+	Amount   uint8
 }
 
 //go:embed structures.json
@@ -36,6 +44,7 @@ func GetStructureData() [StructureDataLength]StructureData {
 	if err == nil {
 		err := json.Unmarshal(data, &sd)
 		if err == nil {
+			fmt.Println(sd)
 			return sd
 		}
 	}
