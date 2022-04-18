@@ -1,5 +1,5 @@
 [ 
-	{ "DisplayName": "home planet", "Cost": 32 },
-	{ "DisplayName": "outpost","Cost": 8 }, 
-	{ "DisplayName": "hydrology plant","Cost": 16 }
+	{ "DisplayName": "home planet" },
+	{ "DisplayName": "outpost", "Produces": { "Resource": 5, "Rate": 64, "Requires": { "4": 16 } }  }, 
+	{ "DisplayName": "hydrology plant", "Produces": { "Resource": 4, "Rate": 64, "Requires": { "1": 0 } } }
 ]

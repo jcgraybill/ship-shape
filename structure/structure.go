@@ -1,7 +1,6 @@
 package structure
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -74,6 +73,10 @@ func (s *Structure) Draw(image *ebiten.Image) {
 	image.DrawImage(s.image, s.displayOpts)
 }
 
-func (s *Structure) Describe() string {
-	return fmt.Sprintf("%s\nplanet: %s\nhabitability: %d\nwater: %d", s.data.DisplayName, s.planet.Name(), s.planet.Habitability, s.planet.Water)
+func (s *Structure) Name() string {
+	return s.data.DisplayName
+}
+
+func (s *Structure) Planet() *planet.Planet {
+	return s.planet
 }

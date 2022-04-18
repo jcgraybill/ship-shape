@@ -9,80 +9,80 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
 const (
 	basePlanetRadius = 8
-	basePlanetColor  = 0x7f
 )
 
 type Planet struct {
-	x, y                int
-	Water, Habitability uint8
-	highlighted         bool
-	image               *ebiten.Image
-	highlightedImage    *ebiten.Image
-	name                string
-	displayOpts         *ebiten.DrawImageOptions
-	ttf                 font.Face
-	visible             bool
+	x, y             int
+	resources        map[int]uint8
+	resourceData     [resource.ResourceDataLength]resource.ResourceData
+	highlighted      bool
+	image            *ebiten.Image
+	highlightedImage *ebiten.Image
+	name             string
+	displayOpts      *ebiten.DrawImageOptions
+	ttf              font.Face
+	visible          bool
 }
 
-func New(x, y int, water, habitability uint8) *Planet {
+func New(x, y int, resources map[int]uint8, resourceData [resource.ResourceDataLength]resource.ResourceData) *Planet {
 	var p Planet
 
 	p.x, p.y = x, y
 	p.visible = true
 
-	if water == 0 {
-		p.Water = uint8(rand.Intn(255))
-	} else {
-		p.Water = water
-	}
+	p.resources = resources
+	p.resourceData = resourceData
 
-	if habitability == 0 {
-		p.Habitability = uint8(rand.Intn(255))
-	} else {
-		p.Habitability = habitability
-	}
-
-	p.image = p.generatePlanetImage()
-	p.highlightedImage = p.generateHighlightedImage()
-	p.highlighted = false
 	p.name = p.generateName()
+
+	p.image, p.highlightedImage = p.generatePlanetImages()
+
+	p.highlighted = false
+
 	p.displayOpts = &ebiten.DrawImageOptions{}
 	p.displayOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
 	p.ttf = ui.Font()
 	return &p
 }
 
-func (p *Planet) generatePlanetImage() *ebiten.Image {
+func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image) {
 	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
+	highlighted := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 
-	radius := float32(basePlanetRadius + p.Habitability/32)
-
-	waterColor := color.RGBA{R: 0x00, G: 0x00, B: 0xff, A: 0xff}
+	radius := float32(basePlanetRadius + rand.Intn(ui.PlanetSize/2-basePlanetRadius))
 
 	planetColor := color.RGBA{}
-	planetColor.R = basePlanetColor + uint8(int(waterColor.R)*int(p.Water)/(255*2))
-	planetColor.G = basePlanetColor + uint8(int(waterColor.G)*int(p.Water)/(255*2))
-	planetColor.B = basePlanetColor + uint8(int(waterColor.B)*int(p.Water)/(255*2))
+	var R, G, B int
+
+	for resource, level := range p.resources {
+		R = R + int(level)*int(p.resourceData[resource].Color.R)
+		G = G + int(level)*int(p.resourceData[resource].Color.G)
+		B = B + int(level)*int(p.resourceData[resource].Color.B)
+	}
+
+	n := len(p.resources) * 255
+
+	planetColor.R = uint8(R / n)
+	planetColor.G = uint8(G / n)
+	planetColor.B = uint8(B / n)
 	planetColor.A = 0xff
 
 	v, i := ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, planetColor)
 	image.DrawTriangles(v, i, ui.Src, nil)
-	return image
-}
 
-func (p *Planet) generateHighlightedImage() *ebiten.Image {
-	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
-	radius := float32(basePlanetRadius+p.Habitability/32) + ui.Border
+	radius = radius + ui.Border
 
-	v, i := ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
-	image.DrawTriangles(v, i, ui.Src, nil)
-	image.DrawImage(p.image, nil)
-	return image
+	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
+	highlighted.DrawTriangles(v, i, ui.Src, nil)
+	highlighted.DrawImage(image, nil)
+
+	return image, highlighted
 }
 
 func (p *Planet) Center() (int, int) {
@@ -139,6 +139,6 @@ func (p *Planet) ReplaceWithStructure() {
 	p.visible = false
 }
 
-func (p *Planet) Describe() string {
-	return fmt.Sprintf("planet: %s\nhabitability: %d\nwater: %d", p.Name(), p.Habitability, p.Water)
+func (p *Planet) Resources() map[int]uint8 {
+	return p.resources
 }

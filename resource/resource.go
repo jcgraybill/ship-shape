@@ -7,14 +7,16 @@ import (
 )
 
 const (
-	ResourceDataLength = 3
+	ResourceDataLength = 5
 	ResourcesJSONFile  = "resources.json"
 )
 
 const (
 	Habitability int = iota
-	Water
+	Ice
 	Iron
+	Water
+	Population
 )
 
 type ResourceData struct {

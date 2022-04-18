@@ -7,8 +7,9 @@ const (
 	W = 800
 	H = 480
 
-	Buffer = 4
-	Border = 1
+	Buffer    = 4
+	Border    = 1
+	BarHeight = 4
 
 	PanelWidth           = 160
 	PanelExternalPadding = 10

@@ -4,6 +4,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/jcgraybill/ship-shape/panel/bar"
 	"github.com/jcgraybill/ship-shape/panel/button"
 	"github.com/jcgraybill/ship-shape/panel/label"
 	"github.com/jcgraybill/ship-shape/ui"
@@ -89,6 +90,10 @@ func (p *Panel) AddLabel(text string) {
 
 func (p *Panel) AddButton(text string, callback func()) {
 	p.elements = append(p.elements, button.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, callback))
+}
+
+func (p *Panel) AddBar(value uint8, color color.RGBA) {
+	p.elements = append(p.elements, bar.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, value, color))
 }
 
 func (p *Panel) firstAvailableSpot() int {

@@ -1,9 +1,13 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/planet"
+	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/structure"
 )
 
@@ -37,7 +41,7 @@ func handleLeftMouseButtonPress(g *Game) {
 		for _, planet := range g.planets {
 			if planet.MouseButton(ebiten.CursorPosition()) {
 				planet.Highlight()
-				g.panel.AddLabel(planet.Describe())
+				showPlanet(g.panel, planet, g.resourceData)
 				g.panel.AddButton("build "+g.structureData[structure.Water].DisplayName, generateConstructionCallback(g, planet, structure.Water))
 				g.panel.AddButton("build "+g.structureData[structure.Outpost].DisplayName, generateConstructionCallback(g, planet, structure.Outpost))
 			} else {
@@ -47,7 +51,8 @@ func handleLeftMouseButtonPress(g *Game) {
 
 		for _, structure := range g.structures {
 			if structure.MouseButton(ebiten.CursorPosition()) {
-				g.panel.AddLabel(structure.Describe())
+				g.panel.AddLabel(structure.Name())
+				showPlanet(g.panel, structure.Planet(), g.resourceData)
 			}
 		}
 
@@ -58,7 +63,16 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 	return func() {
 		g.panel.Clear()
 		structure := structure.New(g.structureData[structureType], p)
-		g.panel.AddLabel(structure.Describe())
+		g.panel.AddLabel(structure.Name())
+		showPlanet(g.panel, structure.Planet(), g.resourceData)
 		g.structures = append(g.structures, structure)
+	}
+}
+
+func showPlanet(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
+	panel.AddLabel(fmt.Sprintf("planet: %s", p.Name()))
+	for resource, level := range p.Resources() {
+		panel.AddLabel(rd[resource].DisplayName)
+		panel.AddBar(level, rd[resource].Color)
 	}
 }

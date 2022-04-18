@@ -18,7 +18,13 @@ const (
 
 type StructureData struct {
 	DisplayName string
-	Cost        int
+	Produces    Production
+}
+
+type Production struct {
+	Resource int
+	Rate     uint8
+	Requires map[int]int
 }
 
 //go:embed structures.json
