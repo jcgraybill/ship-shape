@@ -34,10 +34,7 @@ func main() {
 	ebiten.SetWindowSize(ui.W, ui.H)
 	ebiten.SetWindowTitle("ship shape")
 
-	rd, err := resource.GetResourceData()
-	if err != nil {
-		panic(err)
-	}
+	rd := resource.GetResourceData()
 
 	planets := make([]*planet.Planet, 3)
 	planets[0] = planet.New(100, 100, 255, 1)
@@ -45,10 +42,7 @@ func main() {
 	planets[2] = planet.New(500, 200, 128, 128)
 	panel := panel.New(ui.W, ui.H)
 
-	sd, err := structure.GetStructureData()
-	if err != nil {
-		panic(err)
-	}
+	sd := structure.GetStructureData()
 
 	structures := make([]*structure.Structure, 1)
 	structures[0] = structure.New(sd[structure.Home], planets[2])

@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"embed"
 	"image/color"
 	"math/rand"
 
@@ -8,6 +9,13 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 )
+
+func GameData(path string) ([]byte, error) {
+	return gd.ReadFile(path)
+}
+
+//go:embed fonts audio
+var gd embed.FS
 
 func StarField(w, h int) *ebiten.Image {
 	field := ebiten.NewImage(w, h)

@@ -1,0 +1,5 @@
+[ 
+	{ "DisplayName": "home planet", "Cost": 32 },
+	{ "DisplayName": "outpost","Cost": 8 }, 
+	{ "DisplayName": "hydrology plant","Cost": 16 }
+]

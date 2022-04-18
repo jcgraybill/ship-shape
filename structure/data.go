@@ -1,13 +1,14 @@
 package structure
 
-import "encoding/json"
+import (
+	"embed"
+	"encoding/json"
+)
 
-type StructureData struct {
-	DisplayName string
-	Cost        int
-}
-
-const StructureDataLength = 3
+const (
+	StructureDataLength = 3
+	StructuresJSONFile  = "structures.json"
+)
 
 const (
 	Home int = iota
@@ -15,14 +16,22 @@ const (
 	Water
 )
 
-var data = []byte(`[ 
-	{ "DisplayName": "home planet", "Cost": 32 },
-	{ "DisplayName": "outpost","Cost": 8 }, 
-	{ "DisplayName": "hydrology plant","Cost": 16 }
-	]`)
+type StructureData struct {
+	DisplayName string
+	Cost        int
+}
 
-func GetStructureData() ([StructureDataLength]StructureData, error) {
+//go:embed structures.json
+var structureJSON embed.FS
+
+func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
-	err := json.Unmarshal(data, &sd)
-	return sd, err
+	data, err := structureJSON.ReadFile(StructuresJSONFile)
+	if err == nil {
+		err := json.Unmarshal(data, &sd)
+		if err == nil {
+			return sd
+		}
+	}
+	panic(err)
 }
