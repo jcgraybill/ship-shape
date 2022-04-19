@@ -6,8 +6,11 @@ const (
 	starriness = 3000
 	PlanetSize = 32
 
-	W = 800
-	H = 480
+	W = 1000
+	H = 1000
+
+	WindowW = 800
+	WindowH = 480
 
 	Buffer    = 4
 	Border    = 1
@@ -21,7 +24,7 @@ const (
 	fontSize   = 13
 	DPI        = 72
 
-	BaseProductionRate = 2
+	BaseProductionRate = 8
 	BidFrequency       = 60
 	ShipSpeed          = 3
 )

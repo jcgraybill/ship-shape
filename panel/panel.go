@@ -37,7 +37,7 @@ func New(w, h int) *Panel {
 	p.w = ui.PanelWidth
 	p.h = h - ui.PanelExternalPadding*2
 	p.background = ebiten.NewImage(p.w, p.h)
-	p.background.Fill(color.White)
+	p.background.Fill(ui.FocusedColor)
 	p.displayOptions = &ebiten.DrawImageOptions{}
 	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
 	p.interiorDisplayOptions = &ebiten.DrawImageOptions{}
@@ -48,7 +48,7 @@ func New(w, h int) *Panel {
 }
 
 func (p *Panel) Draw(image *ebiten.Image) {
-	p.interior.Fill(color.Black)
+	p.interior.Fill(ui.BackgroundColor)
 	for _, ui := range p.elements {
 		p.interior.DrawImage(ui.Draw())
 	}
@@ -112,4 +112,15 @@ func (p *Panel) firstAvailableSpot() int {
 
 func (p *Panel) Clear() {
 	p.elements = nil
+}
+
+func (p *Panel) Resize(w, h int) {
+	p.x = w - ui.PanelWidth - ui.PanelExternalPadding
+	p.h = h - ui.PanelExternalPadding*2
+	p.displayOptions.GeoM.Reset()
+	p.displayOptions.GeoM.Translate(float64(p.x), float64(p.y))
+
+	p.background = ebiten.NewImage(p.w, p.h)
+	p.background.Fill(ui.FocusedColor)
+	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
 }

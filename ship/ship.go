@@ -146,6 +146,7 @@ func (s *Ship) DrawCourse(image *ebiten.Image) {
 	image.DrawImage(s.course, s.courseOpts)
 }
 
+//FIXME rotation causes this to not be the actual ship coordinates
 func (s *Ship) MouseButton(x, y int) bool {
 	if int(s.x)+plumeW < x && int(s.x)+shipW+plumeW > x {
 		if int(s.y) < y && int(s.y)+shipH > y {
@@ -155,6 +156,7 @@ func (s *Ship) MouseButton(x, y int) bool {
 	return false
 }
 
+// TODO visually show the cargo
 func (s *Ship) LoadCargo(resource int) {
 	s.cargo = resource
 }

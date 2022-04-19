@@ -48,7 +48,7 @@ func bidForResources(g *Game) {
 					g.panel.Clear()
 					showStructurePanel(g, structure)
 				}
-
+				break // prevents another structure from accepting the same bid
 			}
 		}
 	}

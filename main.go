@@ -18,6 +18,7 @@ import (
 type Game struct {
 	count         int
 	bg            *ebiten.Image
+	universe      *ebiten.Image
 	ttf           font.Face
 	planets       []*planet.Planet
 	structures    []*structure.Structure
@@ -33,8 +34,9 @@ func init() {
 }
 
 func main() {
-	ebiten.SetWindowSize(ui.W, ui.H)
+	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
 	ebiten.SetWindowTitle("ship shape")
+	ebiten.SetWindowResizable(true)
 
 	rd := resource.GetResourceData()
 
@@ -46,7 +48,7 @@ func main() {
 	planets[4] = planet.New(200, 400, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
 	planets[5] = planet.New(300, 60, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
 
-	panel := panel.New(ui.W, ui.H)
+	panel := panel.New(ui.WindowW, ui.WindowH)
 
 	sd := structure.GetStructureData()
 
@@ -58,7 +60,7 @@ func main() {
 	g := Game{
 		count:         0,
 		bg:            ui.StarField(ui.W, ui.H),
-		ttf:           ui.Font(ui.TtfRegular),
+		universe:      ebiten.NewImage(ui.W, ui.H),
 		planets:       planets,
 		panel:         panel,
 		structureData: sd,
@@ -72,6 +74,13 @@ func main() {
 	}
 }
 
-func (g *Game) Layout(int, int) (int, int) {
-	return ui.W, ui.H
+func (g *Game) Layout(w, h int) (int, int) {
+	if w < ui.WindowW {
+		w = ui.WindowW
+	}
+	if h < ui.WindowH {
+		h = ui.WindowH
+	}
+	g.panel.Resize(w, h)
+	return w, h
 }

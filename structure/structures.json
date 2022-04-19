@@ -2,15 +2,15 @@
 	{ "DisplayName": "home planet" },
 
 	{ "DisplayName": "outpost", 
-		"Produces": { "Resource": 4, "Rate": 64, "Requires": 0 }, 
-		"Storage": [{ "Resource": 4, "Capacity": 32 },
+		"Produces": { "Resource": 4, "Rate": 8, "Requires": 0 }, 
+		"Storage": [{ "Resource": 4, "Capacity": 4 },
 					{ "Resource": 3, "Capacity": 32 }
 					 ] ,
 		"Consumes": 3
 	 }, 
 	{ "DisplayName": "ice melter", 
-		"Produces": { "Resource": 3, "Rate": 64, "Requires": 1 }, 
-		"Storage": [{ "Resource": 3, "Capacity": 128 }],
+		"Produces": { "Resource": 3, "Rate": 32, "Requires": 1 }, 
+		"Storage": [{ "Resource": 3, "Capacity": 8 }],
 		"Berths": 2
 	}
 ]

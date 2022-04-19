@@ -3,23 +3,24 @@ package main
 import "github.com/hajimehoshi/ebiten/v2"
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.DrawImage(g.bg, nil)
+	g.universe.Clear()
+	g.universe.DrawImage(g.bg, nil)
 
 	for _, s := range g.ships {
-		s.DrawCourse(screen)
+		s.DrawCourse(g.universe)
 	}
 
 	for _, p := range g.planets {
-		p.Draw(screen)
+		p.Draw(g.universe)
 	}
 
 	for _, s := range g.structures {
-		s.Draw(screen)
+		s.Draw(g.universe)
 	}
 
 	for _, s := range g.ships {
-		s.Draw(screen)
+		s.Draw(g.universe)
 	}
-
+	screen.DrawImage(g.universe, nil)
 	g.panel.Draw(screen)
 }
