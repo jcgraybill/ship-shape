@@ -3,7 +3,6 @@ package structure
 import (
 	"embed"
 	"encoding/json"
-	"fmt"
 )
 
 const (
@@ -26,12 +25,12 @@ type StructureData struct {
 type Production struct {
 	Resource int
 	Rate     uint8
-	Requires map[int]int
+	Requires int
 }
 
 type Storage struct {
 	Resource int
-	Storage  uint8
+	Capacity uint8
 	Amount   uint8
 }
 
@@ -44,7 +43,6 @@ func GetStructureData() [StructureDataLength]StructureData {
 	if err == nil {
 		err := json.Unmarshal(data, &sd)
 		if err == nil {
-			fmt.Println(sd)
 			return sd
 		}
 	}

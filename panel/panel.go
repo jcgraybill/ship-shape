@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/panel/bar"
 	"github.com/jcgraybill/ship-shape/panel/button"
+	"github.com/jcgraybill/ship-shape/panel/divider"
 	"github.com/jcgraybill/ship-shape/panel/label"
 	"github.com/jcgraybill/ship-shape/ui"
 )
@@ -94,6 +95,10 @@ func (p *Panel) AddButton(text string, callback func()) {
 
 func (p *Panel) AddBar(value uint8, color color.RGBA) {
 	p.elements = append(p.elements, bar.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, value, color))
+}
+
+func (p *Panel) AddDivider() {
+	p.elements = append(p.elements, divider.New(0, p.firstAvailableSpot(), p.w))
 }
 
 func (p *Panel) firstAvailableSpot() int {

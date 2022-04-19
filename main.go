@@ -15,7 +15,7 @@ import (
 )
 
 type Game struct {
-	count         int32
+	count         int
 	bg            *ebiten.Image
 	ttf           font.Face
 	planets       []*planet.Planet

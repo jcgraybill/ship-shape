@@ -1,5 +1,5 @@
 [ 
 	{ "DisplayName": "home planet" },
-	{ "DisplayName": "outpost", "Produces": { "Resource": 5, "Rate": 64, "Requires": { "4": 16 } }, "Storage": { "Resource": 4, "Storage": 32 }  }, 
-	{ "DisplayName": "hydrology plant", "Produces": { "Resource": 4, "Rate": 64, "Requires": { "1": 0 } }, "Storage": { "Resource": 3, "Storage": 128 }}
+	{ "DisplayName": "outpost", "Produces": { "Resource": 4, "Rate": 64, "Requires": 0 }, "Storage": { "Resource": 4, "Capacity": 32 }  }, 
+	{ "DisplayName": "hydrology plant", "Produces": { "Resource": 3, "Rate": 64, "Requires": 1 }, "Storage": { "Resource": 3, "Capacity": 128 }}
 ]
