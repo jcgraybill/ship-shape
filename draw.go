@@ -12,5 +12,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		s.Draw(screen)
 	}
 
+	g.ship.Draw(screen)
+
 	g.panel.Draw(screen)
 }

@@ -1,14 +1,14 @@
 package ui
 
 /*
-	v, i := util.Rectangle(50, 50, 120, 120, color.RGBA{0x00, 0x80, 0x00, 0xff})
-	screen.DrawTriangles(v, i, util.Src, nil)
-	v, i = util.Circle(120, 300, 60, color.RGBA{0x80, 0x00, 0x00, 0xff})
-	screen.DrawTriangles(v, i, util.Src, nil)
-	v, i = util.Line(400, 100, 600, 200, 2, color.RGBA{0x00, 0x00, 0xff, 0xff})
-	screen.DrawTriangles(v, i, util.Src, nil)
-	v, i = util.Triangle(400, 200, 100, 100, color.RGBA{0xff, 0x00, 0xff, 0xff})
-	screen.DrawTriangles(v, i, util.Src, nil)
+	v, i := ui.Rectangle(50, 50, 120, 120, color.RGBA{0x00, 0x80, 0x00, 0xff})
+	image.DrawTriangles(v, i, ui.Src, nil)
+	v, i := ui.Circle(120, 300, 60, color.RGBA{0x80, 0x00, 0x00, 0xff})
+	image.DrawTriangles(v, i, ui.Src, nil)
+	v, i := ui.Line(400, 100, 600, 200, 2, color.RGBA{0x00, 0x00, 0xff, 0xff})
+	image.DrawTriangles(v, i, ui.Src, nil)
+	v, i := ui.Triangle(400, 200, 100, 100, color.RGBA{0xff, 0x00, 0xff, 0xff})
+	image.DrawTriangles(v, i, ui.Src, nil)
 
 */
 import (

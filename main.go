@@ -9,6 +9,7 @@ import (
 	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/planet"
 	"github.com/jcgraybill/ship-shape/resource"
+	"github.com/jcgraybill/ship-shape/ship"
 	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
 	"golang.org/x/image/font"
@@ -23,6 +24,8 @@ type Game struct {
 	panel         *panel.Panel
 	structureData [structure.StructureDataLength]structure.StructureData
 	resourceData  [resource.ResourceDataLength]resource.ResourceData
+
+	ship *ship.Ship
 }
 
 func init() {
@@ -57,6 +60,7 @@ func main() {
 		structureData: sd,
 		resourceData:  rd,
 		structures:    structures,
+		ship:          ship.New(320, 240),
 	}
 
 	if err := ebiten.RunGame(&g); err != nil {

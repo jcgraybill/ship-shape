@@ -10,13 +10,14 @@ import (
 )
 
 type Structure struct {
-	x, y, w, h  int
-	highlighted bool
-	image       *ebiten.Image
-	displayOpts *ebiten.DrawImageOptions
-	planet      *planet.Planet
-	data        StructureData
-	storage     map[int]Storage
+	x, y, w, h       int
+	highlighted      bool
+	image            *ebiten.Image
+	highlightedImage *ebiten.Image
+	displayOpts      *ebiten.DrawImageOptions
+	planet           *planet.Planet
+	data             StructureData
+	storage          map[int]Storage
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {
@@ -25,7 +26,9 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	s.planet = p
 	s.highlighted = false
 	p.ReplaceWithStructure()
-	s.image, s.x, s.y, s.w, s.h = s.generateImage(p.Center())
+	px, py := p.Center()
+	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, color.RGBA{128, 128, 128, 255})
+	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, color.White)
 
 	s.storage = make(map[int]Storage)
 
@@ -43,7 +46,7 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	return &s
 }
 
-func (s *Structure) generateImage(planetCenterX, planetCenterY int) (*ebiten.Image, int, int, int, int) {
+func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, int, int, int, int) {
 	var x, y, w, h int
 	ttf := ui.Font()
 	textBounds := text.BoundString(ttf, s.data.DisplayName)
@@ -52,13 +55,13 @@ func (s *Structure) generateImage(planetCenterX, planetCenterY int) (*ebiten.Ima
 		contentWidth = ui.PlanetSize
 	}
 	image := ebiten.NewImage(ui.Border+ui.Buffer+contentWidth+ui.Buffer+ui.Border, ui.Border+ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer+ui.Border)
-	image.Fill(color.White)
+	image.Fill(uiColor)
 
 	interior := ebiten.NewImage(ui.Buffer+contentWidth+ui.Buffer, ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer)
 	interior.Fill(color.Black)
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
-	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, color.White)
+	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
 
 	popts := &ebiten.DrawImageOptions{}
 	popts.GeoM.Translate(float64(ui.Buffer), float64(ui.Buffer+textBounds.Dy()+ui.Buffer))
@@ -83,7 +86,11 @@ func (s *Structure) MouseButton(x, y int) bool {
 }
 
 func (s *Structure) Draw(image *ebiten.Image) {
-	image.DrawImage(s.image, s.displayOpts)
+	if s.IsHighlighted() {
+		image.DrawImage(s.highlightedImage, s.displayOpts)
+	} else {
+		image.DrawImage(s.image, s.displayOpts)
+	}
 }
 
 func (s *Structure) Name() string {
