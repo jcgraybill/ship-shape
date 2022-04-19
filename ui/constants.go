@@ -17,4 +17,7 @@ const (
 	ttf      = "fonts/OpenSans_SemiCondensed-Regular.ttf"
 	fontSize = 13
 	DPI      = 72
+
+	BaseProductionRate = 2
+	BidFrequency       = 60
 )

@@ -1,5 +1,15 @@
 [ 
 	{ "DisplayName": "home planet" },
-	{ "DisplayName": "outpost", "Produces": { "Resource": 4, "Rate": 64, "Requires": 0 }, "Storage": { "Resource": 4, "Capacity": 32 }  }, 
-	{ "DisplayName": "hydrology plant", "Produces": { "Resource": 3, "Rate": 64, "Requires": 1 }, "Storage": { "Resource": 3, "Capacity": 128 }}
+
+	{ "DisplayName": "outpost", 
+		"Produces": { "Resource": 4, "Rate": 64, "Requires": 0 }, 
+		"Storage": [{ "Resource": 4, "Capacity": 32 },
+					{ "Resource": 3, "Capacity": 32 }
+					 ] ,
+		"Consumes": 3
+	 }, 
+	{ "DisplayName": "ice melter", 
+		"Produces": { "Resource": 3, "Rate": 64, "Requires": 1 }, 
+		"Storage": [{ "Resource": 3, "Capacity": 128 }]
+	}
 ]

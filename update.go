@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -9,21 +10,64 @@ import (
 	"github.com/jcgraybill/ship-shape/planet"
 	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/structure"
+	"github.com/jcgraybill/ship-shape/ui"
 )
+
+type Bid struct {
+	Structure *structure.Structure
+	Resource  int
+	Urgency   uint8
+}
 
 func (g *Game) Update() error {
 	g.count++
 
 	handleInputEvents(g)
 
-	for _, structure := range g.structures {
-		if structure.Update(g.count) && structure.IsHighlighted() {
-			g.panel.Clear()
-			showStructurePanel(g, structure)
-		}
+	if g.count%ui.BidFrequency == 0 {
+		bidForResources(g)
 	}
 
 	return nil
+}
+
+func bidForResources(g *Game) {
+	bids := make([]*Bid, 0)
+
+	for _, structure := range g.structures {
+		if structure.Produce(g.count) && structure.IsHighlighted() {
+			g.panel.Clear()
+			showStructurePanel(g, structure)
+		}
+
+		if resource, urgency := structure.Bid(); urgency > 0 {
+			bids = append(bids, &Bid{Structure: structure, Resource: resource, Urgency: urgency})
+			fmt.Println(fmt.Sprintf("%s %s bids %d for %s", structure.Name(), structure.Planet().Name(), urgency, g.resourceData[resource].DisplayName))
+		}
+	}
+
+	for _, structure := range g.structures {
+		var topBid int
+		var topBidValue float64 = 0
+		for i, bid := range bids {
+			if bid.Resource == structure.Produces() && structure.Storage()[bid.Resource].Amount > 0 {
+				x1, y1 := structure.Planet().Center()
+				x2, y2 := bid.Structure.Planet().Center()
+				value := float64(bid.Urgency) / distance(float64(x1), float64(y1), float64(x2), float64(y2))
+				if value > topBidValue {
+					topBid = i
+					topBidValue = value
+				}
+			}
+		}
+		if topBidValue > 0 {
+			fmt.Println(fmt.Sprintf("%s (%s) accepts %s (%s)'s bid for %s at %d / %f", structure.Name(), structure.Planet().Name(), bids[topBid].Structure.Name(), bids[topBid].Structure.Planet().Name(), g.resourceData[bids[topBid].Resource].DisplayName, bids[topBid].Urgency, topBidValue))
+		}
+	}
+}
+
+func distance(x1, y1, x2, y2 float64) float64 {
+	return math.Sqrt(math.Pow(math.Abs(x1-x2), 2) + math.Pow(math.Abs(y1-y2), 2))
 }
 
 func handleInputEvents(g *Game) {
@@ -78,11 +122,13 @@ func showPlanet(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataL
 func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
 	panel.AddLabel(s.Name())
 
-	if s.Storage().Capacity > 0 {
+	if len(s.Storage()) > 0 {
 		panel.AddDivider()
 		panel.AddLabel("storage:")
-		panel.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[s.Storage().Resource].DisplayName, s.Storage().Amount, s.Storage().Capacity))
-		panel.AddBar(uint8((255*int(s.Storage().Amount))/int(s.Storage().Capacity)), rd[s.Storage().Resource].Color)
+		for _, st := range s.Storage() {
+			panel.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[st.Resource].DisplayName, st.Amount, st.Capacity))
+			panel.AddBar(uint8((255*int(st.Amount))/int(st.Capacity)), rd[st.Resource].Color)
+		}
 	}
 }
 

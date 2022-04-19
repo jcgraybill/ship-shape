@@ -16,7 +16,7 @@ type Structure struct {
 	displayOpts *ebiten.DrawImageOptions
 	planet      *planet.Planet
 	data        StructureData
-	storage     Storage
+	storage     map[int]Storage
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {
@@ -27,10 +27,14 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	p.ReplaceWithStructure()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(p.Center())
 
-	s.storage = Storage{
-		Resource: s.data.Storage.Resource,
-		Capacity: s.data.Storage.Capacity,
-		Amount:   s.data.Storage.Amount,
+	s.storage = make(map[int]Storage)
+
+	for _, st := range s.data.Storage {
+		s.storage[st.Resource] = Storage{
+			Resource: st.Resource,
+			Capacity: st.Capacity,
+			Amount:   st.Amount,
+		}
 	}
 
 	s.displayOpts = &ebiten.DrawImageOptions{}
@@ -90,7 +94,7 @@ func (s *Structure) Planet() *planet.Planet {
 	return s.planet
 }
 
-func (s *Structure) Storage() Storage {
+func (s *Structure) Storage() map[int]Storage {
 	return s.storage
 }
 
@@ -104,4 +108,8 @@ func (s *Structure) Unhighlight() {
 
 func (s *Structure) IsHighlighted() bool {
 	return s.highlighted
+}
+
+func (s *Structure) Produces() int {
+	return s.data.Produces.Resource
 }

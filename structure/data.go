@@ -19,7 +19,8 @@ const (
 type StructureData struct {
 	DisplayName string
 	Produces    Production
-	Storage     Storage
+	Storage     []Storage
+	Consumes    int
 }
 
 type Production struct {
