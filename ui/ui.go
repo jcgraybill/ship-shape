@@ -37,8 +37,8 @@ func StarField(w, h int) *ebiten.Image {
 	return field
 }
 
-func Font() font.Face {
-	ttbytes, err := GameData(ttf)
+func Font(which string) font.Face {
+	ttbytes, err := GameData(which)
 	if err == nil {
 		tt, err := opentype.Parse(ttbytes)
 		if err == nil {

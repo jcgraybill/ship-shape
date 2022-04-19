@@ -16,12 +16,14 @@ const (
 	PanelWidth           = 160
 	PanelExternalPadding = 10
 
-	ttf      = "fonts/OpenSans_SemiCondensed-Regular.ttf"
-	fontSize = 13
-	DPI      = 72
+	TtfRegular = "fonts/OpenSans_SemiCondensed-Regular.ttf"
+	TtfBold    = "fonts/OpenSans_SemiCondensed-Bold.ttf"
+	fontSize   = 13
+	DPI        = 72
 
 	BaseProductionRate = 2
 	BidFrequency       = 60
+	ShipSpeed          = 3
 )
 
 var FocusedColor = color.RGBA{0xff, 0xff, 0xff, 0xff}

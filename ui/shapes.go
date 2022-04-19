@@ -156,6 +156,7 @@ func Line(x0, y0, x1, y1, width float32, clr color.RGBA) ([]ebiten.Vertex, []uin
 			ColorA: a,
 		},
 	}, []uint16{0, 1, 2, 1, 2, 3}
+
 }
 
 func Triangle(x, y, w, h float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {

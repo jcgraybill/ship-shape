@@ -85,8 +85,8 @@ func (p *Panel) LeftMouseButtonRelease(x, y int) bool {
 	return false
 }
 
-func (p *Panel) AddLabel(text string) {
-	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text))
+func (p *Panel) AddLabel(text string, style string) {
+	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, style))
 }
 
 func (p *Panel) AddButton(text string, callback func()) {

@@ -14,13 +14,13 @@ type Label struct {
 	opts  *ebiten.DrawImageOptions
 }
 
-func New(x, y, w, h int, message string) *Label {
+func New(x, y, w, h int, message string, style string) *Label {
 	l := Label{
 		x: x,
 		y: y,
 		w: w,
 	}
-	ttf := ui.Font()
+	ttf := ui.Font(style)
 	textBounds := text.BoundString(ttf, message)
 
 	// FIXME text.BoundString underestimates this typeface's height by a few pixels

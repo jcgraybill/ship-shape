@@ -21,11 +21,10 @@ type Game struct {
 	ttf           font.Face
 	planets       []*planet.Planet
 	structures    []*structure.Structure
+	ships         []*ship.Ship
 	panel         *panel.Panel
 	structureData [structure.StructureDataLength]structure.StructureData
 	resourceData  [resource.ResourceDataLength]resource.ResourceData
-
-	ship *ship.Ship
 }
 
 func init() {
@@ -51,16 +50,24 @@ func main() {
 	structures := make([]*structure.Structure, 1)
 	structures[0] = structure.New(sd[structure.Home], planets[2])
 
+	ships := make([]*ship.Ship, 6)
+	ships[0] = ship.New(planets[0], planets[1])
+	ships[1] = ship.New(planets[2], planets[0])
+	ships[2] = ship.New(planets[0], planets[3])
+	ships[3] = ship.New(planets[2], planets[1])
+	ships[4] = ship.New(planets[1], planets[3])
+	ships[5] = ship.New(planets[2], planets[3])
+
 	g := Game{
 		count:         0,
 		bg:            ui.StarField(ui.W, ui.H),
-		ttf:           ui.Font(),
+		ttf:           ui.Font(ui.TtfRegular),
 		planets:       planets,
 		panel:         panel,
 		structureData: sd,
 		resourceData:  rd,
 		structures:    structures,
-		ship:          ship.New(320, 240),
+		ships:         ships,
 	}
 
 	if err := ebiten.RunGame(&g); err != nil {

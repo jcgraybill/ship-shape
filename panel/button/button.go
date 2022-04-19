@@ -31,7 +31,7 @@ func New(x, y, w, h int, message string, action func()) *Button {
 		pressed: false,
 	}
 
-	ttf := ui.Font()
+	ttf := ui.Font(ui.TtfRegular)
 	textBounds := text.BoundString(ttf, message)
 	b.h = textBounds.Dy() + ui.Buffer*2 + ui.Border + 2
 

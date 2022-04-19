@@ -48,7 +48,7 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 
 func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, int, int, int, int) {
 	var x, y, w, h int
-	ttf := ui.Font()
+	ttf := ui.Font(ui.TtfRegular)
 	textBounds := text.BoundString(ttf, s.data.DisplayName)
 	contentWidth := textBounds.Dx()
 	if contentWidth < ui.PlanetSize {

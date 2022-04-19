@@ -47,7 +47,7 @@ func New(x, y int, resources map[int]uint8, resourceData [resource.ResourceDataL
 
 	p.displayOpts = &ebiten.DrawImageOptions{}
 	p.displayOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
-	p.ttf = ui.Font()
+	p.ttf = ui.Font(ui.TtfRegular)
 	return &p
 }
 
@@ -146,4 +146,13 @@ func (p *Planet) ReplaceWithStructure() {
 
 func (p *Planet) Resources() map[int]uint8 {
 	return p.resources
+}
+
+func (p *Planet) In(x, y int) bool {
+	if p.x-ui.PlanetSize/2 < x && p.x+ui.PlanetSize/2 > x {
+		if p.y-ui.PlanetSize/2 < y && p.y+ui.PlanetSize/2 > y {
+			return true
+		}
+	}
+	return false
 }
