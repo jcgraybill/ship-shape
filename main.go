@@ -21,7 +21,7 @@ type Game struct {
 	ttf           font.Face
 	planets       []*planet.Planet
 	structures    []*structure.Structure
-	ships         []*ship.Ship
+	ships         map[int]*ship.Ship
 	panel         *panel.Panel
 	structureData [structure.StructureDataLength]structure.StructureData
 	resourceData  [resource.ResourceDataLength]resource.ResourceData
@@ -38,11 +38,14 @@ func main() {
 
 	rd := resource.GetResourceData()
 
-	planets := make([]*planet.Planet, 4)
+	planets := make([]*planet.Planet, 6)
 	planets[0] = planet.New(100, 100, map[int]uint8{resource.Ice: 196}, rd)
 	planets[1] = planet.New(300, 300, map[int]uint8{resource.Habitability: 200}, rd)
 	planets[2] = planet.New(500, 140, map[int]uint8{resource.Ice: 128, resource.Habitability: 128, resource.Iron: 32}, rd)
 	planets[3] = planet.New(550, 250, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
+	planets[4] = planet.New(200, 400, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
+	planets[5] = planet.New(300, 60, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
+
 	panel := panel.New(ui.W, ui.H)
 
 	sd := structure.GetStructureData()
@@ -50,13 +53,7 @@ func main() {
 	structures := make([]*structure.Structure, 1)
 	structures[0] = structure.New(sd[structure.Home], planets[2])
 
-	ships := make([]*ship.Ship, 6)
-	ships[0] = ship.New(planets[0], planets[1])
-	ships[1] = ship.New(planets[2], planets[0])
-	ships[2] = ship.New(planets[0], planets[3])
-	ships[3] = ship.New(planets[2], planets[1])
-	ships[4] = ship.New(planets[1], planets[3])
-	ships[5] = ship.New(planets[2], planets[3])
+	ships := make(map[int]*ship.Ship)
 
 	g := Game{
 		count:         0,

@@ -1,13 +1,12 @@
 package ship
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/jcgraybill/ship-shape/planet"
+	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
@@ -29,22 +28,23 @@ type Ship struct {
 	plumeVisible       bool
 	opts               *ebiten.DrawImageOptions
 
-	origin      *planet.Planet
-	destination *planet.Planet
+	origin      *structure.Structure
+	destination *structure.Structure
 	course      *ebiten.Image
 	courseOpts  *ebiten.DrawImageOptions
 	cargo       int
 }
 
-func New(origin, destination *planet.Planet) *Ship {
+func New(origin, destination *structure.Structure) *Ship {
 	s := Ship{
 		origin:       origin,
 		destination:  destination,
 		plumeVisible: true,
+		cargo:        -1,
 	}
 
-	x0, y0 := origin.Center()
-	x1, y1 := destination.Center()
+	x0, y0 := origin.Planet().Center()
+	x1, y1 := destination.Planet().Center()
 	s.x = float64(x0)
 	s.y = float64(y0)
 
@@ -65,15 +65,21 @@ func New(origin, destination *planet.Planet) *Ship {
 	if x0 > x1 {
 		w = x0 - x1
 		s.baseX = float64(x1)
-	} else {
+	} else if x1 > x0 {
 		w = x1 - x0
+		s.baseX = float64(x0)
+	} else {
+		w = ui.Border
 		s.baseX = float64(x0)
 	}
 	if y0 > y1 {
 		h = y0 - y1
 		s.baseY = float64(y1)
-	} else {
+	} else if y1 > y0 {
 		h = y1 - y0
+		s.baseY = float64(y0)
+	} else {
+		h = ui.Border
 		s.baseY = float64(y0)
 	}
 	s.course = ebiten.NewImage(w, h)
@@ -103,7 +109,7 @@ func (s *Ship) Draw(image *ebiten.Image) {
 	}
 }
 
-func (s *Ship) Update(count int) {
+func (s *Ship) Update(count int) bool {
 	if count%plumeCycleTime == 0 {
 		if rand.Intn(plumeFrequency) == 0 {
 			s.plumeVisible = false
@@ -112,8 +118,8 @@ func (s *Ship) Update(count int) {
 		}
 	}
 
-	if s.destination.In(int(s.x), int(s.y)) {
-		fmt.Println("arrived")
+	if s.destination.Planet().In(int(s.x), int(s.y)) {
+		return true
 	} else {
 		if count%ui.ShipSpeed == 0 {
 			s.x += s.dx
@@ -122,12 +128,13 @@ func (s *Ship) Update(count int) {
 			s.updateCourseLine()
 		}
 	}
+	return false
 }
 
 func (s *Ship) updateCourseLine() {
 	s.course.Clear()
-	x0, y0 := s.origin.Center()
-	x1, y1 := s.destination.Center()
+	x0, y0 := s.origin.Planet().Center()
+	x1, y1 := s.destination.Planet().Center()
 	v, i := ui.Line(float32(s.x)-float32(s.baseX), float32(s.y)-float32(s.baseY), float32(x1)-float32(s.baseX), float32(y1)-float32(s.baseY), ui.Border, ui.FocusedColor)
 	s.course.DrawTriangles(v, i, ui.Src, nil)
 	v, i = ui.Line(float32(x0)-float32(s.baseX), float32(y0)-float32(s.baseY), float32(s.x)-float32(s.baseX), float32(s.y)-float32(s.baseY), ui.Border, ui.NonFocusColor)
@@ -146,4 +153,12 @@ func (s *Ship) MouseButton(x, y int) bool {
 		}
 	}
 	return false
+}
+
+func (s *Ship) LoadCargo(resource int) {
+	s.cargo = resource
+}
+
+func (s *Ship) Manifest() (int, *structure.Structure, *structure.Structure) {
+	return s.cargo, s.origin, s.destination
 }

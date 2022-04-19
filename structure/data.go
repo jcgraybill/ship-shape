@@ -21,6 +21,7 @@ type StructureData struct {
 	Produces    Production
 	Storage     []Storage
 	Consumes    int
+	Berths      int
 }
 
 type Production struct {

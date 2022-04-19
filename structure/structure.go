@@ -18,6 +18,8 @@ type Structure struct {
 	planet           *planet.Planet
 	data             StructureData
 	storage          map[int]Storage
+	berths, ships    int
+	awaiting         int
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {
@@ -29,7 +31,7 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	px, py := p.Center()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, ui.NonFocusColor)
 	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, ui.FocusedColor)
-
+	s.berths, s.ships = s.data.Berths, s.data.Berths
 	s.storage = make(map[int]Storage)
 
 	for _, st := range s.data.Storage {
@@ -119,4 +121,11 @@ func (s *Structure) IsHighlighted() bool {
 
 func (s *Structure) Produces() int {
 	return s.data.Produces.Resource
+}
+
+func (s *Structure) HasShips() bool {
+	if s.ships > 0 {
+		return true
+	}
+	return false
 }
