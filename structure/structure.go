@@ -19,7 +19,6 @@ type Structure struct {
 	data             StructureData
 	storage          map[int]Storage
 	berths, ships    int
-	awaiting         int
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {

@@ -9,7 +9,7 @@
 		"Consumes": 3
 	 }, 
 	{ "DisplayName": "ice melter", 
-		"Produces": { "Resource": 3, "Rate": 32, "Requires": 1 }, 
+		"Produces": { "Resource": 3, "Rate": 128, "Requires": 1 }, 
 		"Storage": [{ "Resource": 3, "Capacity": 8 }],
 		"Berths": 2
 	}

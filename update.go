@@ -28,7 +28,6 @@ func (g *Game) Update() error {
 				returnShip := ship.New(destination, origin)
 				g.ships[key] = returnShip
 			} else {
-				origin.UnAwait()
 				destination.ReturnShip()
 				delete(g.ships, key)
 			}
