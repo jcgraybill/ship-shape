@@ -1,8 +1,6 @@
 package divider
 
 import (
-	"image/color"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/ui"
 )
@@ -24,7 +22,7 @@ func New(x, y, w int) *Divider {
 	}
 
 	d.image = ebiten.NewImage(d.w, d.h)
-	d.image.Fill(color.White)
+	d.image.Fill(ui.FocusedColor)
 
 	d.opts = &ebiten.DrawImageOptions{}
 	d.opts.GeoM.Translate(float64(d.x), float64(d.y))

@@ -7,7 +7,8 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-const shipSize = 16
+const shipW = 16
+const shipH = 10
 
 type Ship struct {
 	x, y  int
@@ -21,9 +22,9 @@ func New(x, y int) *Ship {
 		y: y,
 	}
 
-	s.image = ebiten.NewImage(shipSize, shipSize)
+	s.image = ebiten.NewImage(shipW, shipH)
 	s.image.Fill(color.Black)
-	v, i := ui.Triangle(0, 0, shipSize, shipSize, color.RGBA{0xcc, 0xcc, 0xcc, 0xff})
+	v, i := ui.Triangle(0, 0, shipW, shipH, color.RGBA{0xcc, 0xcc, 0xcc, 0xff})
 	s.image.DrawTriangles(v, i, ui.Src, nil)
 
 	s.opts = &ebiten.DrawImageOptions{}
@@ -38,8 +39,8 @@ func (s *Ship) Draw(image *ebiten.Image) {
 }
 
 func (s *Ship) MouseButton(x, y int) bool {
-	if s.x < x && s.x+shipSize > x {
-		if s.y < y && s.y+shipSize > y {
+	if s.x < x && s.x+shipW > x {
+		if s.y < y && s.y+shipH > y {
 			return true
 		}
 	}

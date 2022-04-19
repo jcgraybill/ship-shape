@@ -1,5 +1,7 @@
 package ui
 
+import "image/color"
+
 const (
 	starriness = 3000
 	PlanetSize = 32
@@ -21,3 +23,7 @@ const (
 	BaseProductionRate = 2
 	BidFrequency       = 60
 )
+
+var FocusedColor = color.RGBA{0xff, 0xff, 0xff, 0xff}
+var NonFocusColor = color.RGBA{0x7f, 0x7f, 0x7f, 0xff}
+var BackgroundColor = color.RGBA{0x00, 0x00, 0x00, 0xff}

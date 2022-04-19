@@ -7,8 +7,6 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-var neutralColor = color.RGBA{R: 0x7d, G: 0x7d, B: 0x7d, A: 0xff}
-
 type Bar struct {
 	x, y  int
 	w, h  int
@@ -30,7 +28,7 @@ func New(x, y, w int, value uint8, barColor color.RGBA) *Bar {
 	}
 
 	b.image = ebiten.NewImage(b.w, b.h)
-	b.image.Fill(neutralColor)
+	b.image.Fill(ui.NonFocusColor)
 
 	barWidth := (int(b.value) * b.w) / 255
 	if barWidth > 0 {

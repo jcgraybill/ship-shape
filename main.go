@@ -42,8 +42,8 @@ func main() {
 	planets := make([]*planet.Planet, 4)
 	planets[0] = planet.New(100, 100, map[int]uint8{resource.Ice: 196}, rd)
 	planets[1] = planet.New(300, 300, map[int]uint8{resource.Habitability: 200}, rd)
-	planets[2] = planet.New(500, 140, map[int]uint8{resource.Ice: 64, resource.Iron: 196}, rd)
-	planets[3] = planet.New(550, 250, map[int]uint8{resource.Habitability: 50, resource.Iron: 60}, rd)
+	planets[2] = planet.New(500, 140, map[int]uint8{resource.Ice: 128, resource.Habitability: 128, resource.Iron: 32}, rd)
+	planets[3] = planet.New(550, 250, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
 	panel := panel.New(ui.W, ui.H)
 
 	sd := structure.GetStructureData()

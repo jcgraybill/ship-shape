@@ -52,6 +52,7 @@ func New(x, y int, resources map[int]uint8, resourceData [resource.ResourceDataL
 }
 
 func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image) {
+	base := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 	highlighted := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 
@@ -74,13 +75,17 @@ func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image) {
 	planetColor.A = 0xff
 
 	v, i := ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, planetColor)
-	image.DrawTriangles(v, i, ui.Src, nil)
+	base.DrawTriangles(v, i, ui.Src, nil)
 
 	radius = radius + ui.Border
 
-	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, color.RGBA{0xff, 0xff, 0xff, 0xff})
+	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, ui.NonFocusColor)
+	image.DrawTriangles(v, i, ui.Src, nil)
+	image.DrawImage(base, nil)
+
+	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, ui.FocusedColor)
 	highlighted.DrawTriangles(v, i, ui.Src, nil)
-	highlighted.DrawImage(image, nil)
+	highlighted.DrawImage(base, nil)
 
 	return image, highlighted
 }
@@ -130,7 +135,7 @@ func (p *Planet) Draw(image *ebiten.Image) {
 		image.DrawImage(p.Image(), p.displayOpts)
 		cx, cy := p.Center()
 		textBounds := text.BoundString(p.ttf, p.Name())
-		text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, color.White)
+		text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, ui.FocusedColor)
 	}
 }
 

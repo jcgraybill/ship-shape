@@ -1,8 +1,6 @@
 package label
 
 import (
-	"image/color"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/jcgraybill/ship-shape/ui"
@@ -29,9 +27,9 @@ func New(x, y, w, h int, message string) *Label {
 	l.h = textBounds.Dy() + int(ttf.Metrics().Descent/ui.DPI)
 
 	image := ebiten.NewImage(l.w, l.h)
-	image.Fill(color.Black)
+	image.Fill(ui.BackgroundColor)
 
-	text.Draw(image, message, ttf, 0, int(ttf.Metrics().Ascent/ui.DPI), color.White)
+	text.Draw(image, message, ttf, 0, int(ttf.Metrics().Ascent/ui.DPI), ui.FocusedColor)
 	l.image = image
 
 	l.opts = &ebiten.DrawImageOptions{}

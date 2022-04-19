@@ -27,8 +27,8 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	s.highlighted = false
 	p.ReplaceWithStructure()
 	px, py := p.Center()
-	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, color.RGBA{128, 128, 128, 255})
-	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, color.White)
+	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, ui.NonFocusColor)
+	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, ui.FocusedColor)
 
 	s.storage = make(map[int]Storage)
 
@@ -58,7 +58,7 @@ func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor colo
 	image.Fill(uiColor)
 
 	interior := ebiten.NewImage(ui.Buffer+contentWidth+ui.Buffer, ui.Buffer+textBounds.Dy()+ui.Buffer+ui.PlanetSize+ui.Buffer)
-	interior.Fill(color.Black)
+	interior.Fill(ui.BackgroundColor)
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
 	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
