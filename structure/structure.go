@@ -11,6 +11,7 @@ import (
 
 type Structure struct {
 	x, y, w, h  int
+	highlighted bool
 	image       *ebiten.Image
 	displayOpts *ebiten.DrawImageOptions
 	planet      *planet.Planet
@@ -22,6 +23,7 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 	var s Structure
 	s.data = sd
 	s.planet = p
+	s.highlighted = false
 	p.ReplaceWithStructure()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(p.Center())
 
@@ -90,4 +92,16 @@ func (s *Structure) Planet() *planet.Planet {
 
 func (s *Structure) Storage() Storage {
 	return s.storage
+}
+
+func (s *Structure) Highlight() {
+	s.highlighted = true
+}
+
+func (s *Structure) Unhighlight() {
+	s.highlighted = false
+}
+
+func (s *Structure) IsHighlighted() bool {
+	return s.highlighted
 }

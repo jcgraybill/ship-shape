@@ -17,8 +17,7 @@ func (g *Game) Update() error {
 	handleInputEvents(g)
 
 	for _, structure := range g.structures {
-		if structure.Update(g.count) {
-			// TODO only do this if it's the currently visible structure
+		if structure.Update(g.count) && structure.IsHighlighted() {
 			g.panel.Clear()
 			showStructurePanel(g, structure)
 		}
@@ -45,7 +44,10 @@ func handleInputEvents(g *Game) {
 
 			for _, structure := range g.structures {
 				if structure.MouseButton(ebiten.CursorPosition()) {
+					structure.Highlight()
 					showStructurePanel(g, structure)
+				} else {
+					structure.Unhighlight()
 				}
 			}
 
@@ -60,6 +62,7 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 		g.panel.Clear()
 		structure := structure.New(g.structureData[structureType], p)
 		showStructurePanel(g, structure)
+		structure.Highlight()
 		g.structures = append(g.structures, structure)
 	}
 }
