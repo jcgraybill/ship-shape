@@ -24,9 +24,9 @@ const (
 	fontSize   = 13
 	DPI        = 72
 
-	BaseProductionRate = 8
-	BidFrequency       = 60
-	ShipSpeed          = 3
+	BaseProductionRate = 4  // smaller numbers are faster
+	BidFrequency       = 60 // smaller numbers are more frequent
+	ShipSpeed          = 2  // smaller numbers are faster
 )
 
 var FocusedColor = color.RGBA{0xff, 0xff, 0xff, 0xff}

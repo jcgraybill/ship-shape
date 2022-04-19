@@ -4,7 +4,7 @@
 	{ "DisplayName": "outpost", 
 		"Produces": { "Resource": 4, "Rate": 8, "Requires": 0 }, 
 		"Storage": [{ "Resource": 4, "Capacity": 4 },
-					{ "Resource": 3, "Capacity": 32 }
+					{ "Resource": 3, "Capacity": 16 }
 					 ] ,
 		"Consumes": 3
 	 }, 
