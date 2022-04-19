@@ -8,8 +8,10 @@ Built in [golang](https://go.dev/) using the [ebiten](https://ebiten.org/) 2D ga
 * You make progress even when you lose.
 * There isn't a combat mechanic.
 * The player's direct control is limited: most of what happens is autonomous decisions by game entities.
-* There's a deep tech tree. The supply chain is the tech tree. Distance matters
+* There's a deep tech tree. The supply chain is the tech tree. Distance matters.
 * The user interface is shallow: everything shows what it's doing and uses cultural referents.
+
+![screenshot](https://github.com/jcgraybill/ship-shape/blob/main/screenshot.png)
 
 # Running it
 
