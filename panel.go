@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 
 	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/planet"
@@ -10,12 +11,23 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-// TODO Affix this to the top of the panel, update it automatically every tick
-// Show objective & timer counting down the current day
-func showPlayerPanel(panel *panel.Panel, money, pop, maxPop, workersNeeded int) {
-	panel.AddInvertedLabel(fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
-	panel.AddLabel(fmt.Sprintf("bank: $%d", money), ui.TtfRegular)
-	panel.AddDivider()
+func showPlayerPanel(g *Game) int {
+	g.panel.AddInvertedLabel(fmt.Sprintf("population: %d/%d (need %d)", g.pop, g.maxPop, g.workersNeeded), ui.TtfRegular)
+	g.panel.AddLabel(fmt.Sprintf("bank: $%d", g.money), ui.TtfRegular)
+	g.panel.AddLabel("current day:", ui.TtfRegular)
+	g.panel.AddBar(0, color.RGBA{0x00, 0x00, 0x00, 0xff})
+	g.panel.AddDivider()
+	return 5
+}
+
+func updatePlayerPanel(g *Game) {
+	g.panel.UpdateLabel(0, fmt.Sprintf("population: %d/%d (need %d)", g.pop, g.maxPop, g.workersNeeded))
+	g.panel.UpdateLabel(1, fmt.Sprintf("bank: $%d", g.money))
+	var day float32
+	day = float32(g.count % ui.DayLength)
+	day = day / float32(ui.DayLength)
+	day = day * 255
+	g.panel.UpdateBar(3, uint8(day))
 }
 
 func showPlanetPanel(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {

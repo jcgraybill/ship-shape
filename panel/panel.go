@@ -15,13 +15,13 @@ import (
 type Panel struct {
 	x, y           int
 	w, h           int
+	locked         int
 	background     *ebiten.Image
 	displayOptions *ebiten.DrawImageOptions
 
 	interior               *ebiten.Image
 	interiorDisplayOptions *ebiten.DrawImageOptions
-
-	elements []widget
+	elements               []widget
 }
 
 type widget interface {
@@ -29,6 +29,11 @@ type widget interface {
 	LeftMouseButtonRelease(int, int) bool
 	Draw() (*ebiten.Image, *ebiten.DrawImageOptions)
 	Height() int
+	UpdateText(string)
+	UpdateValue(uint8)
+}
+
+type updateableLabel interface {
 }
 
 func New(w, h int) *Panel {
@@ -116,7 +121,7 @@ func (p *Panel) firstAvailableSpot() int {
 }
 
 func (p *Panel) Clear() {
-	p.elements = nil
+	p.elements = p.elements[:p.locked]
 }
 
 func (p *Panel) Resize(w, h int) {
@@ -128,4 +133,22 @@ func (p *Panel) Resize(w, h int) {
 	p.background = ebiten.NewImage(p.w, p.h)
 	p.background.Fill(ui.FocusedColor)
 	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
+}
+
+func (p *Panel) Lock(n int) {
+	if len(p.elements) >= n {
+		p.locked = n
+	}
+}
+
+func (p *Panel) UpdateLabel(n int, newText string) {
+	if n <= p.locked {
+		p.elements[n].UpdateText(newText)
+	}
+}
+
+func (p *Panel) UpdateBar(n int, newValue uint8) {
+	if n <= p.locked {
+		p.elements[n].UpdateValue(newValue)
+	}
 }

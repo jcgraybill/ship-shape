@@ -106,3 +106,6 @@ func (b *Button) playSound() {
 	b.audio.Rewind()
 	b.audio.Play()
 }
+
+func (b *Button) UpdateValue(uint8) { return }
+func (b *Button) UpdateText(string) { return }

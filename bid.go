@@ -59,8 +59,6 @@ func structuresBidForResources(g *Game) {
 					g.ships[g.count] = ship
 					if structure.IsHighlighted() {
 						g.panel.Clear()
-						showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
-
 						showStructurePanel(g, structure)
 					}
 					break // prevents another structure from accepting the same bid

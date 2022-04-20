@@ -18,7 +18,6 @@ func handleMouseClicks(g *Game) {
 			cx -= g.offsetX
 			cy -= g.offsetY
 			g.panel.Clear()
-			showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 
 			clickedObject := false
 			for _, planet := range g.planets {
@@ -47,22 +46,6 @@ func handleMouseClicks(g *Game) {
 				}
 			}
 
-			for _, ship := range g.ships {
-				if ship.MouseButton(cx, cy) {
-					clickedObject = true
-					g.panel.Clear()
-					showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
-					g.panel.AddLabel("ship", ui.TtfBold)
-					cargo, origin, destination := ship.Manifest()
-					if cargo > 0 {
-						g.panel.AddLabel(fmt.Sprintf("carrying %s\nfrom %s\nat %s\nto %s\nat %s", g.resourceData[cargo].DisplayName, origin.Name(), origin.Planet().Name(), destination.Name(), destination.Planet().Name()), ui.TtfRegular)
-					} else {
-						g.panel.AddLabel(fmt.Sprintf("returning to %s", destination.Planet().Name()), ui.TtfRegular)
-					}
-				}
-			}
-
-			//TODO: click-drag should not cause a selected structure/planet to lose focus
 			if !clickedObject {
 				g.dragging = true
 				g.mouseDragX, g.mouseDragY = ebiten.CursorPosition()
@@ -110,7 +93,6 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 		structure := structure.New(g.structureData[structureType], p)
 		g.structures = append(g.structures, structure)
 		updatePopulation(g)
-		showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 		showStructurePanel(g, structure)
 		structure.Highlight()
 	}

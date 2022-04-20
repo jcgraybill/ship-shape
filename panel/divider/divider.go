@@ -44,3 +44,6 @@ func (d *Divider) Draw() (*ebiten.Image, *ebiten.DrawImageOptions) {
 func (d *Divider) Height() int {
 	return d.h
 }
+
+func (d *Divider) UpdateValue(uint8) { return }
+func (d *Divider) UpdateText(string) { return }

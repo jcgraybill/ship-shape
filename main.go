@@ -62,7 +62,7 @@ func main() {
 	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
 	ebiten.SetWindowTitle("ship shape")
 	ebiten.SetWindowResizable(true)
-	showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
+	g.panel.Lock(showPlayerPanel(&g))
 
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)

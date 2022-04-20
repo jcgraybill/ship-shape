@@ -8,7 +8,7 @@ import (
 
 func (g *Game) Update() error {
 	g.count++
-
+	updatePlayerPanel(g)
 	handleMouseClicks(g)
 	handleKeyPresses(g)
 
@@ -70,7 +70,6 @@ func structuresProduce(g *Game) {
 		if structure.Produce(g.count) && structure.IsHighlighted() {
 			g.panel.Clear()
 			updatePopulation(g)
-			showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 			showStructurePanel(g, structure)
 		}
 	}
@@ -84,7 +83,6 @@ func shipsArrive(g *Game) {
 				destination.ReceiveCargo(cargo)
 				if destination.IsHighlighted() {
 					g.panel.Clear()
-					showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 					showStructurePanel(g, destination)
 				}
 				returnShip := ship.New(destination, origin)
