@@ -49,7 +49,7 @@ func bidForResources(g *Game) {
 			if topBidValue > 0 {
 
 				ship := ship.New(structure, bids[topBid].Structure)
-				ship.LoadCargo(bids[topBid].Resource)
+				ship.LoadCargo(bids[topBid].Resource, g.resourceData[bids[topBid].Resource].Color)
 				structure.LaunchShip(bids[topBid].Resource)
 				g.ships[g.count] = ship
 				if structure.IsHighlighted() {

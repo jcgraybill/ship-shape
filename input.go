@@ -9,8 +9,6 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-// TODO Click & drag or arrow keys to move screen
-
 func handleInputEvents(g *Game) {
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {

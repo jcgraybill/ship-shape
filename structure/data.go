@@ -39,7 +39,6 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-// FIXME without this comment, StructureDataLength is a compiler error (?)
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)
