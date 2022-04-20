@@ -42,7 +42,6 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-//FIXME - occasional compiler error with this syntax
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)

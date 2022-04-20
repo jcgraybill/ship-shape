@@ -151,3 +151,10 @@ func (s *Structure) LaborCost() int {
 func (s *Structure) WorkerCost() int {
 	return s.data.WorkerCost
 }
+
+func (s *Structure) CanProduce() bool {
+	if s.Storage()[s.data.Produces.Resource].Amount < s.Storage()[s.data.Produces.Resource].Capacity {
+		return true
+	}
+	return false
+}

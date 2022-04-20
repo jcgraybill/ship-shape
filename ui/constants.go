@@ -6,10 +6,10 @@ const (
 	starriness     = 3000
 	PlanetSize     = 32
 	PlanetDistance = 8 // lower numbers are denser
-	StartingMoney  = 100
+	StartingMoney  = 500
 
-	W = 1920
-	H = 1080
+	W = 1600
+	H = 900
 
 	WindowW           = 800
 	WindowH           = 600
