@@ -8,15 +8,22 @@ func (s *Structure) Produce(count int) bool {
 	if s.data.Produces.Rate > 0 {
 		if s.storage[s.data.Produces.Resource].Resource == s.data.Produces.Resource && s.storage[s.data.Produces.Resource].Amount < s.storage[s.data.Produces.Resource].Capacity {
 			if s.Planet().Resources()[s.data.Produces.Requires] > 0 {
-				//TODO confirm this
-				productionRate := 255 - (int(s.data.Produces.Rate) * (int(s.Planet().Resources()[s.data.Produces.Requires]) / 255))
-				if count%(productionRate*ui.BaseProductionRate) == 0 {
-					s.storage[s.data.Produces.Resource] = Storage{
-						Resource: s.data.Produces.Resource,
-						Capacity: s.storage[s.data.Produces.Resource].Capacity,
-						Amount:   s.storage[s.data.Produces.Resource].Amount + 1,
+				var productionRate float32
+				productionRate = float32(s.data.Produces.Rate)
+				productionRate *= float32(s.Planet().Resources()[s.data.Produces.Requires]) / 255
+				if s.WorkersNeeded() > 0 {
+					productionRate *= float32(s.Workers()) / float32(s.WorkersNeeded())
+				}
+				if productionRate > 0 {
+					productionRate = 255 - productionRate
+					if count%(int(productionRate)*ui.BaseProductionRate) == 0 {
+						s.storage[s.data.Produces.Resource] = Storage{
+							Resource: s.data.Produces.Resource,
+							Capacity: s.storage[s.data.Produces.Resource].Capacity,
+							Amount:   s.storage[s.data.Produces.Resource].Amount + 1,
+						}
+						return true
 					}
-					return true
 				}
 			}
 		}

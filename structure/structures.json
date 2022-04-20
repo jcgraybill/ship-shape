@@ -11,6 +11,7 @@
 	{ "DisplayName": "ice harvester", 
 		"Produces": { "Resource": 3, "Rate": 128, "Requires": 1 }, 
 		"Storage": [{ "Resource": 3, "Capacity": 8 }],
-		"Berths": 2
+		"Berths": 2,
+		"Workers": 6
 	}
 ]

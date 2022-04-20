@@ -30,6 +30,7 @@ type Game struct {
 	offsetX, offsetY, windowW, windowH int
 	mouseDragX, mouseDragY             int
 	dragging                           bool
+	pop, maxPop, workersNeeded         int
 }
 
 func init() {
@@ -77,6 +78,8 @@ func main() {
 		windowW:       ui.WindowW,
 		windowH:       ui.WindowH,
 	}
+
+	showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
 
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)

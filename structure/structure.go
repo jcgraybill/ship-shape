@@ -19,15 +19,20 @@ type Structure struct {
 	data             StructureData
 	storage          map[int]Storage
 	berths, ships    int
+	workers          int
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {
-	var s Structure
-	s.data = sd
-	s.planet = p
-	s.highlighted = false
-	p.ReplaceWithStructure()
-	px, py := p.Center()
+	s := Structure{
+		data:        sd,
+		planet:      p,
+		highlighted: false,
+		workers:     0,
+		displayOpts: &ebiten.DrawImageOptions{},
+	}
+
+	s.planet.ReplaceWithStructure()
+	px, py := s.planet.Center()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, ui.NonFocusColor)
 	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, ui.FocusedColor)
 	s.berths, s.ships = s.data.Berths, s.data.Berths
@@ -41,7 +46,6 @@ func New(sd StructureData, p *planet.Planet) *Structure {
 		}
 	}
 
-	s.displayOpts = &ebiten.DrawImageOptions{}
 	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
 
 	return &s
@@ -127,4 +131,15 @@ func (s *Structure) HasShips() bool {
 		return true
 	}
 	return false
+}
+
+func (s *Structure) Workers() int {
+	return s.workers
+}
+func (s *Structure) WorkersNeeded() int {
+	return s.data.Workers
+}
+
+func (s *Structure) AssignWorkers(workers int) {
+	s.workers = workers
 }

@@ -5,11 +5,12 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/jcgraybill/ship-shape/planet"
 	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-func handleInputEvents(g *Game) {
+func handleMouseClicks(g *Game) {
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		if !g.panel.LeftMouseButtonPress(ebiten.CursorPosition()) {
@@ -17,13 +18,14 @@ func handleInputEvents(g *Game) {
 			cx -= g.offsetX
 			cy -= g.offsetY
 			g.panel.Clear()
+			showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
 
 			clickedObject := false
 			for _, planet := range g.planets {
 				if planet.MouseButton(cx, cy) {
 					clickedObject = true
 					planet.Highlight()
-					showPlanet(g.panel, planet, g.resourceData)
+					showPlanetPanel(g.panel, planet, g.resourceData)
 					g.panel.AddButton("build "+g.structureData[structure.Water].DisplayName, generateConstructionCallback(g, planet, structure.Water))
 					g.panel.AddButton("build "+g.structureData[structure.Outpost].DisplayName, generateConstructionCallback(g, planet, structure.Outpost))
 				} else {
@@ -45,6 +47,7 @@ func handleInputEvents(g *Game) {
 				if ship.MouseButton(cx, cy) {
 					clickedObject = true
 					g.panel.Clear()
+					showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
 					g.panel.AddLabel("ship", ui.TtfBold)
 					cargo, origin, destination := ship.Manifest()
 					if cargo > 0 {
@@ -55,6 +58,7 @@ func handleInputEvents(g *Game) {
 				}
 			}
 
+			//TODO: click-drag should not cause a selected structure/planet to lose focus
 			if !clickedObject {
 				g.dragging = true
 				g.mouseDragX, g.mouseDragY = ebiten.CursorPosition()
@@ -93,22 +97,16 @@ func handleInputEvents(g *Game) {
 		g.opts.GeoM.Translate(float64(xMovement), float64(yMovement))
 
 	}
+}
 
-	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) && -1*g.offsetX+g.windowW < ui.W {
-		g.opts.GeoM.Translate(-ui.ArrowKeyMoveSpeed, 0)
-		g.offsetX -= ui.ArrowKeyMoveSpeed
+func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) func() {
+	return func() {
+		g.panel.Clear()
+		structure := structure.New(g.structureData[structureType], p)
+		g.structures = append(g.structures, structure)
+		updatePopulation(g)
+		showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+		showStructurePanel(g, structure)
+		structure.Highlight()
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) && g.offsetX < 0 {
-		g.opts.GeoM.Translate(ui.ArrowKeyMoveSpeed, 0)
-		g.offsetX += ui.ArrowKeyMoveSpeed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowUp) && g.offsetY < 0 {
-		g.opts.GeoM.Translate(0, ui.ArrowKeyMoveSpeed)
-		g.offsetY += ui.ArrowKeyMoveSpeed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) && -1*g.offsetY+g.windowH < ui.H {
-		g.opts.GeoM.Translate(0, -ui.ArrowKeyMoveSpeed)
-		g.offsetY -= ui.ArrowKeyMoveSpeed
-	}
-
 }

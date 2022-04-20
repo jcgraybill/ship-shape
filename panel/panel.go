@@ -7,6 +7,7 @@ import (
 	"github.com/jcgraybill/ship-shape/panel/bar"
 	"github.com/jcgraybill/ship-shape/panel/button"
 	"github.com/jcgraybill/ship-shape/panel/divider"
+	"github.com/jcgraybill/ship-shape/panel/invertedLabel"
 	"github.com/jcgraybill/ship-shape/panel/label"
 	"github.com/jcgraybill/ship-shape/ui"
 )
@@ -83,6 +84,10 @@ func (p *Panel) LeftMouseButtonRelease(x, y int) bool {
 		widget.LeftMouseButtonRelease(-1, -1)
 	}
 	return false
+}
+
+func (p *Panel) AddInvertedLabel(text string, style string) {
+	p.elements = append(p.elements, invertedLabel.New(0, p.firstAvailableSpot(), p.w, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, style))
 }
 
 func (p *Panel) AddLabel(text string, style string) {

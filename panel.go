@@ -10,7 +10,11 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-func showPlanet(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
+func showPopulationPanel(panel *panel.Panel, pop, maxPop, workersNeeded int) {
+	panel.AddInvertedLabel(fmt.Sprintf("Population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
+}
+
+func showPlanetPanel(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
 	panel.AddLabel(fmt.Sprintf("planet: %s", p.Name()), ui.TtfBold)
 	for resource, level := range p.Resources() {
 		panel.AddLabel(rd[resource].DisplayName, ui.TtfRegular)
@@ -20,7 +24,9 @@ func showPlanet(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataL
 
 func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
 	panel.AddLabel(s.Name(), ui.TtfBold)
-
+	if s.WorkersNeeded() > 0 {
+		panel.AddLabel(fmt.Sprintf("%d/%d workers", s.Workers(), s.WorkersNeeded()), ui.TtfRegular)
+	}
 	if len(s.Storage()) > 0 {
 		panel.AddDivider()
 		panel.AddLabel("storage:", ui.TtfRegular)
@@ -34,6 +40,6 @@ func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.Reso
 func showStructurePanel(g *Game, structure *structure.Structure) {
 	showStructure(g.panel, structure, g.resourceData)
 	g.panel.AddDivider()
-	showPlanet(g.panel, structure.Planet(), g.resourceData)
+	showPlanetPanel(g.panel, structure.Planet(), g.resourceData)
 	g.panel.AddDivider()
 }
