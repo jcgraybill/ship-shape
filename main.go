@@ -31,6 +31,7 @@ type Game struct {
 	mouseDragX, mouseDragY             int
 	dragging                           bool
 	pop, maxPop, workersNeeded         int
+	money                              int
 }
 
 func init() {
@@ -39,47 +40,29 @@ func init() {
 }
 
 func main() {
-	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
-	ebiten.SetWindowTitle("ship shape")
-	ebiten.SetWindowResizable(true)
-
-	rd := resource.GetResourceData()
-
-	planets := make([]*planet.Planet, 6)
-	planets[0] = planet.New(100, 100, map[int]uint8{resource.Ice: 255}, rd)
-	planets[1] = planet.New(300, 300, map[int]uint8{resource.Habitability: 200}, rd)
-	planets[2] = planet.New(500, 140, map[int]uint8{resource.Ice: 128, resource.Habitability: 128, resource.Iron: 32}, rd)
-	planets[3] = planet.New(550, 250, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
-	planets[4] = planet.New(200, 400, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
-	planets[5] = planet.New(300, 60, map[int]uint8{resource.Habitability: 60, resource.Ice: 196}, rd)
-
-	panel := panel.New(ui.WindowW, ui.WindowH)
-
-	sd := structure.GetStructureData()
-
-	structures := make([]*structure.Structure, 1)
-	structures[0] = structure.New(sd[structure.Home], planets[2])
-
-	ships := make(map[int]*ship.Ship)
 
 	g := Game{
 		count:         0,
 		bg:            ui.StarField(ui.W, ui.H),
 		universe:      ebiten.NewImage(ui.W, ui.H),
 		opts:          &ebiten.DrawImageOptions{},
-		planets:       planets,
-		panel:         panel,
-		structureData: sd,
-		resourceData:  rd,
-		structures:    structures,
-		ships:         ships,
+		planets:       generatePlanets(ui.W, ui.H),
+		panel:         panel.New(ui.WindowW, ui.WindowH),
+		structureData: structure.GetStructureData(),
+		resourceData:  resource.GetResourceData(),
+		structures:    make([]*structure.Structure, 0),
+		ships:         make(map[int]*ship.Ship),
 		offsetX:       0,
 		offsetY:       0,
 		windowW:       ui.WindowW,
 		windowH:       ui.WindowH,
+		money:         ui.StartingMoney,
 	}
 
-	showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
+	ebiten.SetWindowTitle("ship shape")
+	ebiten.SetWindowResizable(true)
+	showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)
@@ -97,4 +80,23 @@ func (g *Game) Layout(w, h int) (int, int) {
 	g.windowW = w
 	g.windowH = h
 	return w, h
+}
+
+// TODO avoid placing planets underneath the panel
+
+func generatePlanets(w, h int) []*planet.Planet {
+	cellsize := ui.PlanetSize * ui.PlanetDistance
+	planets := make([]*planet.Planet, 0)
+	rd := resource.GetResourceData()
+
+	for i := 0; i < h/cellsize; i++ {
+		for j := 0; j < w/cellsize; j++ {
+			x := j*cellsize + rand.Intn(cellsize-ui.PlanetSize*2) + ui.PlanetSize
+			y := i*cellsize + rand.Intn(cellsize-ui.PlanetSize*2) + ui.PlanetSize
+			ice := uint8(rand.Intn(255))
+			habitability := uint8(rand.Intn(255))
+			planets = append(planets, planet.New(x, y, map[int]uint8{resource.Ice: ice, resource.Habitability: habitability}, rd))
+		}
+	}
+	return planets
 }

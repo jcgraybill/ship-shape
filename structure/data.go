@@ -21,8 +21,10 @@ type StructureData struct {
 	Produces    Production
 	Storage     []Storage
 	Workers     int
+	WorkerCost  int
 	Consumes    int
 	Berths      int
+	Cost        int
 }
 
 type Production struct {

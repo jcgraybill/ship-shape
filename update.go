@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ship"
+	"github.com/jcgraybill/ship-shape/ui"
 )
 
 func (g *Game) Update() error {
@@ -16,8 +17,24 @@ func (g *Game) Update() error {
 	shipsArrive(g)
 
 	updatePopulation(g)
+	payWorkers(g)
 
 	return nil
+}
+
+func payWorkers(g *Game) {
+	if g.count%ui.DayLength == 0 {
+		wages := 0
+		for _, structure := range g.structures {
+			wages += structure.LaborCost()
+		}
+		if wages <= g.money {
+			g.money -= wages
+		} else {
+			g.money = 0
+		}
+
+	}
 }
 
 func updatePopulation(g *Game) {
@@ -28,13 +45,17 @@ func updatePopulation(g *Game) {
 		g.workersNeeded += structure.WorkersNeeded()
 		structure.AssignWorkers(0)
 	}
+	budget := g.money
 	for workersToAssign := g.pop; workersToAssign > 0; {
 		workersAssigned := false
 		for _, structure := range g.structures {
 			if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 {
-				structure.AssignWorkers(structure.Workers() + 1)
-				workersToAssign -= 1
-				workersAssigned = true
+				if budget >= structure.WorkerCost() {
+					budget -= structure.WorkerCost()
+					structure.AssignWorkers(structure.Workers() + 1)
+					workersToAssign -= 1
+					workersAssigned = true
+				}
 			}
 		}
 		if !workersAssigned {
@@ -48,7 +69,7 @@ func structuresProduce(g *Game) {
 		if structure.Produce(g.count) && structure.IsHighlighted() {
 			g.panel.Clear()
 			updatePopulation(g)
-			showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+			showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 			showStructurePanel(g, structure)
 		}
 	}
@@ -62,7 +83,7 @@ func shipsArrive(g *Game) {
 				destination.ReceiveCargo(cargo)
 				if destination.IsHighlighted() {
 					g.panel.Clear()
-					showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+					showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 					showStructurePanel(g, destination)
 				}
 				returnShip := ship.New(destination, origin)

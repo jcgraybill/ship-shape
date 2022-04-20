@@ -18,7 +18,7 @@ func handleMouseClicks(g *Game) {
 			cx -= g.offsetX
 			cy -= g.offsetY
 			g.panel.Clear()
-			showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+			showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 
 			clickedObject := false
 			for _, planet := range g.planets {
@@ -26,8 +26,12 @@ func handleMouseClicks(g *Game) {
 					clickedObject = true
 					planet.Highlight()
 					showPlanetPanel(g.panel, planet, g.resourceData)
-					g.panel.AddButton("build "+g.structureData[structure.Water].DisplayName, generateConstructionCallback(g, planet, structure.Water))
-					g.panel.AddButton("build "+g.structureData[structure.Outpost].DisplayName, generateConstructionCallback(g, planet, structure.Outpost))
+					if g.money >= g.structureData[structure.Water].Cost {
+						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Water].DisplayName, g.structureData[structure.Water].Cost), generateConstructionCallback(g, planet, structure.Water))
+					}
+					if g.money >= g.structureData[structure.Outpost].Cost {
+						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Outpost].DisplayName, g.structureData[structure.Outpost].Cost), generateConstructionCallback(g, planet, structure.Outpost))
+					}
 				} else {
 					planet.Unhighlight()
 				}
@@ -47,7 +51,7 @@ func handleMouseClicks(g *Game) {
 				if ship.MouseButton(cx, cy) {
 					clickedObject = true
 					g.panel.Clear()
-					showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+					showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 					g.panel.AddLabel("ship", ui.TtfBold)
 					cargo, origin, destination := ship.Manifest()
 					if cargo > 0 {
@@ -102,10 +106,11 @@ func handleMouseClicks(g *Game) {
 func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) func() {
 	return func() {
 		g.panel.Clear()
+		g.money -= g.structureData[structureType].Cost
 		structure := structure.New(g.structureData[structureType], p)
 		g.structures = append(g.structures, structure)
 		updatePopulation(g)
-		showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+		showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 		showStructurePanel(g, structure)
 		structure.Highlight()
 	}

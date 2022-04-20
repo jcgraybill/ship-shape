@@ -10,8 +10,12 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-func showPopulationPanel(panel *panel.Panel, pop, maxPop, workersNeeded int) {
-	panel.AddInvertedLabel(fmt.Sprintf("Population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
+// TODO Affix this to the top of the panel, update it automatically every tick
+// Show objective & timer counting down the current day
+func showPlayerPanel(panel *panel.Panel, money, pop, maxPop, workersNeeded int) {
+	panel.AddInvertedLabel(fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
+	panel.AddLabel(fmt.Sprintf("bank: $%d", money), ui.TtfRegular)
+	panel.AddDivider()
 }
 
 func showPlanetPanel(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
@@ -25,7 +29,7 @@ func showPlanetPanel(panel *panel.Panel, p *planet.Planet, rd [resource.Resource
 func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
 	panel.AddLabel(s.Name(), ui.TtfBold)
 	if s.WorkersNeeded() > 0 {
-		panel.AddLabel(fmt.Sprintf("%d/%d workers", s.Workers(), s.WorkersNeeded()), ui.TtfRegular)
+		panel.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.Workers(), s.WorkersNeeded(), s.LaborCost()), ui.TtfRegular)
 	}
 	if len(s.Storage()) > 0 {
 		panel.AddDivider()

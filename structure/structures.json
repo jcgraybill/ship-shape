@@ -1,17 +1,21 @@
 [ 
-	{ "DisplayName": "home planet" },
+	{ "DisplayName": "capitol" },
 
 	{ "DisplayName": "outpost", 
 		"Produces": { "Resource": 4, "Rate": 8, "Requires": 0 }, 
 		"Storage": [{ "Resource": 4, "Capacity": 4 },
 					{ "Resource": 3, "Capacity": 16 }
 					 ] ,
-		"Consumes": 3
+		"Consumes": 3,
+		"Cost": 8
+		
 	 }, 
 	{ "DisplayName": "ice harvester", 
-		"Produces": { "Resource": 3, "Rate": 128, "Requires": 1 }, 
+		"Produces": { "Resource": 3, "Rate": 12, "Requires": 1 }, 
 		"Storage": [{ "Resource": 3, "Capacity": 8 }],
 		"Berths": 2,
-		"Workers": 6
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4
 	}
 ]

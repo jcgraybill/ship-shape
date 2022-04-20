@@ -3,14 +3,16 @@ package ui
 import "image/color"
 
 const (
-	starriness = 3000
-	PlanetSize = 32
+	starriness     = 3000
+	PlanetSize     = 32
+	PlanetDistance = 8 // lower numbers are denser
+	StartingMoney  = 100
 
-	W = 2048
-	H = 2048
+	W = 1920
+	H = 1080
 
 	WindowW           = 800
-	WindowH           = 480
+	WindowH           = 600
 	ArrowKeyMoveSpeed = 4 // larger numbers are faster
 
 	Buffer    = 4
@@ -25,9 +27,10 @@ const (
 	fontSize   = 13
 	DPI        = 72
 
-	BaseProductionRate = 4  // smaller numbers are faster
-	BidFrequency       = 60 // smaller numbers are more frequent
-	ShipSpeed          = 2  // smaller numbers are faster
+	DayLength          = 3600 // smaller numbers are faster
+	BaseProductionRate = 3600 // smaller numbers are faster
+	BidFrequency       = 60   // smaller numbers are more frequent
+	ShipSpeed          = 2    // smaller numbers are faster
 )
 
 var FocusedColor = color.RGBA{0xff, 0xff, 0xff, 0xff}

@@ -15,8 +15,8 @@ func (s *Structure) Produce(count int) bool {
 					productionRate *= float32(s.Workers()) / float32(s.WorkersNeeded())
 				}
 				if productionRate > 0 {
-					productionRate = 255 - productionRate
-					if count%(int(productionRate)*ui.BaseProductionRate) == 0 {
+					productionRate = ui.BaseProductionRate / productionRate
+					if count%int(productionRate) == 0 {
 						s.storage[s.data.Produces.Resource] = Storage{
 							Resource: s.data.Produces.Resource,
 							Capacity: s.storage[s.data.Produces.Resource].Capacity,

@@ -59,7 +59,7 @@ func structuresBidForResources(g *Game) {
 					g.ships[g.count] = ship
 					if structure.IsHighlighted() {
 						g.panel.Clear()
-						showPopulationPanel(g.panel, g.pop, g.maxPop, g.workersNeeded)
+						showPlayerPanel(g.panel, g.money, g.pop, g.maxPop, g.workersNeeded)
 
 						showStructurePanel(g, structure)
 					}

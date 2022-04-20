@@ -143,3 +143,11 @@ func (s *Structure) WorkersNeeded() int {
 func (s *Structure) AssignWorkers(workers int) {
 	s.workers = workers
 }
+
+func (s *Structure) LaborCost() int {
+	return s.workers * s.data.WorkerCost
+}
+
+func (s *Structure) WorkerCost() int {
+	return s.data.WorkerCost
+}
