@@ -49,7 +49,8 @@ func updatePopulation(g *Game) {
 	for workersToAssign := g.pop; workersToAssign > 0; {
 		workersAssigned := false
 		for _, structure := range g.structures {
-			if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 {
+			//TODO decide whether buildings actually release workers when they can't produce.
+			if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 && structure.CanProduce() {
 				if budget >= structure.WorkerCost() {
 					budget -= structure.WorkerCost()
 					structure.AssignWorkers(structure.Workers() + 1)
