@@ -1,8 +1,6 @@
 package main
 
 import (
-	"math"
-
 	"github.com/jcgraybill/ship-shape/ship"
 	"github.com/jcgraybill/ship-shape/structure"
 )
@@ -62,8 +60,4 @@ func bidForResources(g *Game) {
 			}
 		}
 	}
-}
-
-func distance(x1, y1, x2, y2 float64) float64 {
-	return math.Sqrt(math.Pow(math.Abs(x1-x2), 2) + math.Pow(math.Abs(y1-y2), 2))
 }

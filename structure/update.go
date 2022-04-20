@@ -25,6 +25,7 @@ func (s *Structure) Produce(count int) bool {
 	return false
 }
 
+//FIXME race condition allows structures to over-bid
 func (s *Structure) Bid() (int, uint8) {
 	if s.storage[s.data.Consumes].Resource == s.data.Consumes && s.storage[s.data.Consumes].Amount < s.storage[s.data.Consumes].Capacity {
 		urgency := ((float32(s.storage[s.data.Consumes].Capacity) - float32(s.storage[s.data.Consumes].Amount)) / float32(s.storage[s.data.Consumes].Capacity)) * 255

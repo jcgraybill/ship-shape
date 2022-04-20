@@ -6,11 +6,12 @@ const (
 	starriness = 3000
 	PlanetSize = 32
 
-	W = 1000
-	H = 1000
+	W = 2048
+	H = 2048
 
-	WindowW = 800
-	WindowH = 480
+	WindowW           = 800
+	WindowH           = 480
+	ArrowKeyMoveSpeed = 4 // larger numbers are faster
 
 	Buffer    = 4
 	Border    = 1

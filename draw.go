@@ -1,6 +1,8 @@
 package main
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.universe.Clear()
@@ -21,6 +23,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, s := range g.ships {
 		s.Draw(g.universe)
 	}
-	screen.DrawImage(g.universe, nil)
+	screen.DrawImage(g.universe, g.opts)
 	g.panel.Draw(screen)
 }

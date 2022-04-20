@@ -16,16 +16,20 @@ import (
 )
 
 type Game struct {
-	count         int
-	bg            *ebiten.Image
-	universe      *ebiten.Image
-	ttf           font.Face
-	planets       []*planet.Planet
-	structures    []*structure.Structure
-	ships         map[int]*ship.Ship
-	panel         *panel.Panel
-	structureData [structure.StructureDataLength]structure.StructureData
-	resourceData  [resource.ResourceDataLength]resource.ResourceData
+	count                              int
+	bg                                 *ebiten.Image
+	universe                           *ebiten.Image
+	ttf                                font.Face
+	planets                            []*planet.Planet
+	structures                         []*structure.Structure
+	ships                              map[int]*ship.Ship
+	panel                              *panel.Panel
+	structureData                      [structure.StructureDataLength]structure.StructureData
+	resourceData                       [resource.ResourceDataLength]resource.ResourceData
+	opts                               *ebiten.DrawImageOptions
+	offsetX, offsetY, windowW, windowH int
+	mouseDragX, mouseDragY             int
+	dragging                           bool
 }
 
 func init() {
@@ -61,12 +65,17 @@ func main() {
 		count:         0,
 		bg:            ui.StarField(ui.W, ui.H),
 		universe:      ebiten.NewImage(ui.W, ui.H),
+		opts:          &ebiten.DrawImageOptions{},
 		planets:       planets,
 		panel:         panel,
 		structureData: sd,
 		resourceData:  rd,
 		structures:    structures,
 		ships:         ships,
+		offsetX:       0,
+		offsetY:       0,
+		windowW:       ui.WindowW,
+		windowH:       ui.WindowH,
 	}
 
 	if err := ebiten.RunGame(&g); err != nil {
@@ -82,5 +91,7 @@ func (g *Game) Layout(w, h int) (int, int) {
 		h = ui.WindowH
 	}
 	g.panel.Resize(w, h)
+	g.windowW = w
+	g.windowH = h
 	return w, h
 }

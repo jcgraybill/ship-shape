@@ -12,12 +12,18 @@ import (
 // TODO Click & drag or arrow keys to move screen
 
 func handleInputEvents(g *Game) {
+
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		if !g.panel.LeftMouseButtonPress(ebiten.CursorPosition()) {
+			cx, cy := ebiten.CursorPosition()
+			cx -= g.offsetX
+			cy -= g.offsetY
 			g.panel.Clear()
 
+			clickedObject := false
 			for _, planet := range g.planets {
-				if planet.MouseButton(ebiten.CursorPosition()) {
+				if planet.MouseButton(cx, cy) {
+					clickedObject = true
 					planet.Highlight()
 					showPlanet(g.panel, planet, g.resourceData)
 					g.panel.AddButton("build "+g.structureData[structure.Water].DisplayName, generateConstructionCallback(g, planet, structure.Water))
@@ -28,7 +34,8 @@ func handleInputEvents(g *Game) {
 			}
 
 			for _, structure := range g.structures {
-				if structure.MouseButton(ebiten.CursorPosition()) {
+				if structure.MouseButton(cx, cy) {
+					clickedObject = true
 					structure.Highlight()
 					showStructurePanel(g, structure)
 				} else {
@@ -37,7 +44,8 @@ func handleInputEvents(g *Game) {
 			}
 
 			for _, ship := range g.ships {
-				if ship.MouseButton(ebiten.CursorPosition()) {
+				if ship.MouseButton(cx, cy) {
+					clickedObject = true
 					g.panel.Clear()
 					g.panel.AddLabel("ship", ui.TtfBold)
 					cargo, origin, destination := ship.Manifest()
@@ -49,8 +57,60 @@ func handleInputEvents(g *Game) {
 				}
 			}
 
+			if !clickedObject {
+				g.dragging = true
+				g.mouseDragX, g.mouseDragY = ebiten.CursorPosition()
+			}
 		}
 	} else if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		g.dragging = false
 		g.panel.LeftMouseButtonRelease(ebiten.CursorPosition())
+	} else if g.dragging && ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		newX, newY := ebiten.CursorPosition()
+
+		var xMovement, yMovement int
+
+		if newX < g.mouseDragX && -1*g.offsetX+g.windowW < ui.W {
+			xMovement = newX - g.mouseDragX
+			g.offsetX += xMovement
+		}
+
+		if newX > g.mouseDragX && g.offsetX < 0 {
+			xMovement = newX - g.mouseDragX
+			g.offsetX += xMovement
+		}
+
+		if newY > g.mouseDragY && g.offsetY < 0 {
+			yMovement = newY - g.mouseDragY
+			g.offsetY += yMovement
+		}
+		if newY < g.mouseDragY && -1*g.offsetY+g.windowH < ui.H {
+			yMovement = newY - g.mouseDragY
+			g.offsetY += yMovement
+		}
+
+		g.mouseDragX = newX
+		g.mouseDragY = newY
+
+		g.opts.GeoM.Translate(float64(xMovement), float64(yMovement))
+
 	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) && -1*g.offsetX+g.windowW < ui.W {
+		g.opts.GeoM.Translate(-ui.ArrowKeyMoveSpeed, 0)
+		g.offsetX -= ui.ArrowKeyMoveSpeed
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) && g.offsetX < 0 {
+		g.opts.GeoM.Translate(ui.ArrowKeyMoveSpeed, 0)
+		g.offsetX += ui.ArrowKeyMoveSpeed
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowUp) && g.offsetY < 0 {
+		g.opts.GeoM.Translate(0, ui.ArrowKeyMoveSpeed)
+		g.offsetY += ui.ArrowKeyMoveSpeed
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) && -1*g.offsetY+g.windowH < ui.H {
+		g.opts.GeoM.Translate(0, -ui.ArrowKeyMoveSpeed)
+		g.offsetY -= ui.ArrowKeyMoveSpeed
+	}
+
 }
