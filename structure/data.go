@@ -11,7 +11,7 @@ const (
 )
 
 const (
-	Home int = iota
+	Capitol int = iota
 	Outpost
 	Water
 )

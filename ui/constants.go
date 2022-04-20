@@ -27,6 +27,8 @@ const (
 	fontSize   = 13
 	DPI        = 72
 
+	IncomeRate         = 0.5
+	MaxCapitols        = 1
 	DayLength          = 3600 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster
 	BidFrequency       = 60   // smaller numbers are more frequent

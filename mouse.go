@@ -25,6 +25,9 @@ func handleMouseClicks(g *Game) {
 					clickedObject = true
 					planet.Highlight()
 					showPlanetPanel(g.panel, planet, g.resourceData)
+					if g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.Capitol].Cost {
+						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Capitol].DisplayName, g.structureData[structure.Capitol].Cost), generateConstructionCallback(g, planet, structure.Capitol))
+					}
 					if g.money >= g.structureData[structure.Water].Cost {
 						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Water].DisplayName, g.structureData[structure.Water].Cost), generateConstructionCallback(g, planet, structure.Water))
 					}
@@ -90,10 +93,13 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 	return func() {
 		g.panel.Clear()
 		g.money -= g.structureData[structureType].Cost
-		structure := structure.New(g.structureData[structureType], p)
-		g.structures = append(g.structures, structure)
+		st := structure.New(g.structureData[structureType], p)
+		g.structures = append(g.structures, st)
 		updatePopulation(g)
-		showStructurePanel(g, structure)
-		structure.Highlight()
+		showStructurePanel(g, st)
+		st.Highlight()
+		if structureType == structure.Capitol {
+			g.capitols += 1
+		}
 	}
 }

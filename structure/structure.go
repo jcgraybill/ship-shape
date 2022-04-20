@@ -20,6 +20,7 @@ type Structure struct {
 	storage          map[int]Storage
 	berths, ships    int
 	workers          int
+	income           int
 }
 
 func New(sd StructureData, p *planet.Planet) *Structure {

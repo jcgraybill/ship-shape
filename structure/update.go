@@ -1,6 +1,7 @@
 package structure
 
 import (
+	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
@@ -65,4 +66,8 @@ func (s *Structure) ReturnShip() {
 	if s.ships < s.berths {
 		s.ships += 1
 	}
+}
+
+func (s *Structure) GenerateIncome() {
+	s.income += int(float32(s.Storage()[resource.Population].Amount) * ui.IncomeRate)
 }

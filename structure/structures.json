@@ -1,5 +1,8 @@
 [ 
-	{ "DisplayName": "capitol" },
+	{ "DisplayName": "capitol",
+		"Storage": [{ "Resource": 4, "Capacity": 2 }],
+		"Cost": 16
+	 },
 
 	{ "DisplayName": "outpost", 
 		"Produces": { "Resource": 4, "Rate": 8, "Requires": 0 }, 
@@ -7,8 +10,7 @@
 					{ "Resource": 3, "Capacity": 16 }
 					 ] ,
 		"Consumes": 3,
-		"Cost": 8
-		
+		"Cost": 8	
 	 }, 
 	{ "DisplayName": "ice harvester", 
 		"Produces": { "Resource": 3, "Rate": 12, "Requires": 1 }, 

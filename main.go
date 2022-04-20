@@ -32,6 +32,7 @@ type Game struct {
 	dragging                           bool
 	pop, maxPop, workersNeeded         int
 	money                              int
+	capitols                           int
 }
 
 func init() {
@@ -57,6 +58,7 @@ func main() {
 		windowW:       ui.WindowW,
 		windowH:       ui.WindowH,
 		money:         ui.StartingMoney,
+		capitols:      0,
 	}
 
 	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)

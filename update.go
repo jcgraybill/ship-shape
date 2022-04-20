@@ -12,6 +12,7 @@ func (g *Game) Update() error {
 	handleMouseClicks(g)
 	handleKeyPresses(g)
 
+	structuresGenerateIncome(g)
 	structuresProduce(g)
 	structuresBidForResources(g)
 	shipsArrive(g)
@@ -20,6 +21,14 @@ func (g *Game) Update() error {
 	payWorkers(g)
 
 	return nil
+}
+
+func structuresGenerateIncome(g *Game) {
+	if g.count%ui.DayLength == 0 {
+		for _, structure := range g.structures {
+			structure.GenerateIncome()
+		}
+	}
 }
 
 func payWorkers(g *Game) {
