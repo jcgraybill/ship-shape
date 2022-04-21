@@ -45,10 +45,13 @@ func (s *Structure) Bid() (int, uint8) {
 func (s *Structure) LaunchShip(resource int) {
 
 	s.ships -= 1
-	s.storage[resource] = Storage{
-		Resource: resource,
-		Capacity: s.storage[resource].Capacity,
-		Amount:   s.storage[resource].Amount - 1,
+
+	if s.structureType != Capitol {
+		s.storage[resource] = Storage{
+			Resource: resource,
+			Capacity: s.storage[resource].Capacity,
+			Amount:   s.storage[resource].Amount - 1,
+		}
 	}
 }
 

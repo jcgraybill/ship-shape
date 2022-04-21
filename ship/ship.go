@@ -10,13 +10,19 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
+const (
+	Cargo int = iota
+	Income
+)
+
 const shipW = 16
 const plumeW = 8
 const shipH = 10
 
-var shipColor = color.RGBA{0xcc, 0xcc, 0xcc, 0xff}  // silver
-var plumeOuter = color.RGBA{0xff, 0xa5, 0x00, 0xff} //orange
-var plumeInner = color.RGBA{0xff, 0xff, 0x00, 0xff} // yellow
+var shipColor = color.RGBA{0xcc, 0xcc, 0xcc, 0xff}       // silver
+var incomeShipColor = color.RGBA{0xd4, 0xaf, 0x47, 0xff} // gold
+var plumeOuter = color.RGBA{0xff, 0xa5, 0x00, 0xff}      //orange
+var plumeInner = color.RGBA{0xff, 0xff, 0x00, 0xff}      // yellow
 const plumeCycleTime = 20
 const plumeFrequency = 4
 
@@ -33,6 +39,7 @@ type Ship struct {
 	course      *ebiten.Image
 	courseOpts  *ebiten.DrawImageOptions
 	cargo       int
+	shipType    int
 }
 
 func New(origin, destination *structure.Structure) *Ship {
@@ -41,6 +48,11 @@ func New(origin, destination *structure.Structure) *Ship {
 		destination:  destination,
 		plumeVisible: true,
 		cargo:        -1,
+		shipType:     Cargo,
+	}
+
+	if s.origin.StructureType() == structure.Capitol || s.destination.StructureType() == structure.Capitol {
+		s.shipType = Income
 	}
 
 	x0, y0 := origin.Planet().Center()
@@ -48,8 +60,15 @@ func New(origin, destination *structure.Structure) *Ship {
 	s.x = float64(x0)
 	s.y = float64(y0)
 
+	var v []ebiten.Vertex
+	var i []uint16
+
+	if s.shipType == Cargo {
+		v, i = ui.Triangle(plumeW, 0, shipW, shipH, shipColor)
+	} else {
+		v, i = ui.Triangle(plumeW, 0, shipW, shipH, incomeShipColor)
+	}
 	s.image = ebiten.NewImage(shipW+plumeW, shipH)
-	v, i := ui.Triangle(plumeW, 0, shipW, shipH, shipColor)
 	s.image.DrawTriangles(v, i, ui.Src, nil)
 
 	s.plume = ebiten.NewImage(shipW+plumeW, shipH)
@@ -144,16 +163,6 @@ func (s *Ship) updateCourseLine() {
 
 func (s *Ship) DrawCourse(image *ebiten.Image) {
 	image.DrawImage(s.course, s.courseOpts)
-}
-
-//FIXME rotation causes this to not be the actual ship coordinates
-func (s *Ship) MouseButton(x, y int) bool {
-	if int(s.x)+plumeW < x && int(s.x)+shipW+plumeW > x {
-		if int(s.y) < y && int(s.y)+shipH > y {
-			return true
-		}
-	}
-	return false
 }
 
 func (s *Ship) LoadCargo(resource int, cargoColor color.RGBA) {

@@ -27,9 +27,9 @@ func structuresBidForResources(g *Game) {
 
 		for _, structure := range g.structures {
 			if structure.HasShips() {
-				var topBid int
+				var topBid *Bid
 				var topBidValue float64 = 0
-				for i, bid := range bids {
+				for _, bid := range bids {
 					if bid.Resource == structure.Produces() && structure.Storage()[bid.Resource].Amount > 0 {
 
 						shipAlreadyInLane := false
@@ -45,7 +45,7 @@ func structuresBidForResources(g *Game) {
 							x2, y2 := bid.Structure.Planet().Center()
 							value := float64(bid.Urgency) / distance(float64(x1), float64(y1), float64(x2), float64(y2))
 							if value > topBidValue {
-								topBid = i
+								topBid = bid
 								topBidValue = value
 							}
 						}
@@ -53,9 +53,9 @@ func structuresBidForResources(g *Game) {
 				}
 				if topBidValue > 0 {
 
-					ship := ship.New(structure, bids[topBid].Structure)
-					ship.LoadCargo(bids[topBid].Resource, g.resourceData[bids[topBid].Resource].Color)
-					structure.LaunchShip(bids[topBid].Resource)
+					ship := ship.New(structure, topBid.Structure)
+					ship.LoadCargo(topBid.Resource, g.resourceData[topBid.Resource].Color)
+					structure.LaunchShip(topBid.Resource)
 					g.ships[g.count] = ship
 					if structure.IsHighlighted() {
 						g.panel.Clear()

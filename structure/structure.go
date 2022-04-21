@@ -2,10 +2,12 @@ package structure
 
 import (
 	"image/color"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/jcgraybill/ship-shape/planet"
+	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
@@ -50,6 +52,15 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 	}
 
 	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
+
+	if s.structureType == Outpost && s.storage[resource.Population].Capacity > 0 {
+		cap := float64(s.storage[resource.Population].Capacity) * (float64(s.planet.Resources()[resource.Habitability]) / 255)
+		s.storage[resource.Population] = Storage{
+			Resource: resource.Population,
+			Amount:   s.storage[resource.Population].Amount,
+			Capacity: uint8(math.Ceil(cap)),
+		}
+	}
 
 	return &s
 }
@@ -130,6 +141,12 @@ func (s *Structure) Produces() int {
 }
 
 func (s *Structure) HasShips() bool {
+	if s.structureType == Capitol {
+		if s.ships > 0 && s.ships <= s.workers {
+			return true
+		}
+	}
+
 	if s.ships > 0 {
 		return true
 	}
@@ -163,4 +180,18 @@ func (s *Structure) CanProduce() bool {
 		return true
 	}
 	return false
+}
+
+func (s *Structure) Income() int {
+	return s.income
+}
+
+func (s *Structure) StructureType() int {
+	return s.structureType
+}
+
+func (s *Structure) CollectIncome() int {
+	income := s.income
+	s.income = 0
+	return income
 }

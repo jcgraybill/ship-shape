@@ -1,8 +1,11 @@
 package main
 
 import (
+	"image/color"
+
 	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ship"
+	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
@@ -15,6 +18,7 @@ func (g *Game) Update() error {
 	structuresGenerateIncome(g)
 	structuresProduce(g)
 	structuresBidForResources(g)
+	collectIncome(g)
 	shipsArrive(g)
 
 	updatePopulation(g)
@@ -95,6 +99,21 @@ func shipsArrive(g *Game) {
 	for key, s := range g.ships {
 		if s.Update(g.count) { //ship has arrived
 			cargo, origin, destination := s.Manifest()
+
+			if origin.StructureType() == structure.Capitol {
+				returnShip := ship.New(destination, origin)
+				returnShip.LoadCargo(destination.CollectIncome(), color.RGBA{0xd4, 0xaf, 0x47, 0xff})
+				g.ships[key] = returnShip
+				continue
+			}
+
+			if destination.StructureType() == structure.Capitol {
+				g.money += cargo
+				destination.ReturnShip()
+				delete(g.ships, key)
+				continue
+			}
+
 			if cargo > 0 {
 				destination.ReceiveCargo(cargo)
 				if destination.IsHighlighted() {

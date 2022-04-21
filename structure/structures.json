@@ -1,8 +1,9 @@
 [ 
-	{ "DisplayName": "capitol",
+	{ "DisplayName": "headquarters",
 		"Workers": 2,
 		"WorkerCost": 2,
-		"Cost": 16
+		"Cost": 16,
+		"Berths": 2
 	 },
 
 	{ "DisplayName": "outpost", 
