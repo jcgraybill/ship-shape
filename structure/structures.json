@@ -1,11 +1,12 @@
 [ 
 	{ "DisplayName": "capitol",
-		"Storage": [{ "Resource": 4, "Capacity": 2 }],
+		"Workers": 2,
+		"WorkerCost": 2,
 		"Cost": 16
 	 },
 
 	{ "DisplayName": "outpost", 
-		"Produces": { "Resource": 4, "Rate": 8, "Requires": 0 }, 
+		"Produces": { "Resource": 4, "Rate": 4, "Requires": 0 }, 
 		"Storage": [{ "Resource": 4, "Capacity": 4 },
 					{ "Resource": 3, "Capacity": 16 }
 					 ] ,

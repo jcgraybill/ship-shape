@@ -52,24 +52,31 @@ func updatePopulation(g *Game) {
 		g.pop += int(structure.Storage()[resource.Population].Amount)
 		g.maxPop += int(structure.Storage()[resource.Population].Capacity)
 		g.workersNeeded += structure.WorkersNeeded()
-		structure.AssignWorkers(0)
 	}
-	budget := g.money
-	for workersToAssign := g.pop; workersToAssign > 0; {
-		workersAssigned := false
+	if g.count%ui.DayLength == 0 {
 		for _, structure := range g.structures {
-			//TODO decide whether buildings actually release workers when they can't produce.
-			if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 && structure.CanProduce() {
-				if budget >= structure.WorkerCost() {
-					budget -= structure.WorkerCost()
-					structure.AssignWorkers(structure.Workers() + 1)
-					workersToAssign -= 1
-					workersAssigned = true
+			structure.AssignWorkers(0)
+		}
+		budget := g.money
+		for workersToAssign := g.pop; workersToAssign > 0; {
+			workersAssigned := false
+			for _, structure := range g.structures {
+				if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 && structure.CanProduce() {
+					if budget >= structure.WorkerCost() {
+						budget -= structure.WorkerCost()
+						structure.AssignWorkers(structure.Workers() + 1)
+						workersToAssign -= 1
+						workersAssigned = true
+						if structure.IsHighlighted() {
+							g.panel.Clear()
+							showStructurePanel(g, structure)
+						}
+					}
 				}
 			}
-		}
-		if !workersAssigned {
-			workersToAssign = 0
+			if !workersAssigned {
+				workersToAssign = 0
+			}
 		}
 	}
 }

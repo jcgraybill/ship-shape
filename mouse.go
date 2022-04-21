@@ -93,7 +93,7 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 	return func() {
 		g.panel.Clear()
 		g.money -= g.structureData[structureType].Cost
-		st := structure.New(g.structureData[structureType], p)
+		st := structure.New(structureType, g.structureData[structureType], p)
 		g.structures = append(g.structures, st)
 		updatePopulation(g)
 		showStructurePanel(g, st)

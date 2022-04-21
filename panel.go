@@ -45,7 +45,6 @@ func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.Reso
 	}
 	if len(s.Storage()) > 0 {
 		panel.AddDivider()
-		panel.AddLabel("storage:", ui.TtfRegular)
 		for _, st := range s.Storage() {
 			panel.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[st.Resource].DisplayName, st.Amount, st.Capacity), ui.TtfRegular)
 			panel.AddBar(uint8((255*int(st.Amount))/int(st.Capacity)), rd[st.Resource].Color)
