@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ResourceDataLength = 5
+	ResourceDataLength = 8
 	ResourcesJSONFile  = "resources.json"
 )
 
@@ -17,6 +17,9 @@ const (
 	Iron
 	Water
 	Population
+	Ore
+	Metal
+	Machinery
 )
 
 type ResourceData struct {

@@ -7,16 +7,80 @@
 	 },
 
 	{ "DisplayName": "outpost", 
-		"Produces": { "Resource": 4, "Rate": 4, "Requires": 0 }, 
+		"Produces": { "Resource": 4, "Rate": 4, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 4, "Capacity": 4 },
 					{ "Resource": 3, "Capacity": 16 }
 					 ] ,
-		"Consumes": 3,
+		"Upgrade": { "Structure": 3,
+						"Required": [
+							{"Resource": 3}
+						]},
 		"Cost": 8	
 	 }, 
 	{ "DisplayName": "ice harvester", 
-		"Produces": { "Resource": 3, "Rate": 12, "Requires": 1 }, 
+		"Produces": { "Resource": 3, "Rate": 12, "Requires": [{"Resource": 1, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 3, "Capacity": 8 }],
+		"Berths": 2,
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4
+	},
+	{ "DisplayName": "habitat",
+		"Produces": { "Resource": 4, "Rate": 6, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 4, "Capacity": 8 },
+					{ "Resource": 3, "Capacity": 24 },
+					{ "Resource": 6, "Capacity": 12 }
+					 ] ,
+		"Downgrade": { "Structure": 1,
+						"Required": [
+							{"Resource": 3}
+						]},
+		"Upgrade": { "Structure": 4,
+						"Required": [
+							{"Resource": 3},
+							{"Resource": 7}
+					]},
+		"Consumes": [{ "Resource": 3, "Rate": 32 }],
+		"Cost": 12	
+	},
+	{ "DisplayName": "settlement",
+		"Produces": { "Resource": 4, "Rate": 8, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 4, "Capacity": 16 },
+					{ "Resource": 3, "Capacity": 32 },
+					{ "Resource": 7, "Capacity": 8  }
+					 ] ,
+		"Downgrade": { "Structure": 3,
+						"Required": [
+							{"Resource": 3},
+							{"Resource": 7}
+						]},
+		"Consumes": [{ "Resource": 3, "Rate": 32 },
+					{ "Resource": 7, "Rate": 8}],
+		"Cost": 18	
+	},
+	{ "DisplayName": "mine", 
+		"Produces": { "Resource": 5, "Rate": 12, "Requires": [{"Resource": 2, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 5, "Capacity": 8 }],
+		"Berths": 2,
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4
+	},
+	{ "DisplayName": "smelter", 
+		"Produces": { "Resource": 6, "Rate": 12, "Requires": [{"Resource": 5, "Quantity": 1}, {"Resource": 3, "Quantity": 2}] }, 
+		"Storage": [{ "Resource": 3, "Capacity": 16 },
+					{ "Resource": 5, "Capacity": 8 },
+					{ "Resource": 6, "Capacity": 8 }
+					],
+		"Berths": 2,
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4
+	},
+	{ "DisplayName": "factory", 
+		"Produces": { "Resource": 7, "Rate": 12, "Requires": [{"Resource": 2, "Quantity": 3}] }, 
+		"Storage": [{ "Resource": 6, "Capacity": 18 },
+					{ "Resource": 7, "Capacity": 8 }],
 		"Berths": 2,
 		"Workers": 6,
 		"WorkerCost": 1,

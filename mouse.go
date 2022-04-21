@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/jcgraybill/ship-shape/planet"
@@ -20,22 +18,14 @@ func handleMouseClicks(g *Game) {
 			g.panel.Clear()
 
 			clickedObject := false
-			for _, planet := range g.planets {
-				if planet.MouseButton(cx, cy) {
+			for _, p := range g.planets {
+				if p.MouseButton(cx, cy) {
 					clickedObject = true
-					planet.Highlight()
-					showPlanetPanel(g.panel, planet, g.resourceData)
-					if g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.Capitol].Cost {
-						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Capitol].DisplayName, g.structureData[structure.Capitol].Cost), generateConstructionCallback(g, planet, structure.Capitol))
-					}
-					if g.money >= g.structureData[structure.Water].Cost {
-						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Water].DisplayName, g.structureData[structure.Water].Cost), generateConstructionCallback(g, planet, structure.Water))
-					}
-					if g.money >= g.structureData[structure.Outpost].Cost {
-						g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Outpost].DisplayName, g.structureData[structure.Outpost].Cost), generateConstructionCallback(g, planet, structure.Outpost))
-					}
+					p.Highlight()
+					showPlanetPanel(g.panel, p, g.resourceData)
+					showBuildOptionsPanel(p, g)
 				} else {
-					planet.Unhighlight()
+					p.Unhighlight()
 				}
 			}
 

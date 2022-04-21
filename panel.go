@@ -11,6 +11,29 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
+func showBuildOptionsPanel(p *planet.Planet, g *Game) {
+
+	if g.money >= g.structureData[structure.Outpost].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Outpost].DisplayName, g.structureData[structure.Outpost].Cost), generateConstructionCallback(g, p, structure.Outpost))
+	}
+	if g.money >= g.structureData[structure.Water].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Water].DisplayName, g.structureData[structure.Water].Cost), generateConstructionCallback(g, p, structure.Water))
+	}
+	if g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.Capitol].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Capitol].DisplayName, g.structureData[structure.Capitol].Cost), generateConstructionCallback(g, p, structure.Capitol))
+	}
+	if g.money >= g.structureData[structure.Mine].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Mine].DisplayName, g.structureData[structure.Mine].Cost), generateConstructionCallback(g, p, structure.Mine))
+	}
+	if g.money >= g.structureData[structure.Smelter].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Smelter].DisplayName, g.structureData[structure.Smelter].Cost), generateConstructionCallback(g, p, structure.Smelter))
+	}
+	if g.money >= g.structureData[structure.Factory].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Factory].DisplayName, g.structureData[structure.Factory].Cost), generateConstructionCallback(g, p, structure.Factory))
+	}
+
+}
+
 func showPlayerPanel(g *Game) int {
 	g.panel.AddInvertedLabel(fmt.Sprintf("population: %d/%d (need %d)", g.pop, g.maxPop, g.workersNeeded), ui.TtfRegular)
 	g.panel.AddLabel(fmt.Sprintf("bank: $%d", g.money), ui.TtfRegular)

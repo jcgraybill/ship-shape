@@ -1,8 +1,10 @@
 [
 	{ "DisplayName": "habitability", "Color": {"R": 0, "G": 255, "B": 0, "A": 255} },
 	{ "DisplayName": "ice",          "Color": {"R": 200, "G": 200, "B": 255, "A": 255} },
-	{ "DisplayName": "iron",         "Color": {"R": 255, "G": 0, "B": 0, "A": 255} },
+	{ "DisplayName": "iron",         "Color": {"R": 255, "G": 87, "B": 51, "A": 255} },
 	{ "DisplayName": "water",        "Color": {"R": 0, "G": 0, "B": 255, "A": 255} },
-	{ "DisplayName": "population",   "Color": {"R": 255, "G": 255, "B": 255, "A": 255} }
-
+	{ "DisplayName": "population",   "Color": {"R": 255, "G": 255, "B": 255, "A": 255} },
+	{ "DisplayName": "ore",     "Color": {"R": 165, "G": 42, "B": 42, "A": 255} },
+	{ "DisplayName": "metal",        "Color": {"R": 204, "G": 85, "B": 0, "A": 255}  },
+	{ "DisplayName": "machinery",    "Color": {"R": 83, "G": 86, "B": 90, "A": 255} }
 ]

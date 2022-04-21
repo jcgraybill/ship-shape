@@ -19,8 +19,7 @@ func structuresBidForResources(g *Game) {
 
 		bids := make([]*Bid, 0)
 		for _, structure := range g.structures {
-
-			if resource, urgency := structure.Bid(); urgency > 0 {
+			for resource, urgency := range structure.Bid() {
 				bids = append(bids, &Bid{Structure: structure, Resource: resource, Urgency: urgency})
 			}
 		}

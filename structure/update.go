@@ -7,14 +7,22 @@ import (
 
 func (s *Structure) Produce(count int) bool {
 	if s.data.Produces.Rate > 0 {
-		if s.storage[s.data.Produces.Resource].Resource == s.data.Produces.Resource && s.storage[s.data.Produces.Resource].Amount < s.storage[s.data.Produces.Resource].Capacity {
-			if s.Planet().Resources()[s.data.Produces.Requires] > 0 {
-				var productionRate float32
-				productionRate = float32(s.data.Produces.Rate)
-				productionRate *= float32(s.Planet().Resources()[s.data.Produces.Requires]) / 255
+		if s.storage[s.data.Produces.Resource].Resource == s.data.Produces.Resource {
+			if s.storage[s.data.Produces.Resource].Amount < s.storage[s.data.Produces.Resource].Capacity {
+				productionRate := float32(s.data.Produces.Rate)
+
+				for _, ingredient := range s.data.Produces.Requires {
+					if s.Planet().Resources()[ingredient.Resource] > 0 {
+						productionRate *= float32(s.Planet().Resources()[ingredient.Resource]) / 255
+					} else if s.storage[ingredient.Resource].Amount < ingredient.Quantity {
+						productionRate = 0
+					}
+				}
+
 				if s.WorkersNeeded() > 0 {
 					productionRate *= float32(s.Workers()) / float32(s.WorkersNeeded())
 				}
+
 				if productionRate > 0 {
 					productionRate = ui.BaseProductionRate / productionRate
 					if count%int(productionRate) == 0 {
@@ -23,23 +31,36 @@ func (s *Structure) Produce(count int) bool {
 							Capacity: s.storage[s.data.Produces.Resource].Capacity,
 							Amount:   s.storage[s.data.Produces.Resource].Amount + 1,
 						}
+
+						for _, ingredient := range s.data.Produces.Requires {
+							if s.Planet().Resources()[ingredient.Resource] == 0 {
+								if s.storage[ingredient.Resource].Resource == ingredient.Resource {
+									s.storage[ingredient.Resource] = Storage{
+										Resource: s.storage[ingredient.Resource].Resource,
+										Capacity: s.storage[ingredient.Resource].Capacity,
+										Amount:   s.storage[ingredient.Resource].Amount - ingredient.Quantity,
+									}
+								}
+							}
+						}
 						return true
 					}
 				}
 			}
 		}
 	}
-
 	return false
 }
 
 //FIXME race condition allows structures to over-bid
-func (s *Structure) Bid() (int, uint8) {
-	if s.storage[s.data.Consumes].Resource == s.data.Consumes && s.storage[s.data.Consumes].Amount < s.storage[s.data.Consumes].Capacity {
-		urgency := ((float32(s.storage[s.data.Consumes].Capacity) - float32(s.storage[s.data.Consumes].Amount)) / float32(s.storage[s.data.Consumes].Capacity)) * 255
-		return s.data.Consumes, uint8(urgency)
+func (s *Structure) Bid() map[int]uint8 {
+	bids := make(map[int]uint8)
+	for _, r := range s.resourcesWanted {
+		if s.storage[r].Amount < s.storage[r].Capacity {
+			bids[r] = uint8(((float32(s.storage[r].Capacity) - float32(s.storage[r].Amount)) / float32(s.storage[r].Capacity)) * 255)
+		}
 	}
-	return 0, 0
+	return bids
 }
 
 func (s *Structure) LaunchShip(resource int) {

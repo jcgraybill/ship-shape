@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	StructureDataLength = 3
+	StructureDataLength = 8
 	StructuresJSONFile  = "structures.json"
 )
 
@@ -14,23 +14,38 @@ const (
 	Capitol int = iota
 	Outpost
 	Water
+	Habitat
+	Settlement
+	Mine
+	Smelter
+	Factory
 )
 
 type StructureData struct {
 	DisplayName string
 	Produces    Production
 	Storage     []Storage
+	Consumes    []Consumption
 	Workers     int
 	WorkerCost  int
-	Consumes    int
 	Berths      int
 	Cost        int
+}
+
+type Consumption struct {
+	Resource int
+	Rate     uint8
 }
 
 type Production struct {
 	Resource int
 	Rate     uint8
-	Requires int
+	Requires []Ingredient
+}
+
+type Ingredient struct {
+	Resource int
+	Quantity uint8
 }
 
 type Storage struct {
@@ -42,7 +57,7 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-//
+//.
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)
