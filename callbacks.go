@@ -31,3 +31,44 @@ func generateUpgradeCallBack(g *Game, s *structure.Structure, structureType int)
 	}
 
 }
+
+func generatePauseCallback(g *Game, s *structure.Structure) func() {
+	return func() {
+		s.Pause()
+		g.panel.Clear()
+		updatePopulation(g)
+		showStructurePanel(g, s)
+		s.Highlight()
+	}
+}
+
+func generateUnPauseCallback(g *Game, s *structure.Structure) func() {
+	return func() {
+		s.Unpause()
+		g.panel.Clear()
+		updatePopulation(g)
+		showStructurePanel(g, s)
+		s.Highlight()
+	}
+}
+
+func generatePrioritizeCallback(g *Game, s *structure.Structure) func() {
+	return func() {
+		s.Prioritize()
+		g.money -= g.structureData[s.StructureType()].Prioritize
+		g.panel.Clear()
+		updatePopulation(g)
+		showStructurePanel(g, s)
+		s.Highlight()
+	}
+}
+
+func generateUnPrioritizeCallback(g *Game, s *structure.Structure) func() {
+	return func() {
+		s.Deprioritize()
+		g.panel.Clear()
+		updatePopulation(g)
+		showStructurePanel(g, s)
+		s.Highlight()
+	}
+}

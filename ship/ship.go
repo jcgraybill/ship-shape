@@ -42,7 +42,7 @@ type Ship struct {
 	shipType    int
 }
 
-func New(origin, destination *structure.Structure) *Ship {
+func New(origin, destination *structure.Structure, shipType int) *Ship {
 	s := Ship{
 		origin:       origin,
 		destination:  destination,
@@ -51,9 +51,7 @@ func New(origin, destination *structure.Structure) *Ship {
 		shipType:     Cargo,
 	}
 
-	if s.origin.StructureType() == structure.Capitol || s.destination.StructureType() == structure.Capitol {
-		s.shipType = Income
-	}
+	s.shipType = shipType
 
 	x0, y0 := origin.Planet().Center()
 	x1, y1 := destination.Planet().Center()
@@ -174,4 +172,8 @@ func (s *Ship) LoadCargo(resource int, cargoColor color.RGBA) {
 
 func (s *Ship) Manifest() (int, *structure.Structure, *structure.Structure) {
 	return s.cargo, s.origin, s.destination
+}
+
+func (s *Ship) ShipType() int {
+	return s.shipType
 }

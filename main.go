@@ -90,8 +90,8 @@ func generatePlanets(w, h int) []*planet.Planet {
 	rd := resource.GetResourceData()
 
 	for i := 0; i < h/cellsize; i++ {
-		//j < w/cellsize+2 prevents creating planets underneath the panel
-		for j := 0; j < w/cellsize+2; j++ {
+		//j < w/cellsize-1 prevents creating planets underneath the panel
+		for j := 0; j < w/cellsize-1; j++ {
 			x := j*cellsize + rand.Intn(cellsize-ui.PlanetSize*2) + ui.PlanetSize
 			y := i*cellsize + rand.Intn(cellsize-ui.PlanetSize*2) + ui.PlanetSize
 			ice := uint8(rand.Intn(255))

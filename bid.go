@@ -52,7 +52,7 @@ func structuresBidForResources(g *Game) {
 				}
 				if topBidValue > 0 {
 
-					ship := ship.New(structure, topBid.Structure)
+					ship := ship.New(structure, topBid.Structure, ship.Cargo)
 					ship.LoadCargo(topBid.Resource, g.resourceData[topBid.Resource].Color)
 					structure.LaunchShip(topBid.Resource)
 					g.ships[g.count] = ship

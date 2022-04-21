@@ -14,6 +14,8 @@ import (
 type Structure struct {
 	x, y, w, h       int
 	highlighted      bool
+	paused           bool
+	prioritized      bool
 	image            *ebiten.Image
 	highlightedImage *ebiten.Image
 	displayOpts      *ebiten.DrawImageOptions
@@ -32,6 +34,8 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 		data:          sd,
 		planet:        p,
 		highlighted:   false,
+		paused:        false,
+		prioritized:   false,
 		workers:       0,
 		displayOpts:   &ebiten.DrawImageOptions{},
 		structureType: structureType,
@@ -59,7 +63,13 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 
 	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
 
-	if s.structureType == Outpost && s.storage[resource.Population].Capacity > 0 {
+	s.adjustPopulationCapacity()
+
+	return &s
+}
+
+func (s *Structure) adjustPopulationCapacity() {
+	if s.storage[resource.Population].Capacity > 0 {
 		cap := float64(s.storage[resource.Population].Capacity) * (float64(s.planet.Resources()[resource.Habitability]) / 255)
 		s.storage[resource.Population] = Storage{
 			Resource: resource.Population,
@@ -67,8 +77,6 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 			Capacity: uint8(math.Ceil(cap)),
 		}
 	}
-
-	return &s
 }
 
 func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, int, int, int, int) {
@@ -148,8 +156,10 @@ func (s *Structure) Produces() int {
 
 func (s *Structure) HasShips() bool {
 	if s.structureType == Capitol {
-		if s.ships > 0 && s.workers > 0 && s.ships <= s.workers {
+		if !s.paused && s.ships > 0 && s.workers > 0 && s.ships <= s.workers {
 			return true
+		} else {
+			return false
 		}
 	}
 
@@ -163,6 +173,9 @@ func (s *Structure) Workers() int {
 	return s.workers
 }
 func (s *Structure) WorkersNeeded() int {
+	if s.paused {
+		return 0
+	}
 	return s.data.Workers
 }
 
@@ -228,10 +241,14 @@ func (s *Structure) Upgrade(st int, sd StructureData) {
 
 	s.resourcesWanted = make([]int, 0)
 	for _, st := range s.data.Storage {
+		amount := s.storage[st.Resource].Amount
+		if amount > st.Capacity {
+			amount = st.Capacity
+		}
 		storage[st.Resource] = Storage{
 			Resource: st.Resource,
 			Capacity: st.Capacity,
-			Amount:   s.storage[st.Resource].Amount,
+			Amount:   amount,
 		}
 
 		if st.Resource != s.data.Produces.Resource {
@@ -240,4 +257,27 @@ func (s *Structure) Upgrade(st int, sd StructureData) {
 	}
 
 	s.storage = storage
+	s.adjustPopulationCapacity()
+
+}
+
+func (s *Structure) Pause() {
+	s.paused = true
+	s.workers = 0
+}
+func (s *Structure) Unpause() {
+	s.paused = false
+}
+func (s *Structure) IsPaused() bool {
+	return s.paused
+}
+
+func (s *Structure) Prioritize() {
+	s.prioritized = true
+}
+func (s *Structure) Deprioritize() {
+	s.prioritized = false
+}
+func (s *Structure) IsPrioritized() bool {
+	return s.prioritized
 }

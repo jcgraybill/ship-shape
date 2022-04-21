@@ -17,6 +17,7 @@ func (g *Game) Update() error {
 
 	structuresGenerateIncome(g)
 	structuresProduce(g)
+	structuresConsume(g)
 	structuresBidForResources(g)
 	collectIncome(g)
 	shipsArrive(g)
@@ -65,7 +66,7 @@ func updatePopulation(g *Game) {
 		for workersToAssign := g.pop; workersToAssign > 0; {
 			workersAssigned := false
 			for _, structure := range g.structures {
-				if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 && structure.CanProduce() {
+				if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 && structure.CanProduce() && !structure.IsPaused() {
 					if budget >= structure.WorkerCost() {
 						budget -= structure.WorkerCost()
 						structure.AssignWorkers(structure.Workers() + 1)
@@ -95,19 +96,34 @@ func structuresProduce(g *Game) {
 	}
 }
 
+func structuresConsume(g *Game) {
+	for _, structure := range g.structures {
+		consumed, downgrade := structure.Consume(g.count)
+		if downgrade > 0 {
+			structure.Upgrade(downgrade, g.structureData[downgrade])
+		}
+
+		if (consumed || downgrade > 0) && structure.IsHighlighted() {
+			g.panel.Clear()
+			updatePopulation(g)
+			showStructurePanel(g, structure)
+		}
+	}
+}
+
 func shipsArrive(g *Game) {
 	for key, s := range g.ships {
 		if s.Update(g.count) { //ship has arrived
 			cargo, origin, destination := s.Manifest()
 
-			if origin.StructureType() == structure.Capitol {
-				returnShip := ship.New(destination, origin)
+			if s.ShipType() == ship.Income && origin.StructureType() == structure.Capitol {
+				returnShip := ship.New(destination, origin, ship.Income)
 				returnShip.LoadCargo(destination.CollectIncome(), color.RGBA{0xd4, 0xaf, 0x47, 0xff})
 				g.ships[key] = returnShip
 				continue
 			}
 
-			if destination.StructureType() == structure.Capitol {
+			if s.ShipType() == ship.Income && destination.StructureType() == structure.Capitol {
 				g.money += cargo
 				destination.ReturnShip()
 				delete(g.ships, key)
@@ -120,7 +136,7 @@ func shipsArrive(g *Game) {
 					g.panel.Clear()
 					showStructurePanel(g, destination)
 				}
-				returnShip := ship.New(destination, origin)
+				returnShip := ship.New(destination, origin, ship.Cargo)
 				g.ships[key] = returnShip
 			} else {
 				destination.ReturnShip()

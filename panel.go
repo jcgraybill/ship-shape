@@ -78,7 +78,24 @@ func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.Reso
 func showStructurePanel(g *Game, s *structure.Structure) {
 	showStructure(g.panel, s, g.resourceData)
 
-	if up := s.Upgradeable(); up > 0 {
+	if g.structureData[s.StructureType()].Workers > 0 {
+		if s.IsPaused() {
+			g.panel.AddButton("resume production", generateUnPauseCallback(g, s))
+		} else {
+			g.panel.AddButton("pause production", generatePauseCallback(g, s))
+		}
+	}
+
+	if g.structureData[s.StructureType()].Prioritize > 0 && g.structureData[s.StructureType()].Prioritize <= g.money && !s.IsPaused() {
+		if s.IsPrioritized() {
+			g.panel.AddButton("normal deliveries", generateUnPrioritizeCallback(g, s))
+		} else {
+			g.panel.AddButton(fmt.Sprintf("prioritize deliveries ($%d)", g.structureData[s.StructureType()].Prioritize), generatePrioritizeCallback(g, s))
+
+		}
+	}
+
+	if up := s.Upgradeable(); up > 0 && g.structureData[up].Cost <= g.money {
 		g.panel.AddButton(fmt.Sprintf("upgrade to %s ($%d)", g.structureData[up].DisplayName, g.structureData[up].Cost), generateUpgradeCallBack(g, s, up))
 	}
 

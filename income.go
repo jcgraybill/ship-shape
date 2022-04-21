@@ -49,7 +49,7 @@ func collectIncome(g *Game) {
 			}
 
 			if topOfferValue > 0 {
-				ship := ship.New(cap, topOffer.s)
+				ship := ship.New(cap, topOffer.s, ship.Income)
 				cap.LaunchShip(0)
 				g.ships[g.count] = ship
 			}

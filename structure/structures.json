@@ -13,7 +13,8 @@
 					 ] ,
 		"Upgrade": { "Structure": 3,
 					 "Required": [ 3 ]},
-		"Cost": 8	
+		"Cost": 8,
+		"Prioritize": 4	
 	 }, 
 	{ "DisplayName": "ice harvester", 
 		"Produces": { "Resource": 3, "Rate": 12, "Requires": [{"Resource": 1, "Quantity": 1}] }, 
@@ -27,7 +28,7 @@
 		"Produces": { "Resource": 4, "Rate": 6, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 4, "Capacity": 8 },
 					{ "Resource": 3, "Capacity": 24 },
-					{ "Resource": 6, "Capacity": 12 }
+					{ "Resource": 7, "Capacity": 12 }
 					 ] ,
 		"Downgrade": { "Structure": 1,
 						"Required": [ 3]
@@ -35,8 +36,10 @@
 		"Upgrade": { "Structure": 4,
 						"Required": [ 3,7 ]
 						},
-		"Consumes": [{ "Resource": 3, "Rate": 32 }],
-		"Cost": 12	
+		"Consumes": [{ "Resource": 3, "Rate": 2 }],
+		"Cost": 12,
+		"Prioritize": 4	
+
 	},
 	{ "DisplayName": "settlement",
 		"Produces": { "Resource": 4, "Rate": 8, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
@@ -47,9 +50,11 @@
 		"Downgrade": { "Structure": 3,
 						"Required": [ 3,7 ]
 						},
-		"Consumes": [{ "Resource": 3, "Rate": 32 },
-					{ "Resource": 7, "Rate": 8}],
-		"Cost": 18	
+		"Consumes": [{ "Resource": 3, "Rate": 2 },
+					{ "Resource": 7, "Rate": 1 }],
+		"Cost": 18,
+		"Prioritize": 4	
+	
 	},
 	{ "DisplayName": "mine", 
 		"Produces": { "Resource": 5, "Rate": 12, "Requires": [{"Resource": 2, "Quantity": 1}] }, 
@@ -68,15 +73,18 @@
 		"Berths": 2,
 		"Workers": 6,
 		"WorkerCost": 1,
-		"Cost": 4
+		"Cost": 4,
+		"Prioritize": 4	
 	},
 	{ "DisplayName": "factory", 
-		"Produces": { "Resource": 7, "Rate": 12, "Requires": [{"Resource": 2, "Quantity": 3}] }, 
+		"Produces": { "Resource": 7, "Rate": 12, "Requires": [{"Resource": 6, "Quantity": 3}] }, 
 		"Storage": [{ "Resource": 6, "Capacity": 18 },
 					{ "Resource": 7, "Capacity": 8 }],
 		"Berths": 2,
 		"Workers": 6,
 		"WorkerCost": 1,
-		"Cost": 4
+		"Cost": 4,
+		"Prioritize": 4	
+
 	}
 ]
