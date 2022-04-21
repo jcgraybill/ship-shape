@@ -97,7 +97,8 @@ func generatePlanets(w, h int) []*planet.Planet {
 			ice := uint8(rand.Intn(255))
 			habitability := uint8(rand.Intn(255))
 			iron := uint8(rand.Intn(255))
-			planets = append(planets, planet.New(x, y, map[int]uint8{resource.Ice: ice, resource.Habitability: habitability, resource.Iron: iron}, rd))
+			sand := uint8(rand.Intn(255))
+			planets = append(planets, planet.New(x, y, map[int]uint8{resource.Ice: ice, resource.Habitability: habitability, resource.Iron: iron, resource.Sand: sand}, rd))
 		}
 	}
 	return planets

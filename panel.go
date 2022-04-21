@@ -13,25 +13,26 @@ import (
 
 func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 
-	if g.money >= g.structureData[structure.Outpost].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Outpost].DisplayName, g.structureData[structure.Outpost].Cost), generateConstructionCallback(g, p, structure.Outpost))
-	}
-	if g.money >= g.structureData[structure.Water].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Water].DisplayName, g.structureData[structure.Water].Cost), generateConstructionCallback(g, p, structure.Water))
-	}
-	if g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.Capitol].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Capitol].DisplayName, g.structureData[structure.Capitol].Cost), generateConstructionCallback(g, p, structure.Capitol))
-	}
-	if g.money >= g.structureData[structure.Mine].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Mine].DisplayName, g.structureData[structure.Mine].Cost), generateConstructionCallback(g, p, structure.Mine))
-	}
-	if g.money >= g.structureData[structure.Smelter].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Smelter].DisplayName, g.structureData[structure.Smelter].Cost), generateConstructionCallback(g, p, structure.Smelter))
-	}
-	if g.money >= g.structureData[structure.Factory].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.Factory].DisplayName, g.structureData[structure.Factory].Cost), generateConstructionCallback(g, p, structure.Factory))
+	if g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.HQ].Cost {
+		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
 	}
 
+	structures := [8]int{
+		structure.Outpost,
+		structure.Water,
+		structure.Mine,
+		structure.Smelter,
+		structure.Factory,
+		structure.Silica,
+		structure.ChipFoundry,
+		structure.Assembly,
+	}
+
+	for _, s := range structures {
+		if g.money >= g.structureData[s].Cost {
+			g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
+		}
+	}
 }
 
 func showPlayerPanel(g *Game) int {

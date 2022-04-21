@@ -5,11 +5,11 @@ import "image/color"
 const (
 	starriness     = 3000
 	PlanetSize     = 32
-	PlanetDistance = 8 // lower numbers are denser
-	StartingMoney  = 500
+	PlanetDistance = 6 // lower numbers are denser
+	StartingMoney  = 5000
 
-	W = 1600
-	H = 900
+	W = 2048
+	H = 2048
 
 	WindowW           = 800
 	WindowH           = 600

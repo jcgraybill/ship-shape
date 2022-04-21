@@ -77,7 +77,7 @@ func (s *Structure) LaunchShip(resource int) {
 
 	s.ships -= 1
 
-	if s.structureType != Capitol {
+	if s.structureType != HQ {
 		s.storage[resource] = Storage{
 			Resource: resource,
 			Capacity: s.storage[resource].Capacity,

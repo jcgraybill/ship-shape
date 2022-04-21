@@ -6,12 +6,12 @@ import (
 )
 
 const (
-	StructureDataLength = 8
+	StructureDataLength = 13
 	StructuresJSONFile  = "structures.json"
 )
 
 const (
-	Capitol int = iota
+	HQ int = iota
 	Outpost
 	Water
 	Habitat
@@ -19,6 +19,11 @@ const (
 	Mine
 	Smelter
 	Factory
+	Silica
+	ChipFoundry
+	Assembly
+	Colony
+	Capitol
 )
 
 type StructureData struct {

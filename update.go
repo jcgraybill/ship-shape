@@ -116,14 +116,14 @@ func shipsArrive(g *Game) {
 		if s.Update(g.count) { //ship has arrived
 			cargo, origin, destination := s.Manifest()
 
-			if s.ShipType() == ship.Income && origin.StructureType() == structure.Capitol {
+			if s.ShipType() == ship.Income && origin.StructureType() == structure.HQ {
 				returnShip := ship.New(destination, origin, ship.Income)
 				returnShip.LoadCargo(destination.CollectIncome(), color.RGBA{0xd4, 0xaf, 0x47, 0xff})
 				g.ships[key] = returnShip
 				continue
 			}
 
-			if s.ShipType() == ship.Income && destination.StructureType() == structure.Capitol {
+			if s.ShipType() == ship.Income && destination.StructureType() == structure.HQ {
 				g.money += cargo
 				destination.ReturnShip()
 				delete(g.ships, key)

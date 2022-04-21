@@ -155,7 +155,7 @@ func (s *Structure) Produces() int {
 }
 
 func (s *Structure) HasShips() bool {
-	if s.structureType == Capitol {
+	if s.structureType == HQ || s.structureType == Capitol {
 		if !s.paused && s.ships > 0 && s.workers > 0 && s.ships <= s.workers {
 			return true
 		} else {
@@ -192,7 +192,7 @@ func (s *Structure) WorkerCost() int {
 }
 
 func (s *Structure) CanProduce() bool {
-	if s.structureType == Capitol {
+	if s.structureType == HQ {
 		return true
 	}
 	if s.Storage()[s.data.Produces.Resource].Amount < s.Storage()[s.data.Produces.Resource].Capacity {

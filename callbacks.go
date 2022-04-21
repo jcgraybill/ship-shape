@@ -14,7 +14,7 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 		updatePopulation(g)
 		showStructurePanel(g, st)
 		st.Highlight()
-		if structureType == structure.Capitol {
+		if structureType == structure.HQ {
 			g.capitols += 1
 		}
 	}

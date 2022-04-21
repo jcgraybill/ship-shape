@@ -1,5 +1,7 @@
 [ 
 	{ "DisplayName": "headquarters",
+		"Storage": [{ "Resource": 11, "Capacity": 8  }] ,
+		"Upgrade": { "Structure": 12, "Required": [ 11 ]},
 		"Workers": 2,
 		"WorkerCost": 2,
 		"Cost": 16,
@@ -45,8 +47,12 @@
 		"Produces": { "Resource": 4, "Rate": 8, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 4, "Capacity": 16 },
 					{ "Resource": 3, "Capacity": 32 },
-					{ "Resource": 7, "Capacity": 8  }
+					{ "Resource": 7, "Capacity": 8  },
+					{ "Resource": 11, "Capacity": 8  }
 					 ] ,
+		"Upgrade": { "Structure": 11,
+						"Required": [ 3,7,11 ]
+						},
 		"Downgrade": { "Structure": 3,
 						"Required": [ 3,7 ]
 						},
@@ -54,7 +60,6 @@
 					{ "Resource": 7, "Rate": 1 }],
 		"Cost": 18,
 		"Prioritize": 4	
-	
 	},
 	{ "DisplayName": "mine", 
 		"Produces": { "Resource": 5, "Rate": 12, "Requires": [{"Resource": 2, "Quantity": 1}] }, 
@@ -79,12 +84,72 @@
 	{ "DisplayName": "factory", 
 		"Produces": { "Resource": 7, "Rate": 12, "Requires": [{"Resource": 6, "Quantity": 3}] }, 
 		"Storage": [{ "Resource": 6, "Capacity": 18 },
-					{ "Resource": 7, "Capacity": 8 }],
+					{ "Resource": 7, "Capacity": 8 },
+				    { "Resource": 10, "Capacity": 8}
+				],
+		"Upgrade": { "Structure": 10,
+						"Required": [ 10 ]},
 		"Berths": 2,
 		"Workers": 6,
 		"WorkerCost": 1,
 		"Cost": 4,
 		"Prioritize": 4	
-
-	}
+	},
+	{ "DisplayName": "silica purifier", 
+		"Produces": { "Resource": 9, "Rate": 12, "Requires": [{"Resource": 8, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 9, "Capacity": 8 }],
+		"Berths": 2,
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4
+	},
+	{ "DisplayName": "chip foundry", 
+		"Produces": { "Resource": 10, "Rate": 12, "Requires": [{"Resource": 9, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 10, "Capacity": 16 },
+					{ "Resource": 9, "Capacity": 8 }
+					],
+		"Berths": 2,
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4,
+		"Prioritize": 4	
+	},
+	{ "DisplayName": "assembly plant", 
+		"Produces": { "Resource": 11, "Rate": 12, "Requires": [{"Resource": 10, "Quantity": 1},{"Resource": 7, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 11, "Capacity": 18 },
+					{ "Resource": 7, "Capacity": 8 },
+				    { "Resource": 10, "Capacity": 8}
+				],
+		"Berths": 2,
+		"Workers": 6,
+		"WorkerCost": 1,
+		"Cost": 4,
+		"Prioritize": 4	
+	},
+	{ "DisplayName": "colony",
+		"Produces": { "Resource": 4, "Rate": 12, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 4, "Capacity": 32 },
+					{ "Resource": 3, "Capacity": 32 },
+					{ "Resource": 7, "Capacity": 8  },
+					{ "Resource": 11, "Capacity": 8  }
+					 ] ,
+		"Downgrade": { "Structure": 3,
+						"Required": [ 3,7,11 ]
+						},
+		"Consumes": [{ "Resource": 3, "Rate": 2 },
+					{ "Resource": 7, "Rate": 1 },
+					{ "Resource": 11, "Rate": 1 }
+				],
+		"Cost": 18,
+		"Prioritize": 4	
+	},
+	{ "DisplayName": "capitol",
+		"Storage": [{ "Resource": 11, "Capacity": 8  }] ,
+		"Consumes": [{ "Resource": 11, "Rate": 1 }],
+		"Downgrade": { "Structure": 0, "Required": [ 11 ]},
+		"Workers": 6,
+		"WorkerCost": 2,
+		"Cost": 16,
+		"Berths": 6
+	 }
 ]
