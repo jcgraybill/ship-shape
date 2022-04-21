@@ -148,7 +148,7 @@ func (s *Structure) Produces() int {
 
 func (s *Structure) HasShips() bool {
 	if s.structureType == Capitol {
-		if s.ships > 0 && s.ships <= s.workers {
+		if s.ships > 0 && s.workers > 0 && s.ships <= s.workers {
 			return true
 		}
 	}
@@ -200,4 +200,44 @@ func (s *Structure) CollectIncome() int {
 	income := s.income
 	s.income = 0
 	return income
+}
+
+func (s *Structure) Upgradeable() int {
+	if s.data.Upgrade.Structure > 0 {
+		upgradeable := true
+		for _, r := range s.data.Upgrade.Required {
+			if s.storage[r].Amount < s.storage[r].Capacity {
+				upgradeable = false
+			}
+		}
+		if upgradeable {
+			return s.data.Upgrade.Structure
+		}
+	}
+	return 0
+}
+
+func (s *Structure) Upgrade(st int, sd StructureData) {
+	s.structureType = st
+	s.data = sd
+	s.image, _, _, s.w, s.h = s.generateImage(s.x, s.x, ui.NonFocusColor)
+	s.highlightedImage, _, _, _, _ = s.generateImage(s.x, s.x, ui.FocusedColor)
+	s.berths, s.ships = sd.Berths, sd.Berths
+
+	storage := make(map[int]Storage)
+
+	s.resourcesWanted = make([]int, 0)
+	for _, st := range s.data.Storage {
+		storage[st.Resource] = Storage{
+			Resource: st.Resource,
+			Capacity: st.Capacity,
+			Amount:   s.storage[st.Resource].Amount,
+		}
+
+		if st.Resource != s.data.Produces.Resource {
+			s.resourcesWanted = append(s.resourcesWanted, st.Resource)
+		}
+	}
+
+	s.storage = storage
 }

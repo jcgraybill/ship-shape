@@ -75,9 +75,14 @@ func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.Reso
 	}
 }
 
-func showStructurePanel(g *Game, structure *structure.Structure) {
-	showStructure(g.panel, structure, g.resourceData)
+func showStructurePanel(g *Game, s *structure.Structure) {
+	showStructure(g.panel, s, g.resourceData)
+
+	if up := s.Upgradeable(); up > 0 {
+		g.panel.AddButton(fmt.Sprintf("upgrade to %s ($%d)", g.structureData[up].DisplayName, g.structureData[up].Cost), generateUpgradeCallBack(g, s, up))
+	}
+
 	g.panel.AddDivider()
-	showPlanetPanel(g.panel, structure.Planet(), g.resourceData)
+	showPlanetPanel(g.panel, s.Planet(), g.resourceData)
 	g.panel.AddDivider()
 }

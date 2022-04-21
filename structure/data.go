@@ -30,6 +30,13 @@ type StructureData struct {
 	WorkerCost  int
 	Berths      int
 	Cost        int
+	Upgrade     Upgrade
+	Downgrade   Upgrade
+}
+
+type Upgrade struct {
+	Structure int
+	Required  []int
 }
 
 type Consumption struct {
@@ -57,7 +64,7 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-//.
+//..
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)
