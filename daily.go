@@ -11,14 +11,9 @@ func structuresGenerateIncome(g *Game) {
 }
 
 func payWorkers(g *Game) {
-	wages := 0
+
 	for _, s := range g.player.Structures() {
-		wages += s.LaborCost()
-	}
-	if wages <= g.money {
-		g.money -= wages
-	} else {
-		g.money = 0
+		g.player.RemoveMoney(uint(s.LaborCost()))
 	}
 }
 
@@ -26,8 +21,8 @@ func distributeWorkers(g *Game) {
 	for _, s := range g.player.Structures() {
 		s.AssignWorkers(0)
 	}
-	budget := g.money
-	for workersToAssign := g.pop; workersToAssign > 0; {
+	budget := g.player.Money()
+	for workersToAssign, _, _ := g.player.Population(); workersToAssign > 0; {
 		workersAssigned := false
 		for _, s := range g.player.Structures() {
 			if s.ActiveWorkers() < s.WorkerCapacity() && workersToAssign > 0 && s.CanProduce() && !s.IsPaused() {

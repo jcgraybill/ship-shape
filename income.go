@@ -11,13 +11,9 @@ type income struct {
 }
 
 func collectIncome(g *Game) {
-	if g.capitols > 0 {
+	if exists, cap := g.player.Capitol(); exists {
 		avail := make([]*income, 0)
-		var cap *structure.Structure
 		for _, s := range g.player.Structures() {
-			if s.Class() == structure.Tax {
-				cap = s
-			}
 			if s.Income() > 0 {
 				avail = append(avail, &income{s, s.Income()})
 			}
@@ -27,7 +23,6 @@ func collectIncome(g *Game) {
 			var topOffer *income
 			var topOfferValue float64 = 0
 			for _, offer := range avail {
-
 				shipAlreadyInLane := false
 				for _, ship := range g.player.Ships() {
 					_, origin, destination := ship.Manifest()

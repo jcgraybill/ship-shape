@@ -4,20 +4,21 @@ import (
 	"math/rand"
 
 	"github.com/jcgraybill/ship-shape/planet"
+	"github.com/jcgraybill/ship-shape/player"
 	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ui"
 )
-
-const MaxCapitols = 1
 
 type Level struct {
 	Title             string
 	W, H              int
 	startingMoney     uint
+	startingYear      uint
 	allowedResources  []int
 	allowedStructures []int
-	Progress          func() bool
+	progress          func(*Level, *player.Player) bool
 	planets           []*planet.Planet
+	message           string
 }
 
 func New(which uint) *Level {
@@ -43,4 +44,8 @@ func New(which uint) *Level {
 	}
 
 	return lvl
+}
+
+func (lvl *Level) Progress(p *player.Player) bool {
+	return lvl.progress(lvl, p)
 }

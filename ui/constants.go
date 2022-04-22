@@ -26,7 +26,7 @@ const (
 
 	IncomeRate = 0.5
 
-	DayLength          = 3600 // smaller numbers are faster
+	YearLength         = 3600 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster
 	BidFrequency       = 20   // smaller numbers are more frequent
 	ShipSpeed          = 2    // smaller numbers are faster

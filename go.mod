@@ -8,12 +8,12 @@ require (
 )
 
 require (
-	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20220320163800-277f93cfa958 // indirect
-	github.com/hajimehoshi/oto/v2 v2.2.0-alpha // indirect
-	github.com/jezek/xgb v1.0.0 // indirect
-	golang.org/x/exp/shiny v0.0.0-20220414153411-bcd21879b8fd // indirect
-	golang.org/x/mobile v0.0.0-20220414153400-ce6a79cf6a13 // indirect
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210727001814-0db043d8d5be // indirect
+	github.com/hajimehoshi/oto/v2 v2.1.0-alpha.2 // indirect
+	github.com/jezek/xgb v0.0.0-20210312150743-0e0f116e1240 // indirect
+	golang.org/x/exp v0.0.0-20190731235908-ec7cb31e5a56 // indirect
+	golang.org/x/mobile v0.0.0-20210902104108-5d9a33257ab5 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
+	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )

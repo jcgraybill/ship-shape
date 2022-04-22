@@ -23,11 +23,14 @@ func (g *Game) Update() error {
 
 	updatePopulation(g)
 
-	if g.count%ui.DayLength == 0 {
+	if g.count%ui.YearLength == 0 {
+		g.year += 1
 		structuresGenerateIncome(g)
 		payWorkers(g)
 		distributeWorkers(g)
 	}
+
+	g.level.Progress(g.player)
 	return nil
 }
 

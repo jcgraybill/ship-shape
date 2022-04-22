@@ -16,6 +16,7 @@ import (
 
 type Game struct {
 	count    int
+	year     uint
 	level    *level.Level
 	player   *player.Player
 	bg       *ebiten.Image
@@ -59,8 +60,9 @@ func main() {
 	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
 	ebiten.SetWindowTitle(ui.NameofGame)
 	ebiten.SetWindowResizable(true)
-	g.panel.Lock(showPlayerPanel(&g))
 	g.player.AddMoney(g.level.StartingMoney())
+	g.year = g.level.StartingYear()
+	g.panel.Lock(showPlayerPanel(&g))
 
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)

@@ -1,6 +1,7 @@
 package level
 
 import (
+	"github.com/jcgraybill/ship-shape/player"
 	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/structure"
 )
@@ -10,6 +11,7 @@ var level01 = Level{
 	W:             800,
 	H:             600,
 	startingMoney: 200,
+	startingYear:  2250,
 	allowedResources: []int{
 		resource.Habitability,
 		resource.Ice,
@@ -19,10 +21,17 @@ var level01 = Level{
 	allowedStructures: []int{
 		structure.Outpost,
 		structure.Water,
+		structure.HQ,
 	},
-	Progress: level01Progress,
+	progress: level01Progress,
+	message:  "welcome to ship-shape\nthank you for playing",
 }
 
-func level01Progress() bool {
+func level01Progress(lvl *Level, p *player.Player) bool {
+	for _, s := range p.Structures() {
+		if s.StructureType() == structure.Outpost {
+			lvl.message = "you built an outpost"
+		}
+	}
 	return false
 }

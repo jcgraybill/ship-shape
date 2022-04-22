@@ -14,33 +14,40 @@ import (
 func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 
 	for _, s := range g.level.AllowedStructures() {
-		if g.structureData[s].Class == structure.Tax && g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.HQ].Cost {
-			g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
-		}
 
-		if g.money >= g.structureData[s].Cost {
+		if g.structureData[s].Class == structure.Tax {
+			if hasCapitol, _ := g.player.Capitol(); !hasCapitol && g.player.Money() >= g.structureData[structure.HQ].Cost {
+				g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
+			}
+		} else if g.player.Money() >= g.structureData[s].Cost {
 			g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
 		}
 	}
 }
 
 func showPlayerPanel(g *Game) int {
-	g.panel.AddInvertedLabel(fmt.Sprintf("population: %d/%d (need %d)", g.pop, g.maxPop, g.workersNeeded), ui.TtfRegular)
-	g.panel.AddLabel(fmt.Sprintf("bank: $%d", g.money), ui.TtfRegular)
-	g.panel.AddLabel("current day:", ui.TtfRegular)
 	g.panel.AddBar(0, color.RGBA{0x00, 0x00, 0x00, 0xff})
+	g.panel.AddInvertedLabel(fmt.Sprintf("year: %d", g.year), ui.TtfBold)
+	pop, maxPop, workersNeeded := g.player.Population()
+	g.panel.AddLabel(fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
+	g.panel.AddLabel(fmt.Sprintf("bank: $%d", g.player.Money()), ui.TtfRegular)
 	g.panel.AddDivider()
-	return 5
+	g.panel.AddLabel(g.level.Message(), ui.TtfRegular)
+	g.panel.AddDivider()
+	return 7
 }
 
 func updatePlayerPanel(g *Game) {
-	g.panel.UpdateLabel(0, fmt.Sprintf("population: %d/%d (need %d)", g.pop, g.maxPop, g.workersNeeded))
-	g.panel.UpdateLabel(1, fmt.Sprintf("bank: $%d", g.money))
-	var day float32
-	day = float32(g.count % ui.DayLength)
-	day = day / float32(ui.DayLength)
-	day = day * 255
-	g.panel.UpdateBar(3, uint8(day))
+	var year float32
+	year = float32(g.count % ui.YearLength)
+	year = year / float32(ui.YearLength)
+	year = year * 255
+	g.panel.UpdateBar(0, uint8(year))
+	g.panel.UpdateLabel(1, fmt.Sprintf("year: %d", g.year))
+	pop, maxPop, workersNeeded := g.player.Population()
+	g.panel.UpdateLabel(2, fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded))
+	g.panel.UpdateLabel(3, fmt.Sprintf("bank: $%d", g.player.Money()))
+	g.panel.UpdateLabel(5, g.level.Message())
 }
 
 func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
@@ -76,7 +83,7 @@ func showStructurePanel(g *Game, s *structure.Structure) {
 		}
 	}
 
-	if g.structureData[s.StructureType()].Prioritize > 0 && g.structureData[s.StructureType()].Prioritize <= g.money && !s.IsPaused() {
+	if g.structureData[s.StructureType()].Prioritize > 0 && g.structureData[s.StructureType()].Prioritize <= g.player.Money() && !s.IsPaused() {
 		if s.IsPrioritized() {
 			g.panel.AddButton("normal deliveries", generateUnPrioritizeCallback(g, s))
 		} else {
@@ -85,7 +92,7 @@ func showStructurePanel(g *Game, s *structure.Structure) {
 		}
 	}
 
-	if possible, up := s.Upgradeable(); possible && g.structureData[up].Cost <= g.money {
+	if possible, up := s.Upgradeable(); possible && g.structureData[up].Cost <= g.player.Money() {
 		g.panel.AddButton(fmt.Sprintf("upgrade to %s ($%d)", g.structureData[up].DisplayName, g.structureData[up].Cost), generateUpgradeCallBack(g, s, up))
 	}
 

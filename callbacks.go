@@ -8,23 +8,20 @@ import (
 func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) func() {
 	return func() {
 		g.panel.Clear()
-		g.money -= g.structureData[structureType].Cost
-		st := structure.New(structureType, g.structureData[structureType], p)
-		g.structures = append(g.structures, st)
+		s := structure.New(structureType, g.structureData[structureType], p)
+		g.player.RemoveMoney(uint(g.structureData[structureType].Cost))
+		g.player.AddStructure(s)
 		updatePopulation(g)
-		showStructurePanel(g, st)
-		st.Highlight()
-		if structureType == structure.HQ {
-			g.capitols += 1
-		}
+		showStructurePanel(g, s)
+		s.Highlight()
 	}
 }
 
-func generateUpgradeCallBack(g *Game, s *structure.Structure, structureType int) func() {
+func generateUpgradeCallBack(g *Game, s *structure.Structure, toStructure int) func() {
 	return func() {
 		g.panel.Clear()
-		g.money -= g.structureData[structureType].Cost
-		s.Upgrade(structureType, g.structureData[structureType])
+		g.player.RemoveMoney(uint(g.structureData[toStructure].Cost))
+		s.Upgrade(toStructure, g.structureData[toStructure])
 		updatePopulation(g)
 		showStructurePanel(g, s)
 		s.Highlight()
@@ -55,7 +52,7 @@ func generateUnPauseCallback(g *Game, s *structure.Structure) func() {
 func generatePrioritizeCallback(g *Game, s *structure.Structure) func() {
 	return func() {
 		s.Prioritize()
-		g.money -= g.structureData[s.StructureType()].Prioritize
+		g.player.RemoveMoney(uint(g.structureData[s.StructureType()].Prioritize))
 		g.panel.Clear()
 		updatePopulation(g)
 		showStructurePanel(g, s)
