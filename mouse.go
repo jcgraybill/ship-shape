@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/jcgraybill/ship-shape/ui"
 )
 
 func handleMouseClicks(g *Game) {
@@ -16,7 +15,7 @@ func handleMouseClicks(g *Game) {
 			g.panel.Clear()
 
 			clickedObject := false
-			for _, p := range g.planets {
+			for _, p := range g.level.Planets() {
 				if p.MouseButton(cx, cy) {
 					clickedObject = true
 					p.Highlight()
@@ -50,7 +49,7 @@ func handleMouseClicks(g *Game) {
 
 		var xMovement, yMovement int
 
-		if newX < g.mouseDragX && -1*g.offsetX+g.windowW < ui.W {
+		if newX < g.mouseDragX && -1*g.offsetX+g.windowW < g.level.W {
 			xMovement = newX - g.mouseDragX
 			g.offsetX += xMovement
 		}
@@ -64,7 +63,7 @@ func handleMouseClicks(g *Game) {
 			yMovement = newY - g.mouseDragY
 			g.offsetY += yMovement
 		}
-		if newY < g.mouseDragY && -1*g.offsetY+g.windowH < ui.H {
+		if newY < g.mouseDragY && -1*g.offsetY+g.windowH < g.level.H {
 			yMovement = newY - g.mouseDragY
 			g.offsetY += yMovement
 		}

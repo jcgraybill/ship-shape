@@ -6,21 +6,19 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/jcgraybill/ship-shape/level"
 	"github.com/jcgraybill/ship-shape/panel"
-	"github.com/jcgraybill/ship-shape/planet"
 	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ship"
 	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
-	"golang.org/x/image/font"
 )
 
 type Game struct {
 	count                              int
+	level                              *level.Level
 	bg                                 *ebiten.Image
 	universe                           *ebiten.Image
-	ttf                                font.Face
-	planets                            []*planet.Planet
 	structures                         []*structure.Structure
 	ships                              map[int]*ship.Ship
 	panel                              *panel.Panel
@@ -42,12 +40,14 @@ func init() {
 
 func main() {
 
+	lvl := level.New(1)
+
 	g := Game{
+		level:         lvl,
 		count:         0,
-		bg:            ui.StarField(ui.W, ui.H),
-		universe:      ebiten.NewImage(ui.W, ui.H),
+		bg:            ui.StarField(lvl.W, lvl.H),
+		universe:      ebiten.NewImage(lvl.W, lvl.H),
 		opts:          &ebiten.DrawImageOptions{},
-		planets:       generatePlanets(ui.W, ui.H),
 		panel:         panel.New(ui.WindowW, ui.WindowH),
 		structureData: structure.GetStructureData(),
 		resourceData:  resource.GetResourceData(),
@@ -57,12 +57,12 @@ func main() {
 		offsetY:       0,
 		windowW:       ui.WindowW,
 		windowH:       ui.WindowH,
-		money:         ui.StartingMoney,
+		money:         lvl.StartingMoney,
 		capitols:      0,
 	}
 
 	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
-	ebiten.SetWindowTitle("ship shape")
+	ebiten.SetWindowTitle(ui.NameofGame)
 	ebiten.SetWindowResizable(true)
 	g.panel.Lock(showPlayerPanel(&g))
 
@@ -82,24 +82,4 @@ func (g *Game) Layout(w, h int) (int, int) {
 	g.windowW = w
 	g.windowH = h
 	return w, h
-}
-
-func generatePlanets(w, h int) []*planet.Planet {
-	cellsize := ui.PlanetSize * ui.PlanetDistance
-	planets := make([]*planet.Planet, 0)
-	rd := resource.GetResourceData()
-
-	for i := 0; i < h/cellsize; i++ {
-		//j < w/cellsize-1 prevents creating planets underneath the panel
-		for j := 0; j < w/cellsize-1; j++ {
-			x := j*cellsize + rand.Intn(cellsize-ui.PlanetSize*2) + ui.PlanetSize
-			y := i*cellsize + rand.Intn(cellsize-ui.PlanetSize*2) + ui.PlanetSize
-			ice := uint8(rand.Intn(255))
-			habitability := uint8(rand.Intn(255))
-			iron := uint8(rand.Intn(255))
-			sand := uint8(rand.Intn(255))
-			planets = append(planets, planet.New(x, y, map[int]uint8{resource.Ice: ice, resource.Habitability: habitability, resource.Iron: iron, resource.Sand: sand}, rd))
-		}
-	}
-	return planets
 }

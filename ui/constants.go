@@ -3,13 +3,10 @@ package ui
 import "image/color"
 
 const (
+	NameofGame     = "ship shape"
 	starriness     = 3000
 	PlanetSize     = 32
 	PlanetDistance = 6 // lower numbers are denser
-	StartingMoney  = 5000
-
-	W = 2048
-	H = 2048
 
 	WindowW           = 800
 	WindowH           = 600

@@ -1,14 +1,14 @@
 [
-	{ "DisplayName": "habitability", "Color": {"R": 3, "G": 204, "B": 99, "A": 255} },
-	{ "DisplayName": "ice",          "Color": {"R": 200, "G": 200, "B": 255, "A": 255} },
-	{ "DisplayName": "iron",         "Color": {"R": 255, "G": 87, "B": 51, "A": 255} },
-	{ "DisplayName": "water",        "Color": {"R": 0, "G": 255, "B": 255, "A": 255} },
-	{ "DisplayName": "population",   "Color": {"R": 255, "G": 255, "B": 255, "A": 255} },
-	{ "DisplayName": "ore",          "Color": {"R": 165, "G": 42, "B": 42, "A": 255} },
-	{ "DisplayName": "metal",        "Color": {"R": 78, "G": 53, "B": 36, "A": 255}  },
-	{ "DisplayName": "machinery",    "Color": {"R": 83, "G": 86, "B": 90, "A": 255} },
-	{ "DisplayName": "sand",         "Color": {"R": 194, "G": 178, "B": 128, "A": 255} },
-	{ "DisplayName": "silicon",      "Color": {"R": 60, "G": 60, "B": 60, "A": 255} },
-	{ "DisplayName": "integrated circuits",    "Color": {"R": 0, "G": 45, "B": 4, "A": 255} },
-	{ "DisplayName": "computers",    "Color": {"R": 8, "G": 146, "B": 208, "A": 255} }
+	{ "DisplayName": "habitability", "Source": 0, "Color": {"R": 3, "G": 204, "B": 99, "A": 255} },
+	{ "DisplayName": "ice",          "Source": 0, "Color": {"R": 200, "G": 200, "B": 255, "A": 255} },
+	{ "DisplayName": "iron",         "Source": 0, "Color": {"R": 255, "G": 87, "B": 51, "A": 255} },
+	{ "DisplayName": "water",        "Source": 1, "Color": {"R": 0, "G": 255, "B": 255, "A": 255} },
+	{ "DisplayName": "population",   "Source": 1, "Color": {"R": 255, "G": 255, "B": 255, "A": 255} },
+	{ "DisplayName": "ore",          "Source": 1, "Color": {"R": 165, "G": 42, "B": 42, "A": 255} },
+	{ "DisplayName": "metal",        "Source": 1, "Color": {"R": 78, "G": 53, "B": 36, "A": 255}  },
+	{ "DisplayName": "machinery",    "Source": 1, "Color": {"R": 83, "G": 86, "B": 90, "A": 255} },
+	{ "DisplayName": "sand",         "Source": 0, "Color": {"R": 194, "G": 178, "B": 128, "A": 255} },
+	{ "DisplayName": "silicon",      "Source": 1, "Color": {"R": 60, "G": 60, "B": 60, "A": 255} },
+	{ "DisplayName": "integrated circuits",    "Source": 1, "Color": {"R": 0, "G": 45, "B": 4, "A": 255} },
+	{ "DisplayName": "computers",    "Source": 1, "Color": {"R": 8, "G": 146, "B": 208, "A": 255} }
 ]

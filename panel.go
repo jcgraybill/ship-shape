@@ -13,21 +13,11 @@ import (
 
 func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 
-	if g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.HQ].Cost {
-		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
-	}
+	for _, s := range g.level.AllowedStructures() {
+		if g.structureData[s].Class == structure.Tax && g.capitols < ui.MaxCapitols && g.money >= g.structureData[structure.HQ].Cost {
+			g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
+		}
 
-	structures := [7]int{
-		structure.Outpost,
-		structure.Water,
-		structure.Mine,
-		structure.Smelter,
-		structure.Factory,
-		structure.Silica,
-		structure.ChipFoundry,
-	}
-
-	for _, s := range structures {
 		if g.money >= g.structureData[s].Cost {
 			g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
 		}
@@ -53,24 +43,24 @@ func updatePlayerPanel(g *Game) {
 	g.panel.UpdateBar(3, uint8(day))
 }
 
-func showPlanetPanel(panel *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
-	panel.AddLabel(fmt.Sprintf("planet: %s", p.Name()), ui.TtfBold)
+func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
+	pl.AddLabel(fmt.Sprintf("planet: %s", p.Name()), ui.TtfBold)
 	for resource, level := range p.Resources() {
-		panel.AddLabel(rd[resource].DisplayName, ui.TtfRegular)
-		panel.AddBar(level, rd[resource].Color)
+		pl.AddLabel(rd[resource].DisplayName, ui.TtfRegular)
+		pl.AddBar(level, rd[resource].Color)
 	}
 }
 
-func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
-	panel.AddLabel(s.Name(), ui.TtfBold)
+func showStructure(pl *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
+	pl.AddLabel(s.Name(), ui.TtfBold)
 	if s.WorkerCapacity() > 0 {
-		panel.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)
+		pl.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)
 	}
 	if len(s.Storage()) > 0 {
-		panel.AddDivider()
+		pl.AddDivider()
 		for _, st := range s.Storage() {
-			panel.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[st.Resource].DisplayName, st.Amount, st.Capacity), ui.TtfRegular)
-			panel.AddBar(uint8((255*int(st.Amount))/int(st.Capacity)), rd[st.Resource].Color)
+			pl.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[st.Resource].DisplayName, st.Amount, st.Capacity), ui.TtfRegular)
+			pl.AddBar(uint8((255*int(st.Amount))/int(st.Capacity)), rd[st.Resource].Color)
 		}
 	}
 }

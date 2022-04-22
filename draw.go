@@ -5,14 +5,13 @@ import (
 )
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.universe.Clear()
 	g.universe.DrawImage(g.bg, nil)
 
 	for _, s := range g.ships {
 		s.DrawCourse(g.universe)
 	}
 
-	for _, p := range g.planets {
+	for _, p := range g.level.Planets() {
 		p.Draw(g.universe)
 	}
 

@@ -15,7 +15,6 @@ func (g *Game) Update() error {
 	handleMouseClicks(g)
 	handleKeyPresses(g)
 
-	structuresGenerateIncome(g)
 	structuresProduce(g)
 	structuresConsume(g)
 	structuresBidForResources(g)
@@ -23,107 +22,62 @@ func (g *Game) Update() error {
 	shipsArrive(g)
 
 	updatePopulation(g)
-	payWorkers(g)
 
+	if g.count%ui.DayLength == 0 {
+		structuresGenerateIncome(g)
+		payWorkers(g)
+		distributeWorkers(g)
+	}
 	return nil
-}
-
-func structuresGenerateIncome(g *Game) {
-	if g.count%ui.DayLength == 0 {
-		for _, structure := range g.structures {
-			structure.GenerateIncome()
-		}
-	}
-}
-
-func payWorkers(g *Game) {
-	if g.count%ui.DayLength == 0 {
-		wages := 0
-		for _, structure := range g.structures {
-			wages += structure.LaborCost()
-		}
-		if wages <= g.money {
-			g.money -= wages
-		} else {
-			g.money = 0
-		}
-
-	}
 }
 
 func updatePopulation(g *Game) {
 	g.pop, g.maxPop, g.workersNeeded = 0, 0, 0
-	for _, structure := range g.structures {
-		g.pop += int(structure.Storage()[resource.Population].Amount)
-		g.maxPop += int(structure.Storage()[resource.Population].Capacity)
-		g.workersNeeded += structure.WorkerCapacity()
-	}
-	if g.count%ui.DayLength == 0 {
-		for _, structure := range g.structures {
-			structure.AssignWorkers(0)
-		}
-		budget := g.money
-		for workersToAssign := g.pop; workersToAssign > 0; {
-			workersAssigned := false
-			for _, structure := range g.structures {
-				if structure.ActiveWorkers() < structure.WorkerCapacity() && workersToAssign > 0 && structure.CanProduce() && !structure.IsPaused() {
-					if budget >= structure.WorkerCost() {
-						budget -= structure.WorkerCost()
-						structure.AssignWorkers(structure.ActiveWorkers() + 1)
-						workersToAssign -= 1
-						workersAssigned = true
-						if structure.IsHighlighted() {
-							g.panel.Clear()
-							showStructurePanel(g, structure)
-						}
-					}
-				}
-			}
-			if !workersAssigned {
-				workersToAssign = 0
-			}
-		}
+	for _, s := range g.structures {
+		g.pop += int(s.Storage()[resource.Population].Amount)
+		g.maxPop += int(s.Storage()[resource.Population].Capacity)
+		g.workersNeeded += s.WorkerCapacity()
 	}
 }
 
 func structuresProduce(g *Game) {
-	for _, structure := range g.structures {
-		if structure.Produce(g.count) && structure.IsHighlighted() {
+	for _, s := range g.structures {
+		if s.Produce(g.count) && s.IsHighlighted() {
 			g.panel.Clear()
 			updatePopulation(g)
-			showStructurePanel(g, structure)
+			showStructurePanel(g, s)
 		}
 	}
 }
 
 func structuresConsume(g *Game) {
-	for _, structure := range g.structures {
-		consumed, downgrade := structure.Consume(g.count)
+	for _, s := range g.structures {
+		consumed, downgrade := s.Consume(g.count)
 		if downgrade > 0 {
-			structure.Upgrade(downgrade, g.structureData[downgrade])
+			s.Upgrade(downgrade, g.structureData[downgrade])
 		}
 
-		if (consumed || downgrade > 0) && structure.IsHighlighted() {
+		if (consumed || downgrade > 0) && s.IsHighlighted() {
 			g.panel.Clear()
 			updatePopulation(g)
-			showStructurePanel(g, structure)
+			showStructurePanel(g, s)
 		}
 	}
 }
 
 func shipsArrive(g *Game) {
-	for key, s := range g.ships {
-		if s.Update(g.count) { //ship has arrived
-			cargo, origin, destination := s.Manifest()
+	for key, sh := range g.ships {
+		if sh.Update(g.count) { //ship has arrived
+			cargo, origin, destination := sh.Manifest()
 
-			if s.ShipType() == ship.Income && origin.Class() == structure.Tax {
+			if sh.ShipType() == ship.Income && origin.Class() == structure.Tax {
 				returnShip := ship.New(destination, origin, ship.Income)
 				returnShip.LoadCargo(destination.CollectIncome(), color.RGBA{0xd4, 0xaf, 0x47, 0xff})
 				g.ships[key] = returnShip
 				continue
 			}
 
-			if s.ShipType() == ship.Income && destination.Class() == structure.Tax {
+			if sh.ShipType() == ship.Income && destination.Class() == structure.Tax {
 				g.money += cargo
 				destination.ReturnShip()
 				delete(g.ships, key)

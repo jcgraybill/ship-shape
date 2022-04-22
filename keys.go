@@ -7,7 +7,7 @@ import (
 
 func handleKeyPresses(g *Game) {
 
-	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) && -1*g.offsetX+g.windowW < ui.W {
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) && -1*g.offsetX+g.windowW < g.level.W {
 		g.opts.GeoM.Translate(-ui.ArrowKeyMoveSpeed, 0)
 		g.offsetX -= ui.ArrowKeyMoveSpeed
 	}
@@ -19,7 +19,7 @@ func handleKeyPresses(g *Game) {
 		g.opts.GeoM.Translate(0, ui.ArrowKeyMoveSpeed)
 		g.offsetY += ui.ArrowKeyMoveSpeed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) && -1*g.offsetY+g.windowH < ui.H {
+	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) && -1*g.offsetY+g.windowH < g.level.H {
 		g.opts.GeoM.Translate(0, -ui.ArrowKeyMoveSpeed)
 		g.offsetY -= ui.ArrowKeyMoveSpeed
 	}

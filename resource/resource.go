@@ -12,6 +12,11 @@ const (
 )
 
 const (
+	Planetary int = iota
+	Produced
+)
+
+const (
 	Habitability int = iota
 	Ice
 	Iron
@@ -28,6 +33,7 @@ const (
 
 type ResourceData struct {
 	DisplayName string
+	Source      int
 	Color       color.RGBA
 }
 
