@@ -41,7 +41,7 @@
 						"Required": [ 3]
 						},
 		"Upgrade": { "Structure": 4,
-						"Required": [ 3,7 ]
+						"Required": [ 7 ]
 						},
 		"Consumes": [{ "Resource": 3, "Rate": 2 }],
 		"Cost": 12,
@@ -57,7 +57,7 @@
 					{ "Resource": 11, "Capacity": 8  }
 					 ] ,
 		"Upgrade": { "Structure": 11,
-						"Required": [ 3,7,11 ]
+						"Required": [ 11 ]
 						},
 		"Downgrade": { "Structure": 3,
 						"Required": [ 3,7 ]
