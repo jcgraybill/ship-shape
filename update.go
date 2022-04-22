@@ -32,16 +32,17 @@ func (g *Game) Update() error {
 }
 
 func updatePopulation(g *Game) {
-	g.pop, g.maxPop, g.workersNeeded = 0, 0, 0
-	for _, s := range g.structures {
-		g.pop += int(s.Storage()[resource.Population].Amount)
-		g.maxPop += int(s.Storage()[resource.Population].Capacity)
-		g.workersNeeded += s.WorkerCapacity()
+	pop, maxPop, workersNeeded := 0, 0, 0
+	for _, s := range g.player.Structures() {
+		pop += int(s.Storage()[resource.Population].Amount)
+		maxPop += int(s.Storage()[resource.Population].Capacity)
+		workersNeeded += s.WorkerCapacity()
 	}
+	g.player.SetPopulation(pop, maxPop, workersNeeded)
 }
 
 func structuresProduce(g *Game) {
-	for _, s := range g.structures {
+	for _, s := range g.player.Structures() {
 		if s.Produce(g.count) && s.IsHighlighted() {
 			g.panel.Clear()
 			updatePopulation(g)
@@ -51,7 +52,7 @@ func structuresProduce(g *Game) {
 }
 
 func structuresConsume(g *Game) {
-	for _, s := range g.structures {
+	for _, s := range g.player.Structures() {
 		consumed, downgrade := s.Consume(g.count)
 		if downgrade > 0 {
 			s.Upgrade(downgrade, g.structureData[downgrade])
@@ -66,21 +67,21 @@ func structuresConsume(g *Game) {
 }
 
 func shipsArrive(g *Game) {
-	for key, sh := range g.ships {
+	for key, sh := range g.player.Ships() {
 		if sh.Update(g.count) { //ship has arrived
 			cargo, origin, destination := sh.Manifest()
 
 			if sh.ShipType() == ship.Income && origin.Class() == structure.Tax {
 				returnShip := ship.New(destination, origin, ship.Income)
 				returnShip.LoadCargo(destination.CollectIncome(), color.RGBA{0xd4, 0xaf, 0x47, 0xff})
-				g.ships[key] = returnShip
+				g.player.Ships()[key] = returnShip
 				continue
 			}
 
 			if sh.ShipType() == ship.Income && destination.Class() == structure.Tax {
-				g.money += cargo
+				g.player.AddMoney(uint(cargo))
 				destination.ReturnShip()
-				delete(g.ships, key)
+				delete(g.player.Ships(), key)
 				continue
 			}
 
@@ -91,10 +92,10 @@ func shipsArrive(g *Game) {
 					showStructurePanel(g, destination)
 				}
 				returnShip := ship.New(destination, origin, ship.Cargo)
-				g.ships[key] = returnShip
+				g.player.Ships()[key] = returnShip
 			} else {
 				destination.ReturnShip()
-				delete(g.ships, key)
+				delete(g.player.Ships(), key)
 			}
 		}
 	}

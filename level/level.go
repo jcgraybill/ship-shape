@@ -8,10 +8,12 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
+const MaxCapitols = 1
+
 type Level struct {
 	Title             string
 	W, H              int
-	StartingMoney     int
+	startingMoney     uint
 	allowedResources  []int
 	allowedStructures []int
 	Progress          func() bool

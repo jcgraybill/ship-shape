@@ -9,7 +9,7 @@ var level01 = Level{
 	Title:         "welcome to ship-shape",
 	W:             800,
 	H:             600,
-	StartingMoney: 200,
+	startingMoney: 200,
 	allowedResources: []int{
 		resource.Habitability,
 		resource.Ice,

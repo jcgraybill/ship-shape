@@ -14,7 +14,7 @@ func collectIncome(g *Game) {
 	if g.capitols > 0 {
 		avail := make([]*income, 0)
 		var cap *structure.Structure
-		for _, s := range g.structures {
+		for _, s := range g.player.Structures() {
 			if s.Class() == structure.Tax {
 				cap = s
 			}
@@ -29,7 +29,7 @@ func collectIncome(g *Game) {
 			for _, offer := range avail {
 
 				shipAlreadyInLane := false
-				for _, ship := range g.ships {
+				for _, ship := range g.player.Ships() {
 					_, origin, destination := ship.Manifest()
 					if (origin == cap && destination == offer.s) ||
 						(origin == offer.s && destination == cap) {
@@ -51,7 +51,7 @@ func collectIncome(g *Game) {
 			if topOfferValue > 0 {
 				ship := ship.New(cap, topOffer.s, ship.Income)
 				cap.LaunchShip(0)
-				g.ships[g.count] = ship
+				g.player.Ships()[g.count] = ship
 			}
 		}
 	}

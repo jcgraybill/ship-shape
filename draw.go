@@ -7,7 +7,7 @@ import (
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.universe.DrawImage(g.bg, nil)
 
-	for _, s := range g.ships {
+	for _, s := range g.player.Ships() {
 		s.DrawCourse(g.universe)
 	}
 
@@ -15,11 +15,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		p.Draw(g.universe)
 	}
 
-	for _, s := range g.structures {
+	for _, s := range g.player.Structures() {
 		s.Draw(g.universe)
 	}
 
-	for _, s := range g.ships {
+	for _, s := range g.player.Ships() {
 		s.Draw(g.universe)
 	}
 	screen.DrawImage(g.universe, g.opts)

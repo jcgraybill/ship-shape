@@ -26,13 +26,13 @@ func handleMouseClicks(g *Game) {
 				}
 			}
 
-			for _, structure := range g.structures {
-				if structure.MouseButton(cx, cy) {
+			for _, s := range g.player.Structures() {
+				if s.MouseButton(cx, cy) {
 					clickedObject = true
-					structure.Highlight()
-					showStructurePanel(g, structure)
+					s.Highlight()
+					showStructurePanel(g, s)
 				} else {
-					structure.Unhighlight()
+					s.Unhighlight()
 				}
 			}
 
