@@ -56,7 +56,7 @@ func updatePopulation(g *Game) {
 	for _, structure := range g.structures {
 		g.pop += int(structure.Storage()[resource.Population].Amount)
 		g.maxPop += int(structure.Storage()[resource.Population].Capacity)
-		g.workersNeeded += structure.WorkersNeeded()
+		g.workersNeeded += structure.WorkerCapacity()
 	}
 	if g.count%ui.DayLength == 0 {
 		for _, structure := range g.structures {
@@ -66,10 +66,10 @@ func updatePopulation(g *Game) {
 		for workersToAssign := g.pop; workersToAssign > 0; {
 			workersAssigned := false
 			for _, structure := range g.structures {
-				if structure.Workers() < structure.WorkersNeeded() && workersToAssign > 0 && structure.CanProduce() && !structure.IsPaused() {
+				if structure.ActiveWorkers() < structure.WorkerCapacity() && workersToAssign > 0 && structure.CanProduce() && !structure.IsPaused() {
 					if budget >= structure.WorkerCost() {
 						budget -= structure.WorkerCost()
-						structure.AssignWorkers(structure.Workers() + 1)
+						structure.AssignWorkers(structure.ActiveWorkers() + 1)
 						workersToAssign -= 1
 						workersAssigned = true
 						if structure.IsHighlighted() {
@@ -116,14 +116,14 @@ func shipsArrive(g *Game) {
 		if s.Update(g.count) { //ship has arrived
 			cargo, origin, destination := s.Manifest()
 
-			if s.ShipType() == ship.Income && origin.StructureType() == structure.HQ {
+			if s.ShipType() == ship.Income && origin.Class() == structure.Tax {
 				returnShip := ship.New(destination, origin, ship.Income)
 				returnShip.LoadCargo(destination.CollectIncome(), color.RGBA{0xd4, 0xaf, 0x47, 0xff})
 				g.ships[key] = returnShip
 				continue
 			}
 
-			if s.ShipType() == ship.Income && destination.StructureType() == structure.HQ {
+			if s.ShipType() == ship.Income && destination.Class() == structure.Tax {
 				g.money += cargo
 				destination.ReturnShip()
 				delete(g.ships, key)

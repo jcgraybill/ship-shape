@@ -26,6 +26,13 @@ const (
 	Capitol
 )
 
+const (
+	Tax int = iota
+	Residential
+	Extractor
+	Processor
+)
+
 type StructureData struct {
 	DisplayName string
 	Produces    Production
@@ -36,6 +43,7 @@ type StructureData struct {
 	Berths      int
 	Cost        int
 	Prioritize  int
+	Class       int
 	Upgrade     Upgrade
 	Downgrade   Upgrade
 }
@@ -70,7 +78,7 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-//.....
+//......
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)

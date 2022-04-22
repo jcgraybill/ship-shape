@@ -22,8 +22,8 @@ func (s *Structure) Produce(count int) bool {
 					}
 				}
 
-				if s.WorkersNeeded() > 0 {
-					productionRate *= float32(s.Workers()) / float32(s.WorkersNeeded())
+				if s.WorkerCapacity() > 0 {
+					productionRate *= float32(s.ActiveWorkers()) / float32(s.WorkerCapacity())
 				}
 
 				if productionRate > 0 {
@@ -76,8 +76,8 @@ func (s *Structure) Bid() map[int]uint8 {
 func (s *Structure) LaunchShip(resource int) {
 
 	s.ships -= 1
-
-	if s.structureType != HQ {
+	s.inFlight += 1
+	if s.Class() != Tax {
 		s.storage[resource] = Storage{
 			Resource: resource,
 			Capacity: s.storage[resource].Capacity,
@@ -97,6 +97,7 @@ func (s *Structure) ReceiveCargo(resource int) {
 }
 
 func (s *Structure) ReturnShip() {
+	s.inFlight -= 1
 	if s.ships < s.berths {
 		s.ships += 1
 	}

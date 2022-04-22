@@ -63,8 +63,8 @@ func showPlanetPanel(panel *panel.Panel, p *planet.Planet, rd [resource.Resource
 
 func showStructure(panel *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
 	panel.AddLabel(s.Name(), ui.TtfBold)
-	if s.WorkersNeeded() > 0 {
-		panel.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.Workers(), s.WorkersNeeded(), s.LaborCost()), ui.TtfRegular)
+	if s.WorkerCapacity() > 0 {
+		panel.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)
 	}
 	if len(s.Storage()) > 0 {
 		panel.AddDivider()
@@ -95,7 +95,7 @@ func showStructurePanel(g *Game, s *structure.Structure) {
 		}
 	}
 
-	if up := s.Upgradeable(); up > 0 && g.structureData[up].Cost <= g.money {
+	if possible, up := s.Upgradeable(); possible && g.structureData[up].Cost <= g.money {
 		g.panel.AddButton(fmt.Sprintf("upgrade to %s ($%d)", g.structureData[up].DisplayName, g.structureData[up].Cost), generateUpgradeCallBack(g, s, up))
 	}
 

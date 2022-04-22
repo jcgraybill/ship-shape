@@ -12,31 +12,32 @@ import (
 )
 
 type Structure struct {
-	x, y, w, h       int
-	highlighted      bool
-	paused           bool
-	prioritized      bool
-	image            *ebiten.Image
-	highlightedImage *ebiten.Image
-	displayOpts      *ebiten.DrawImageOptions
-	planet           *planet.Planet
-	data             StructureData
-	storage          map[int]Storage
-	resourcesWanted  []int
-	berths, ships    int
-	workers          int
-	income           int
-	structureType    int
+	x, y, w, h              int
+	highlighted             bool
+	paused                  bool
+	prioritized             bool
+	image                   *ebiten.Image
+	highlightedImage        *ebiten.Image
+	displayOpts             *ebiten.DrawImageOptions
+	planet                  *planet.Planet
+	data                    StructureData
+	storage                 map[int]Storage
+	resourcesWanted         []int
+	berths, ships, inFlight int
+	workers                 int
+	income                  int
+	structureType           int
 }
 
 func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 	s := Structure{
-		data:          sd,
-		planet:        p,
-		highlighted:   false,
-		paused:        false,
-		prioritized:   false,
-		workers:       0,
+		data:        sd,
+		planet:      p,
+		highlighted: false,
+		paused:      false,
+		prioritized: false,
+		workers:     0,
+
 		displayOpts:   &ebiten.DrawImageOptions{},
 		structureType: structureType,
 	}
@@ -45,7 +46,10 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 	px, py := s.planet.Center()
 	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, ui.NonFocusColor)
 	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, ui.FocusedColor)
-	s.berths, s.ships = s.data.Berths, s.data.Berths
+	s.berths, s.ships, s.inFlight = s.data.Berths, s.data.Berths, 0
+	if s.Class() == Tax {
+		s.ships = s.workers
+	}
 	s.storage = make(map[int]Storage)
 
 	s.resourcesWanted = make([]int, 0)
@@ -69,7 +73,7 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 }
 
 func (s *Structure) adjustPopulationCapacity() {
-	if s.storage[resource.Population].Capacity > 0 {
+	if s.data.Class == Residential {
 		cap := float64(s.storage[resource.Population].Capacity) * (float64(s.planet.Resources()[resource.Habitability]) / 255)
 		s.storage[resource.Population] = Storage{
 			Resource: resource.Population,
@@ -155,24 +159,30 @@ func (s *Structure) Produces() int {
 }
 
 func (s *Structure) HasShips() bool {
-	if s.structureType == HQ || s.structureType == Capitol {
-		if !s.paused && s.ships > 0 && s.workers > 0 && s.ships <= s.workers {
-			return true
-		} else {
-			return false
-		}
+	if s.IsPaused() {
+		return false
 	}
 
-	if s.ships > 0 {
-		return true
+	if s.Class() == Tax {
+		maxShips := s.workers
+		if s.berths < maxShips {
+			maxShips = s.berths
+		}
+		s.ships = maxShips - s.inFlight
 	}
-	return false
+
+	if s.ships <= 0 {
+		s.ships = 0
+		return false
+	}
+
+	return true
 }
 
-func (s *Structure) Workers() int {
+func (s *Structure) ActiveWorkers() int {
 	return s.workers
 }
-func (s *Structure) WorkersNeeded() int {
+func (s *Structure) WorkerCapacity() int {
 	if s.paused {
 		return 0
 	}
@@ -192,13 +202,17 @@ func (s *Structure) WorkerCost() int {
 }
 
 func (s *Structure) CanProduce() bool {
-	if s.structureType == HQ || s.structureType == Capitol {
+	if s.Class() == Tax {
 		return true
 	}
 	if s.Storage()[s.data.Produces.Resource].Amount < s.Storage()[s.data.Produces.Resource].Capacity {
 		return true
 	}
 	return false
+}
+
+func (s *Structure) Class() int {
+	return s.data.Class
 }
 
 func (s *Structure) Income() int {
@@ -215,7 +229,7 @@ func (s *Structure) CollectIncome() int {
 	return income
 }
 
-func (s *Structure) Upgradeable() int {
+func (s *Structure) Upgradeable() (bool, int) {
 	if s.data.Upgrade.Structure > 0 {
 		upgradeable := true
 		for _, r := range s.data.Upgrade.Required {
@@ -224,10 +238,10 @@ func (s *Structure) Upgradeable() int {
 			}
 		}
 		if upgradeable {
-			return s.data.Upgrade.Structure
+			return true, s.data.Upgrade.Structure
 		}
 	}
-	return 0
+	return false, 0
 }
 
 func (s *Structure) Upgrade(st int, sd StructureData) {
@@ -237,15 +251,22 @@ func (s *Structure) Upgrade(st int, sd StructureData) {
 	s.highlightedImage, _, _, _, _ = s.generateImage(s.x, s.x, ui.FocusedColor)
 	s.berths, s.ships = sd.Berths, sd.Berths
 
-	storage := make(map[int]Storage)
+	carryover := make(map[int]uint8)
 
+	for _, st := range s.storage {
+		carryover[st.Resource] = st.Amount
+	}
+
+	s.storage = make(map[int]Storage)
 	s.resourcesWanted = make([]int, 0)
+
 	for _, st := range s.data.Storage {
-		amount := s.storage[st.Resource].Amount
+		amount := carryover[st.Resource]
 		if amount > st.Capacity {
 			amount = st.Capacity
 		}
-		storage[st.Resource] = Storage{
+
+		s.storage[st.Resource] = Storage{
 			Resource: st.Resource,
 			Capacity: st.Capacity,
 			Amount:   amount,
@@ -256,7 +277,6 @@ func (s *Structure) Upgrade(st int, sd StructureData) {
 		}
 	}
 
-	s.storage = storage
 	s.adjustPopulationCapacity()
 
 }

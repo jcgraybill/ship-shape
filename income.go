@@ -15,7 +15,7 @@ func collectIncome(g *Game) {
 		avail := make([]*income, 0)
 		var cap *structure.Structure
 		for _, s := range g.structures {
-			if s.StructureType() == structure.HQ || s.StructureType() == structure.Capitol {
+			if s.Class() == structure.Tax {
 				cap = s
 			}
 			if s.Income() > 0 {
