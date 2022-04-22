@@ -192,7 +192,7 @@ func (s *Structure) WorkerCost() int {
 }
 
 func (s *Structure) CanProduce() bool {
-	if s.structureType == HQ {
+	if s.structureType == HQ || s.structureType == Capitol {
 		return true
 	}
 	if s.Storage()[s.data.Produces.Resource].Amount < s.Storage()[s.data.Produces.Resource].Capacity {

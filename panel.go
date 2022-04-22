@@ -17,7 +17,7 @@ func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 		g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
 	}
 
-	structures := [8]int{
+	structures := [7]int{
 		structure.Outpost,
 		structure.Water,
 		structure.Mine,
@@ -25,7 +25,6 @@ func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 		structure.Factory,
 		structure.Silica,
 		structure.ChipFoundry,
-		structure.Assembly,
 	}
 
 	for _, s := range structures {
