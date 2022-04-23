@@ -16,7 +16,7 @@ const (
 	Border    = 1
 	BarHeight = 4
 
-	PanelWidth           = 160
+	PanelWidth           = 200
 	PanelExternalPadding = 10
 
 	TtfRegular = "fonts/OpenSans_SemiCondensed-Regular.ttf"

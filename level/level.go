@@ -10,19 +10,21 @@ import (
 )
 
 type Level struct {
-	Title             string
+	title             string
 	W, H              int
 	startingMoney     uint
 	startingYear      uint
 	allowedResources  []int
 	allowedStructures []int
-	progress          func(*Level, *player.Player) bool
+	update            func(*Level, *player.Player) bool
 	planets           []*planet.Planet
-	message           string
+	message, label    string
+	progress, goal    uint
+	goalMet           bool
+	nextLevel         *Level
 }
 
-func New(which uint) *Level {
-	lvl := &level01
+func New(lvl *Level) *Level {
 	lvl.planets = make([]*planet.Planet, 0)
 	rd := resource.GetResourceData()
 
@@ -46,6 +48,12 @@ func New(which uint) *Level {
 	return lvl
 }
 
-func (lvl *Level) Progress(p *player.Player) bool {
-	return lvl.progress(lvl, p)
+func StartingLevel() *Level {
+	return New(&level01)
+}
+
+func (lvl *Level) Update(p *player.Player) {
+	if lvl.update(lvl, p) {
+		lvl.goalMet = true
+	}
 }

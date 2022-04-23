@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -23,6 +24,7 @@ type Game struct {
 	universe *ebiten.Image
 
 	panel                              *panel.Panel
+	endOfLevelPlayerPanel              bool
 	structureData                      [structure.StructureDataLength]structure.StructureData
 	resourceData                       [resource.ResourceDataLength]resource.ResourceData
 	opts                               *ebiten.DrawImageOptions
@@ -37,15 +39,7 @@ func init() {
 }
 
 func main() {
-
-	lvl := level.New(1)
-
 	g := Game{
-		level:         lvl,
-		player:        player.New(),
-		count:         0,
-		bg:            ui.StarField(lvl.W, lvl.H),
-		universe:      ebiten.NewImage(lvl.W, lvl.H),
 		opts:          &ebiten.DrawImageOptions{},
 		panel:         panel.New(ui.WindowW, ui.WindowH),
 		structureData: structure.GetStructureData(),
@@ -58,15 +52,29 @@ func main() {
 	}
 
 	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
-	ebiten.SetWindowTitle(ui.NameofGame)
 	ebiten.SetWindowResizable(true)
-	g.player.AddMoney(g.level.StartingMoney())
-	g.year = g.level.StartingYear()
-	g.panel.Lock(showPlayerPanel(&g))
+
+	g.load(level.StartingLevel())
 
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)
 	}
+}
+
+func (g *Game) load(lvl *level.Level) {
+	g.count = 0
+	g.level = lvl
+	g.bg = ui.StarField(lvl.W, lvl.H)
+	g.universe = ebiten.NewImage(lvl.W, lvl.H)
+	g.year = g.level.StartingYear()
+	g.player = player.New()
+	g.player.AddMoney(lvl.StartingMoney())
+	g.endOfLevelPlayerPanel = false
+
+	ebiten.SetWindowTitle(fmt.Sprintf("%s: %s", ui.NameofGame, lvl.Title()))
+	g.panel.Lock(0)
+	g.panel.Clear()
+	g.panel.Lock(showPlayerPanel(g))
 }
 
 func (g *Game) Layout(w, h int) (int, int) {

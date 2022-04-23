@@ -19,7 +19,7 @@ func handleMouseClicks(g *Game) {
 				if p.MouseButton(cx, cy) {
 					clickedObject = true
 					p.Highlight()
-					showPlanetPanel(g.panel, p, g.resourceData)
+					showPlanetPanel(g.panel, p, g.resourceData, g.level.AllowedResources())
 					showBuildOptionsPanel(p, g)
 				} else {
 					p.Unhighlight()

@@ -32,12 +32,17 @@ func showPlayerPanel(g *Game) int {
 	g.panel.AddLabel(fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
 	g.panel.AddLabel(fmt.Sprintf("bank: $%d", g.player.Money()), ui.TtfRegular)
 	g.panel.AddDivider()
-	g.panel.AddLabel(g.level.Message(), ui.TtfRegular)
+	message, label, progress, goal := g.level.ShowStatus()
+	g.panel.AddLabel(message, ui.TtfRegular)
 	g.panel.AddDivider()
-	return 7
+	g.panel.AddLabel(fmt.Sprintf("%s (%d/%d):", label, progress, goal), ui.TtfRegular)
+	g.panel.AddBar(uint8(255*float32(progress)/float32(goal)), color.RGBA{75, 104, 184, 255})
+	g.panel.AddDivider()
+	return 10
 }
 
 func updatePlayerPanel(g *Game) {
+
 	var year float32
 	year = float32(g.count % ui.YearLength)
 	year = year / float32(ui.YearLength)
@@ -47,33 +52,55 @@ func updatePlayerPanel(g *Game) {
 	pop, maxPop, workersNeeded := g.player.Population()
 	g.panel.UpdateLabel(2, fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded))
 	g.panel.UpdateLabel(3, fmt.Sprintf("bank: $%d", g.player.Money()))
-	g.panel.UpdateLabel(5, g.level.Message())
+
+	message, label, progress, goal := g.level.ShowStatus()
+	g.panel.UpdateLabel(5, message)
+	if progress == goal {
+		if !g.endOfLevelPlayerPanel {
+			g.panel.UpdateLabel(7, fmt.Sprintf("%s (%d/%d): DONE", label, progress, goal))
+			g.panel.Lock(8)
+			g.panel.Clear()
+			g.panel.AddButton("next", func() { g.load(g.level.NextLevel()) })
+			g.panel.AddDivider()
+			g.panel.Lock(10)
+			g.endOfLevelPlayerPanel = true
+		}
+	} else {
+		g.panel.UpdateLabel(7, fmt.Sprintf("%s (%d/%d):", label, progress, goal))
+		g.panel.UpdateBar(8, uint8(255*float32(progress)/float32(goal)))
+	}
+
 }
 
-func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData) {
+func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData, allowed []int) {
 	pl.AddLabel(fmt.Sprintf("planet: %s", p.Name()), ui.TtfBold)
-	for resource, level := range p.Resources() {
-		pl.AddLabel(rd[resource].DisplayName, ui.TtfRegular)
-		pl.AddBar(level, rd[resource].Color)
+	for _, resource := range allowed {
+		if level, exists := p.Resources()[resource]; exists {
+			pl.AddLabel(rd[resource].DisplayName, ui.TtfRegular)
+			pl.AddBar(level, rd[resource].Color)
+		}
 	}
 }
 
-func showStructure(pl *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData) {
+func showStructure(pl *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData, allowed []int) {
 	pl.AddLabel(s.Name(), ui.TtfBold)
 	if s.WorkerCapacity() > 0 {
 		pl.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)
 	}
 	if len(s.Storage()) > 0 {
 		pl.AddDivider()
-		for _, st := range s.Storage() {
-			pl.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[st.Resource].DisplayName, st.Amount, st.Capacity), ui.TtfRegular)
-			pl.AddBar(uint8((255*int(st.Amount))/int(st.Capacity)), rd[st.Resource].Color)
+
+		for _, resource := range allowed {
+			if st, exists := s.Storage()[resource]; exists {
+				pl.AddLabel(fmt.Sprintf("%s (%d/%d)", rd[st.Resource].DisplayName, st.Amount, st.Capacity), ui.TtfRegular)
+				pl.AddBar(uint8((255*int(st.Amount))/int(st.Capacity)), rd[st.Resource].Color)
+			}
 		}
 	}
 }
 
 func showStructurePanel(g *Game, s *structure.Structure) {
-	showStructure(g.panel, s, g.resourceData)
+	showStructure(g.panel, s, g.resourceData, g.level.AllowedResources())
 
 	if g.structureData[s.StructureType()].Workers > 0 {
 		if s.IsPaused() {
@@ -97,6 +124,6 @@ func showStructurePanel(g *Game, s *structure.Structure) {
 	}
 
 	g.panel.AddDivider()
-	showPlanetPanel(g.panel, s.Planet(), g.resourceData)
+	showPlanetPanel(g.panel, s.Planet(), g.resourceData, g.level.AllowedResources())
 	g.panel.AddDivider()
 }

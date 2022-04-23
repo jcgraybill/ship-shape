@@ -30,7 +30,7 @@ func (g *Game) Update() error {
 		distributeWorkers(g)
 	}
 
-	g.level.Progress(g.player)
+	g.level.Update(g.player)
 	return nil
 }
 
