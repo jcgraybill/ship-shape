@@ -31,7 +31,7 @@ func (s *Structure) HasShips() bool {
 		s.ships = maxShips - s.inFlight
 	}
 
-	if s.ships <= 0 {
+	if s.ships+s.inFlight <= 0 {
 		s.ships = s.data.MinShips
 		if s.ships == 0 {
 			return false

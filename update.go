@@ -9,6 +9,9 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
+// FIXME - reactivate any buttons that were
+// deactivated for lack of funds, when funds
+// become available.
 func (g *Game) Update() error {
 	g.count++
 	updatePlayerPanel(g)

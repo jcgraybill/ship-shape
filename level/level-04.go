@@ -37,8 +37,17 @@ var level04 = Level{
 		structure.Smelter,
 	},
 
-	message: `MANUFACTURING
+	message: `Some structures can MANUFACTURE
+goods, converting raw materials
+into new kinds of resources.
 
+The SMELTER uses ORE and water
+to make METAL. Build MINES on
+planets with high levels of IRON
+to extract ore. Each SMELTER can
+store 8 metal, so you'll need 
+two smelters to meet this 
+level's goal.
 `,
 
 	update: func(lvl *Level, p *player.Player) bool {
@@ -57,9 +66,19 @@ var level04 = Level{
 
 		}
 		if mine && !smelter {
-			lvl.message = `mine !smelter`
+			lvl.message = `mine !smelter
+
+Balance
+your economy carefully, to generate 
+enough revenue to afford
+everything.`
 		} else if !mine && smelter {
-			lvl.message = `!mine smelter`
+			lvl.message = `!mine smelter
+
+Balance
+your economy carefully, to generate 
+enough revenue to afford
+everything.`
 		} else if mine && smelter {
 			lvl.message = `mine smelter`
 		}
