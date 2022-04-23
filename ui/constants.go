@@ -29,7 +29,7 @@ const (
 	YearLength         = 3600 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster
 	BidFrequency       = 20   // smaller numbers are more frequent
-	ShipSpeed          = 2    // smaller numbers are faster
+	ShipSpeed          = 1    // smaller numbers are faster
 )
 
 var FocusedColor = color.RGBA{0xff, 0xff, 0xff, 0xff}

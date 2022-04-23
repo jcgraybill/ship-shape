@@ -6,7 +6,9 @@ import (
 	"github.com/jcgraybill/ship-shape/structure"
 )
 
-var level02 = Level{
+var level04 = Level{} // placeholder
+
+var level03 = Level{
 	title:         "upgrades and resources",
 	W:             1366,
 	H:             768,
@@ -15,7 +17,7 @@ var level02 = Level{
 	label:         "habitats",
 	goal:          3,
 	progress:      0,
-	nextLevel:     New(&level03),
+	nextLevel:     New(&level04),
 
 	allowedResources: []int{
 		resource.Habitability,
@@ -44,19 +46,11 @@ for water.
 
 Find a planet with a lot of ice,
 and build an ICE HARVESTER. Also
-build an outpost or two.
-
-Look for planets with high ICE
-ratings for your ice harvester, 
-and planets with HABITABILITY
-for your outposts.,`,
+build an outpost or two.`,
 
 	update: func(lvl *Level, p *player.Player) bool {
 		lvl.progress = 0
 		ice := false
-		if p.Money() < 800 {
-			p.AddMoney(400)
-		}
 		for _, s := range p.Structures() {
 			if s.StructureType() == structure.Habitat {
 				lvl.progress += 1
@@ -91,10 +85,12 @@ ice harvester need WORKERS!
 
 Workers come from the 
 population of your outposts and
-habitats. Well-staffed structures
-are more productive.
+habitats. Once per year, workers
+are assigned to structures that
+have available jobs. Better-staffed
+structures are more productive.
 
-Labor costs money. You can see the
+Labor costs money. You can see what
 wages the workers will be paid 
 by clicking each structure.
 
@@ -104,6 +100,10 @@ structures that need those goods.
 
 Once an outpost has a full supply of
 water, upgrade it to a HABITAT!`
+		}
+
+		if p.Money() < 800 {
+			p.AddMoney(400)
 		}
 
 		if lvl.progress >= lvl.goal {

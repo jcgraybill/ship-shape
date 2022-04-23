@@ -7,33 +7,36 @@
 		"WorkerCost": 2,
 		"Cost": 16,
 		"Berths": 2,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": true
 	 },
 
 	{ "DisplayName": "outpost", 
 		"Class": 1,
 		"Produces": { "Resource": 4, "Rate": 40, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 4, "Capacity": 40 },
-					{ "Resource": 3, "Capacity": 16 }
+					{ "Resource": 3, "Capacity": 8 }
 					 ] ,
 		"Upgrade": { "Structure": 3,
 					 "Required": [ 3 ]},
 		"Cost": 800,
-		"Prioritize": 50	
+		"Prioritize": 50,
+		"Buildable": true
 	 }, 
 	{ "DisplayName": "ice harvester", 
 		"Class": 2,
 		"Produces": { "Resource": 3, "Rate": 12, "Requires": [{"Resource": 1, "Quantity": 1}] }, 
-		"Storage": [{ "Resource": 3, "Capacity": 8 }],
+		"Storage": [{ "Resource": 3, "Capacity": 10 }],
 		"Berths": 2,
-		"Workers": 6,
-		"WorkerCost": 1,
-		"Cost": 4
+		"Workers": 60,
+		"WorkerCost": 2,
+		"Cost": 450,
+		"Buildable": true
 	},
 	{ "DisplayName": "habitat",
 		"Class": 1,
-		"Produces": { "Resource": 4, "Rate": 6, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
-		"Storage": [{ "Resource": 4, "Capacity": 8 },
+		"Produces": { "Resource": 4, "Rate": 50, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 4, "Capacity": 80 },
 					{ "Resource": 3, "Capacity": 24 },
 					{ "Resource": 7, "Capacity": 12 }
 					 ] ,
@@ -43,9 +46,10 @@
 		"Upgrade": { "Structure": 4,
 						"Required": [ 7 ]
 						},
-		"Consumes": [{ "Resource": 3, "Rate": 2 }],
-		"Cost": 12,
-		"Prioritize": 4	
+		"Consumes": [{ "Resource": 3, "Rate": 6 }],
+		"Cost": 300,
+		"Prioritize": 60,
+		"Buildable": false
 
 	},
 	{ "DisplayName": "settlement",
@@ -65,7 +69,8 @@
 		"Consumes": [{ "Resource": 3, "Rate": 2 },
 					{ "Resource": 7, "Rate": 1 }],
 		"Cost": 18,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": false
 	},
 	{ "DisplayName": "mine", 
 		"Class": 2,
@@ -74,7 +79,8 @@
 		"Berths": 2,
 		"Workers": 6,
 		"WorkerCost": 1,
-		"Cost": 4
+		"Cost": 4,
+		"Buildable": true
 	},
 	{ "DisplayName": "smelter", 
 		"Class": 3,
@@ -87,7 +93,8 @@
 		"Workers": 6,
 		"WorkerCost": 1,
 		"Cost": 4,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": true
 	},
 	{ "DisplayName": "factory", 
 		"Class": 3,
@@ -102,7 +109,8 @@
 		"Workers": 6,
 		"WorkerCost": 1,
 		"Cost": 4,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": true	
 	},
 	{ "DisplayName": "silica purifier", 
 		"Class": 2,
@@ -111,7 +119,8 @@
 		"Berths": 2,
 		"Workers": 6,
 		"WorkerCost": 1,
-		"Cost": 4
+		"Cost": 4,
+		"Buildable": true
 	},
 	{ "DisplayName": "chip foundry", 
 		"Class": 3,
@@ -123,7 +132,8 @@
 		"Workers": 6,
 		"WorkerCost": 1,
 		"Cost": 4,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": true
 	},
 	{ "DisplayName": "assembly", 
 		"Class": 3,
@@ -136,7 +146,8 @@
 		"Workers": 6,
 		"WorkerCost": 1,
 		"Cost": 4,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": false	
 	},
 	{ "DisplayName": "colony",
 		"Class": 1,
@@ -154,7 +165,8 @@
 					{ "Resource": 11, "Rate": 1 }
 				],
 		"Cost": 18,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": false
 	},
 	{ "DisplayName": "capitol",
 		"Class": 0,
@@ -165,6 +177,7 @@
 		"WorkerCost": 2,
 		"Cost": 16,
 		"Berths": 6,
-		"Prioritize": 4	
+		"Prioritize": 4,
+		"Buildable": false
 	 }
 ]

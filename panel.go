@@ -14,13 +14,14 @@ import (
 func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 
 	for _, s := range g.level.AllowedStructures() {
-
-		if g.structureData[s].Class == structure.Tax {
-			if hasCapitol, _ := g.player.Capitol(); !hasCapitol && g.player.Money() >= g.structureData[structure.HQ].Cost {
-				g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
+		if g.structureData[s].Buildable {
+			if g.structureData[s].Class == structure.Tax {
+				if hasCapitol, _ := g.player.Capitol(); !hasCapitol && g.player.Money() >= g.structureData[structure.HQ].Cost {
+					g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
+				}
+			} else if g.player.Money() >= g.structureData[s].Cost {
+				g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
 			}
-		} else if g.player.Money() >= g.structureData[s].Cost {
-			g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
 		}
 	}
 }
@@ -85,7 +86,7 @@ func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDat
 func showStructure(pl *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData, allowed []int) {
 	pl.AddLabel(s.Name(), ui.TtfBold)
 	if s.WorkerCapacity() > 0 {
-		pl.AddLabel(fmt.Sprintf("%d/%d workers ($%d/day)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)
+		pl.AddLabel(fmt.Sprintf("%d/%d workers ($%d/year)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)
 	}
 	if len(s.Storage()) > 0 {
 		pl.AddDivider()

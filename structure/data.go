@@ -46,6 +46,7 @@ type StructureData struct {
 	Class       int
 	Upgrade     Upgrade
 	Downgrade   Upgrade
+	Buildable   bool
 }
 
 type Upgrade struct {
@@ -78,7 +79,7 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-//..........
+//
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)

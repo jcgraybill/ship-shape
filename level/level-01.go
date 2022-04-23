@@ -8,14 +8,15 @@ import (
 
 var level01 = Level{
 	title:         "welcome to ship-shape",
-	W:             1920,
-	H:             1080,
+	W:             1366,
+	H:             768,
 	startingMoney: 3200,
 	startingYear:  2250,
 	label:         "total population",
 	goal:          120,
 	progress:      0,
 	nextLevel:     New(&level02),
+
 	allowedResources: []int{
 		resource.Habitability,
 		resource.Population,
@@ -23,6 +24,7 @@ var level01 = Level{
 	allowedStructures: []int{
 		structure.Outpost,
 	},
+
 	message: `Welcome to ship-shape!
 
 Your mission is to build a thriving
@@ -40,6 +42,7 @@ populations.
 Find a planet with high habitability
 and try building an OUTPOST. Hint: 
 Look for a bar that's mostly green.`,
+
 	update: func(lvl *Level, p *player.Player) bool {
 		lvl.progress = 0
 		outposts := 0
@@ -88,14 +91,12 @@ Try scrolling around: there are
 many more planets to choose from
 than the first few you see here.`
 				} else {
-					lvl.message = `Well done!
-
-You've spent all your money, and
+					lvl.message = `You've spent all your money, and
 built enough outposts to support
 a population of 120. 
 
-Now just sit back and wait for
-your population to grow.`
+Now just sit back and watch your
+population grow!`
 				}
 			}
 		}
@@ -105,7 +106,7 @@ your population to grow.`
 
 You've mastered building outposts. 
 Outposts are one of the most 
-importantstructures in the game, 
+important structures in the game, 
 as they provide the homes where 
 your colonists will live.
 
