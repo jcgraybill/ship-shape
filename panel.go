@@ -18,9 +18,15 @@ func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 			if g.structureData[s].Class == structure.Tax {
 				if hasCapitol, _ := g.player.Capitol(); !hasCapitol && g.player.Money() >= g.structureData[structure.HQ].Cost {
 					g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
+				} else {
+					b := g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[structure.HQ].DisplayName, g.structureData[structure.HQ].Cost), generateConstructionCallback(g, p, structure.HQ))
+					b.DeActivate()
 				}
 			} else if g.player.Money() >= g.structureData[s].Cost {
 				g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
+			} else {
+				b := g.panel.AddButton(fmt.Sprintf("build %s ($%d)", g.structureData[s].DisplayName, g.structureData[s].Cost), generateConstructionCallback(g, p, s))
+				b.DeActivate()
 			}
 		}
 	}
@@ -122,6 +128,13 @@ func showStructurePanel(g *Game, s *structure.Structure) {
 
 	if possible, up := s.Upgradeable(); possible && g.structureData[up].Cost <= g.player.Money() {
 		g.panel.AddButton(fmt.Sprintf("upgrade to %s ($%d)", g.structureData[up].DisplayName, g.structureData[up].Cost), generateUpgradeCallBack(g, s, up))
+	} else if up > 0 {
+		for _, st := range g.level.AllowedStructures() {
+			if st == up {
+				b := g.panel.AddButton(fmt.Sprintf("upgrade to %s ($%d)", g.structureData[up].DisplayName, g.structureData[up].Cost), generateUpgradeCallBack(g, s, up))
+				b.DeActivate()
+			}
+		}
 	}
 
 	g.panel.AddDivider()

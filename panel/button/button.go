@@ -15,11 +15,13 @@ type Button struct {
 	x, y    int
 	w, h    int
 	pressed bool
+	active  bool
 
-	image  *ebiten.Image
-	opts   *ebiten.DrawImageOptions
-	audio  *audio.Player
-	action func()
+	image         *ebiten.Image
+	inactiveImage *ebiten.Image
+	opts          *ebiten.DrawImageOptions
+	audio         *audio.Player
+	action        func()
 }
 
 func New(x, y, w, h int, message string, action func()) *Button {
@@ -29,6 +31,7 @@ func New(x, y, w, h int, message string, action func()) *Button {
 		w:       w,
 		action:  action,
 		pressed: false,
+		active:  true,
 	}
 
 	ttf := ui.Font(ui.TtfRegular)
@@ -45,6 +48,15 @@ func New(x, y, w, h int, message string, action func()) *Button {
 	opts.GeoM.Translate(ui.Border, ui.Border)
 	image.DrawImage(interior, opts)
 	b.image = image
+
+	dimage := ebiten.NewImage(b.w, b.h)
+	dimage.Fill(ui.NonFocusColor)
+
+	dinterior := ebiten.NewImage(b.w-ui.Border*2, b.h-ui.Border*2)
+	dinterior.Fill(ui.BackgroundColor)
+	text.Draw(dinterior, message, ttf, b.w/2-textBounds.Dx()/2, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, ui.NonFocusColor)
+	dimage.DrawImage(dinterior, opts)
+	b.inactiveImage = dimage
 
 	b.opts = &ebiten.DrawImageOptions{}
 	b.opts.GeoM.Translate(float64(b.x), float64(b.y))
@@ -67,6 +79,9 @@ func New(x, y, w, h int, message string, action func()) *Button {
 }
 
 func (b *Button) LeftMouseButtonPress(x, y int) bool {
+	if !b.active {
+		return false
+	}
 	if b.x < x && b.x+b.w > x {
 		if b.y < y && b.y+b.h > y {
 			b.pressed = true
@@ -80,6 +95,10 @@ func (b *Button) LeftMouseButtonPress(x, y int) bool {
 }
 
 func (b *Button) LeftMouseButtonRelease(x, y int) bool {
+	if !b.active {
+		return false
+	}
+
 	if b.pressed {
 		if b.x < x && b.x+b.w > x {
 			if b.y < y && b.y+b.h > y {
@@ -95,7 +114,11 @@ func (b *Button) LeftMouseButtonRelease(x, y int) bool {
 }
 
 func (b *Button) Draw() (*ebiten.Image, *ebiten.DrawImageOptions) {
-	return b.image, b.opts
+	if b.active {
+		return b.image, b.opts
+	} else {
+		return b.inactiveImage, b.opts
+	}
 }
 
 func (b *Button) Height() int {
@@ -109,3 +132,6 @@ func (b *Button) playSound() {
 
 func (b *Button) UpdateValue(uint8) { return }
 func (b *Button) UpdateText(string) { return }
+
+func (b *Button) Activate()   { b.active = true }
+func (b *Button) DeActivate() { b.active = false }

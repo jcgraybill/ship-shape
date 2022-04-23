@@ -122,6 +122,7 @@ func (s *Structure) Consume(count int) (bool, int) {
 				}
 				consumed = true
 			} else {
+				// TODO test this
 				if s.data.Downgrade.Structure > 0 {
 					for _, r := range s.data.Downgrade.Required {
 						if r == c.Resource {

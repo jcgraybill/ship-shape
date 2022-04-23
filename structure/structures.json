@@ -7,6 +7,7 @@
 		"WorkerCost": 10,
 		"Cost": 900,
 		"Berths": 4,
+		"MinShips": 1,
 		"Prioritize": 60,
 		"Buildable": true
 	 },
@@ -25,9 +26,9 @@
 	 }, 
 	{ "DisplayName": "ice harvester", 
 		"Class": 2,
-		"Produces": { "Resource": 3, "Rate": 12, "Requires": [{"Resource": 1, "Quantity": 1}] }, 
+		"Produces": { "Resource": 3, "Rate": 16, "Requires": [{"Resource": 1, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 3, "Capacity": 10 }],
-		"Berths": 2,
+		"Berths": 4,
 		"Workers": 60,
 		"WorkerCost": 2,
 		"Cost": 450,
@@ -46,7 +47,7 @@
 		"Upgrade": { "Structure": 4,
 						"Required": [ 7 ]
 						},
-		"Consumes": [{ "Resource": 3, "Rate": 6 }],
+		"Consumes": [{ "Resource": 3, "Rate": 4 }],
 		"Cost": 300,
 		"Prioritize": 60,
 		"Buildable": false
@@ -66,8 +67,8 @@
 		"Downgrade": { "Structure": 3,
 						"Required": [ 3,7 ]
 						},
-		"Consumes": [{ "Resource": 3, "Rate": 2 },
-					{ "Resource": 7, "Rate": 1 }],
+		"Consumes": [{ "Resource": 3, "Rate": 4 },
+					{ "Resource": 7, "Rate": 2 }],
 		"Cost": 18,
 		"Prioritize": 4,
 		"Buildable": false
@@ -77,9 +78,9 @@
 		"Produces": { "Resource": 5, "Rate": 12, "Requires": [{"Resource": 2, "Quantity": 1}] }, 
 		"Storage": [{ "Resource": 5, "Capacity": 8 }],
 		"Berths": 2,
-		"Workers": 6,
-		"WorkerCost": 1,
-		"Cost": 4,
+		"Workers": 40,
+		"WorkerCost": 2,
+		"Cost": 500,
 		"Buildable": true
 	},
 	{ "DisplayName": "smelter", 
@@ -90,10 +91,10 @@
 					{ "Resource": 6, "Capacity": 8 }
 					],
 		"Berths": 2,
-		"Workers": 6,
-		"WorkerCost": 1,
-		"Cost": 4,
-		"Prioritize": 4,
+		"Workers": 80,
+		"WorkerCost": 2,
+		"Cost": 950,
+		"Prioritize": 50,
 		"Buildable": true
 	},
 	{ "DisplayName": "factory", 

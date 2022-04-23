@@ -32,8 +32,10 @@ func (s *Structure) HasShips() bool {
 	}
 
 	if s.ships <= 0 {
-		s.ships = 0
-		return false
+		s.ships = s.data.MinShips
+		if s.ships == 0 {
+			return false
+		}
 	}
 
 	return true
@@ -89,7 +91,7 @@ func (s *Structure) Upgradeable() (bool, int) {
 			return true, s.data.Upgrade.Structure
 		}
 	}
-	return false, 0
+	return false, s.data.Upgrade.Structure
 }
 
 func (s *Structure) ActiveWorkers() int {

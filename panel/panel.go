@@ -99,8 +99,10 @@ func (p *Panel) AddLabel(text string, style string) {
 	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, style))
 }
 
-func (p *Panel) AddButton(text string, callback func()) {
-	p.elements = append(p.elements, button.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, callback))
+func (p *Panel) AddButton(text string, callback func()) *button.Button {
+	b := button.New(ui.Buffer, p.firstAvailableSpot(), p.w-ui.Buffer*2-ui.Border*2, p.h-p.firstAvailableSpot()-ui.Buffer*2, text, callback)
+	p.elements = append(p.elements, b)
+	return b
 }
 
 func (p *Panel) AddBar(value uint8, color color.RGBA) {

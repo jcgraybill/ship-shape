@@ -27,6 +27,13 @@ type Level struct {
 func New(lvl *Level) *Level {
 	lvl.planets = make([]*planet.Planet, 0)
 
+	if lvl.W == 0 {
+		lvl.W = 1
+	}
+	if lvl.H == 0 {
+		lvl.H = 1
+	}
+
 	rd := resource.GetResourceData()
 
 	cellsize := ui.PlanetSize * ui.PlanetDistance
@@ -50,7 +57,7 @@ func New(lvl *Level) *Level {
 }
 
 func StartingLevel() *Level {
-	return New(&level01)
+	return New(&level04)
 }
 
 func (lvl *Level) Update(p *player.Player) {

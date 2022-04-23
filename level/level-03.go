@@ -6,10 +6,8 @@ import (
 	"github.com/jcgraybill/ship-shape/structure"
 )
 
-var level04 = Level{} // placeholder
-
 var level03 = Level{
-	title:         "upgrades and resources",
+	title:         "earning money",
 	W:             1366,
 	H:             768,
 	startingMoney: 4000,
