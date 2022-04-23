@@ -3,11 +3,11 @@
 		"Class": 0,
 		"Storage": [{ "Resource": 11, "Capacity": 8  }] ,
 		"Upgrade": { "Structure": 12, "Required": [ 11 ]},
-		"Workers": 2,
-		"WorkerCost": 2,
-		"Cost": 16,
-		"Berths": 2,
-		"Prioritize": 4,
+		"Workers": 4,
+		"WorkerCost": 10,
+		"Cost": 900,
+		"Berths": 4,
+		"Prioritize": 60,
 		"Buildable": true
 	 },
 

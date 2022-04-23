@@ -79,7 +79,7 @@ type Storage struct {
 //go:embed structures.json
 var structureJSON embed.FS
 
-//
+//.
 func GetStructureData() [StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)

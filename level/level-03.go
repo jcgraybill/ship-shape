@@ -13,7 +13,7 @@ var level03 = Level{
 	W:             1366,
 	H:             768,
 	startingMoney: 4000,
-	startingYear:  2265,
+	startingYear:  2280,
 	label:         "habitats",
 	goal:          3,
 	progress:      0,
@@ -26,97 +26,76 @@ var level03 = Level{
 		resource.Water,
 	},
 	allowedStructures: []int{
+		structure.HQ,
 		structure.Outpost,
 		structure.Water,
 		structure.Habitat,
 	},
 
-	message: `Resources and upgrades
+	message: `Earning money
 
-You can increase your population
-by upgrading your outposts to 
-HABITATS.
+Structures and labor cost MONEY.
+How can you earn money to pay for
+more of them?
 
-Outposts need plenty of WATER to 
-upgrade to habitats.
+The POPULATION in your outposts
+and habitats is constantly 
+generating REVENUE. To collect
+that revenue, you need a 
+HEADQUARTERS.
 
-Fortunately, ICE deposits found
-on many planets can be harvested
-for water.
-
-Find a planet with a lot of ice,
-and build an ICE HARVESTER. Also
-build an outpost or two.`,
+Build three HABITATS again. This
+time you have less starting
+money, so you will need a
+HEADQUARTERS to afford them.
+	`,
 
 	update: func(lvl *Level, p *player.Player) bool {
 		lvl.progress = 0
-		ice := false
+		hq := false
 		for _, s := range p.Structures() {
 			if s.StructureType() == structure.Habitat {
 				lvl.progress += 1
 			}
-			if s.StructureType() == structure.Water {
-				ice = true
+			if s.StructureType() == structure.HQ {
+				hq = true
 			}
 		}
-		if lvl.progress > 0 {
-			lvl.message = `Good job.
+		if hq {
+			lvl.message = `The headquarters collects
+revenue by sending ships to 
+visit outposts and habitats,
+just like the cargo ships that
+deliver goods.
 
-HABITATS can support a much
-larger population than outposts.
+Any planet can support a 
+headquarters equally well. It
+doesn't consume or depend on any
+particular resources.
 
-A larger population comes with
-a cost, though. You'll need to
-keep your habitat well-
-supplied with water.
-
-If a habitat ever runs out of
-water, residents will become
-unhappy and move away. Your 
-structure will turn back into
-an OUTPOST, and you'll need
-to pay to upgrade it again.
-
-Keep building HABITATS.
-`
-		} else if ice {
-			lvl.message = `Structures such as the 
-ice harvester need WORKERS!
-
-Workers come from the 
-population of your outposts and
-habitats. Once per year, workers
-are assigned to structures that
-have available jobs. Better-staffed
-structures are more productive.
-
-Labor costs money. You can see what
-wages the workers will be paid 
-by clicking each structure.
-
-Structures automatically deliver the
-goods they produce to other
-structures that need those goods. 
-
-Once an outpost has a full supply of
-water, upgrade it to a HABITAT!`
-		}
-
-		if p.Money() < 800 {
-			p.AddMoney(400)
+Hint: place structures that 
+interact with each other close
+together. That gives their ships
+shorter journeys, which makes it
+easier to keep supplies flowing.`
 		}
 
 		if lvl.progress >= lvl.goal {
-			lvl.message = `Nice!
+			lvl.message = `Great!
 
-The same way planets with more
-HABITABILITY yield more productive
-outposts, planets with more ICE
-improve the productivity of
-ICE HARVESTERS.
+You built three settlements, and
+balanced your economy.
 
-Click 'next' to learn about earning
-money.`
+You can upgrade habitats to
+SETTLEMENTS, which support even
+larger populations (and earn
+even more money) by providing
+them MACHINERY.
+
+To create MACHINERY, you'll need
+to learn about MANUFACTURING.
+
+Click 'next'.`
 			return true
 		}
 		return false

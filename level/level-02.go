@@ -10,7 +10,7 @@ var level02 = Level{
 	title:         "upgrades and resources",
 	W:             1366,
 	H:             768,
-	startingMoney: 4000,
+	startingMoney: 6000,
 	startingYear:  2265,
 	label:         "habitats",
 	goal:          3,

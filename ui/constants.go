@@ -24,9 +24,9 @@ const (
 	fontSize   = 13
 	DPI        = 72
 
-	IncomeRate = 0.5
+	IncomeRate = 3
 
-	YearLength         = 3600 // smaller numbers are faster
+	YearLength         = 1800 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster
 	BidFrequency       = 20   // smaller numbers are more frequent
 	ShipSpeed          = 1    // smaller numbers are faster
