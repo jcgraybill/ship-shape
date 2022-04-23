@@ -26,6 +26,7 @@ type Level struct {
 
 func New(lvl *Level) *Level {
 	lvl.planets = make([]*planet.Planet, 0)
+
 	rd := resource.GetResourceData()
 
 	cellsize := ui.PlanetSize * ui.PlanetDistance

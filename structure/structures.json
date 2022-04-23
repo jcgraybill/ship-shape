@@ -12,14 +12,14 @@
 
 	{ "DisplayName": "outpost", 
 		"Class": 1,
-		"Produces": { "Resource": 4, "Rate": 4, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
-		"Storage": [{ "Resource": 4, "Capacity": 4 },
+		"Produces": { "Resource": 4, "Rate": 40, "Requires": [{"Resource": 0, "Quantity": 1}] }, 
+		"Storage": [{ "Resource": 4, "Capacity": 40 },
 					{ "Resource": 3, "Capacity": 16 }
 					 ] ,
 		"Upgrade": { "Structure": 3,
 					 "Required": [ 3 ]},
-		"Cost": 8,
-		"Prioritize": 4	
+		"Cost": 800,
+		"Prioritize": 50	
 	 }, 
 	{ "DisplayName": "ice harvester", 
 		"Class": 2,
