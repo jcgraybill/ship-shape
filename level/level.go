@@ -57,7 +57,7 @@ func New(lvl *Level) *Level {
 }
 
 func StartingLevel() *Level {
-	return New(&level06)
+	return New(&level01)
 }
 
 func (lvl *Level) Update(p *player.Player) {
