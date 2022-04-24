@@ -67,7 +67,9 @@ func updatePlayerPanel(g *Game) {
 			g.panel.UpdateLabel(7, fmt.Sprintf("%s (%d/%d): DONE", label, progress, goal))
 			g.panel.Lock(8)
 			g.panel.Clear()
-			g.panel.AddButton("next", func() { g.load(g.level.NextLevel()) })
+			if g.level.NextLevel() != nil {
+				g.panel.AddButton("NEXT", func() { g.load(g.level.NextLevel()) })
+			}
 			g.panel.AddDivider()
 			g.panel.Lock(10)
 			g.endOfLevelPlayerPanel = true

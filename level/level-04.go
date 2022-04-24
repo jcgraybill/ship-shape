@@ -6,8 +6,6 @@ import (
 	"github.com/jcgraybill/ship-shape/structure"
 )
 
-var level05 = Level{message: ":("} // placeholder
-
 var level04 = Level{
 	title:         "manufacturing",
 	W:             1900,
@@ -43,11 +41,10 @@ into new kinds of resources.
 
 The SMELTER uses ORE and water
 to make METAL. Build MINES on
-planets with high levels of IRON
-to extract ore. Each SMELTER can
-store 8 metal, so you'll need 
-two smelters to meet this 
-level's goal.
+planets with high levels of IRON to
+extract ore. Each SMELTER can store 
+8 metal, so you'll need two smelters
+to meet this level's goal.
 `,
 
 	update: func(lvl *Level, p *player.Player) bool {
@@ -61,32 +58,57 @@ level's goal.
 				mine = true
 			}
 			if s.StructureType() == structure.Smelter {
-				mine = true
+				smelter = true
 			}
 
 		}
 		if mine && !smelter {
-			lvl.message = `mine !smelter
+			lvl.message = `MINES extract ORE. Once you have
+enough money, buy one or more 
+SMELTERS to convert the ore into 
+METAL.
 
-Balance
-your economy carefully, to generate 
-enough revenue to afford
-everything.`
+Balance your economy carefully, to 
+generate enough revenue to afford
+everything. If a structure is costing
+too much to operate, you can 
+PAUSE PRODUCTION for a while.`
 		} else if !mine && smelter {
-			lvl.message = `!mine smelter
+			lvl.message = `The SMELTER converts
+ORE and WATER into METAL. With
+no mines producing ore, your SMELTER
+has nothing to do!
 
-Balance
-your economy carefully, to generate 
-enough revenue to afford
-everything.`
+Until you have one or more mines, 
+consider PAUSING PRODUCTION, so you
+aren't paying to operate an idle
+smelter.`
 		} else if mine && smelter {
-			lvl.message = `mine smelter`
+			lvl.message = `MINES and SMELTERS
+work together to produce METAL.
+
+Your SMELTERS, outposts, and habitats
+all need water. Delivery ships try
+to provide balanced levels of supplies
+to everyone who needs them. For a 
+small fee, you can ask them to 
+PRIORITIZE DELIVERY to some 
+structures.`
 		}
 
 		if lvl.progress >= lvl.goal {
 			lvl.message = `Bravo!
 
-Click 'next'.`
+You've mastered the skill of
+PRODUCTION.
+
+The next level will introduce
+FACTORIES, which convert METAL
+into MACHINERY. With MACHINERY
+you can upgrade your HABITATS
+to even larger SETTLEMENTS.
+
+Click 'next' to continue.`
 			return true
 		}
 		return false

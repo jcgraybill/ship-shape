@@ -1,6 +1,8 @@
 package structure
 
-import "github.com/jcgraybill/ship-shape/planet"
+import (
+	"github.com/jcgraybill/ship-shape/planet"
+)
 
 func (s *Structure) Name() string {
 	return s.data.DisplayName
@@ -31,11 +33,12 @@ func (s *Structure) HasShips() bool {
 		s.ships = maxShips - s.inFlight
 	}
 
-	if s.ships+s.inFlight <= 0 {
+	if !s.IsPaused() && s.ships == 0 && s.inFlight == 0 {
 		s.ships = s.data.MinShips
-		if s.ships == 0 {
-			return false
-		}
+	}
+
+	if s.ships == 0 {
+		return false
 	}
 
 	return true
