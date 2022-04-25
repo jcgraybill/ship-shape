@@ -17,7 +17,6 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 var Src *ebiten.Image
@@ -26,25 +25,6 @@ func init() {
 	emptyImage := ebiten.NewImage(3, 3)
 	emptyImage.Fill(color.White)
 	Src = emptyImage.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
-
-}
-
-func Circle(x float32, y float32, radius float32, clr color.RGBA) ([]ebiten.Vertex, []uint16) {
-	var path vector.Path
-
-	path.MoveTo(x, y)
-	path.Arc(x, y, radius, 0, math.Pi*2, vector.Clockwise)
-
-	vertices, indices := path.AppendVerticesAndIndicesForFilling(nil, nil)
-
-	for i := range vertices {
-		vertices[i].ColorR = float32(clr.R) / 255
-		vertices[i].ColorG = float32(clr.G) / 255
-		vertices[i].ColorB = float32(clr.B) / 255
-		vertices[i].ColorA = float32(clr.A) / 255
-	}
-
-	return vertices, indices
 
 }
 

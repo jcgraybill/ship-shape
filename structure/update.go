@@ -56,6 +56,8 @@ func (s *Structure) Produce(count int) bool {
 }
 
 //FIXME race condition allows structures to over-bid
+const PriorityBidValue = 255
+
 func (s *Structure) Bid() map[int]uint8 {
 	bids := make(map[int]uint8)
 	if s.IsPaused() {
@@ -64,7 +66,7 @@ func (s *Structure) Bid() map[int]uint8 {
 	for _, r := range s.resourcesWanted {
 		if s.storage[r].Amount < s.storage[r].Capacity {
 			if s.prioritized {
-				bids[r] = 255
+				bids[r] = PriorityBidValue
 			} else {
 				bids[r] = uint8(((float32(s.storage[r].Capacity) - float32(s.storage[r].Amount)) / float32(s.storage[r].Capacity)) * 255)
 			}
@@ -104,7 +106,7 @@ func (s *Structure) ReturnShip() {
 }
 
 func (s *Structure) GenerateIncome() {
-	s.income += int(float32(s.Storage()[resource.Population].Amount) * ui.IncomeRate)
+	s.income += (float64(s.Storage()[resource.Population].Amount) * ui.IncomeRate) / ui.YearLength
 }
 
 func (s *Structure) Consume(count int) (bool, int) {

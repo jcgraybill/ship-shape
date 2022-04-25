@@ -43,7 +43,7 @@ func showPlayerPanel(g *Game) int {
 	g.panel.AddLabel(message, ui.TtfRegular)
 	g.panel.AddDivider()
 	g.panel.AddLabel(fmt.Sprintf("%s (%d/%d):", label, progress, goal), ui.TtfRegular)
-	g.panel.AddBar(uint8(255*float32(progress)/float32(goal)), color.RGBA{75, 104, 184, 255})
+	g.panel.AddBar(uint8(255*float32(progress)/float32(goal)), ui.LevelProgressColor)
 	g.panel.AddDivider()
 	return 10
 }

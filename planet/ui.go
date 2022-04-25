@@ -1,12 +1,13 @@
 package planet
 
 import (
-	"image/color"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/jcgraybill/ship-shape/ui"
+
+	"github.com/fogleman/gg"
 )
 
 func (p *Planet) Draw(image *ebiten.Image) {
@@ -37,44 +38,40 @@ func (p *Planet) In(x, y int) bool {
 }
 
 func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image, *ebiten.Image) {
-	base := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
-	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
-	highlighted := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
-	black := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
+	radius := float64(basePlanetRadius + rand.Intn(ui.PlanetSize/2-basePlanetRadius))
 
-	radius := float32(basePlanetRadius + rand.Intn(ui.PlanetSize/2-basePlanetRadius))
+	var R, G, B float64
 
-	planetColor := color.RGBA{}
-	var R, G, B int
-
+	n := float64(len(p.resources) * 255)
 	for resource, level := range p.resources {
-		R = R + int(level)*int(p.resourceData[resource].Color.R)
-		G = G + int(level)*int(p.resourceData[resource].Color.G)
-		B = B + int(level)*int(p.resourceData[resource].Color.B)
+		R = R + float64(level)*float64(p.resourceData[resource].Color.R)/n
+		G = G + float64(level)*float64(p.resourceData[resource].Color.G)/n
+		B = B + float64(level)*float64(p.resourceData[resource].Color.B)/n
 	}
 
-	n := len(p.resources) * 255
+	dc := gg.NewContext(ui.PlanetSize, ui.PlanetSize)
+	dc.DrawCircle(ui.PlanetSize/2, ui.PlanetSize/2, radius)
+	dc.SetRGB255(0, 0, 0)
+	dc.Fill()
+	black := ebiten.NewImageFromImage(dc.Image())
 
-	planetColor.R = uint8(R / n)
-	planetColor.G = uint8(G / n)
-	planetColor.B = uint8(B / n)
-	planetColor.A = 0xff
+	dc = gg.NewContext(ui.PlanetSize, ui.PlanetSize)
+	dc.DrawCircle(ui.PlanetSize/2, ui.PlanetSize/2, radius+ui.Border)
+	dc.SetRGB255(int(ui.NonFocusColor.R), int(ui.NonFocusColor.G), int(ui.NonFocusColor.B))
+	dc.Fill()
+	dc.DrawCircle(ui.PlanetSize/2, ui.PlanetSize/2, radius)
+	dc.SetRGB255(int(R), int(G), int(B))
+	dc.Fill()
+	image := ebiten.NewImageFromImage(dc.Image())
 
-	v, i := ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, planetColor)
-	base.DrawTriangles(v, i, ui.Src, nil)
-
-	radius = radius + ui.Border
-
-	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, ui.NonFocusColor)
-	image.DrawTriangles(v, i, ui.Src, nil)
-	image.DrawImage(base, nil)
-
-	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, ui.FocusedColor)
-	highlighted.DrawTriangles(v, i, ui.Src, nil)
-	highlighted.DrawImage(base, nil)
-
-	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, color.RGBA{0x00, 0x00, 0x00, 0xff})
-	black.DrawTriangles(v, i, ui.Src, nil)
+	dc = gg.NewContext(ui.PlanetSize, ui.PlanetSize)
+	dc.DrawCircle(ui.PlanetSize/2, ui.PlanetSize/2, radius+ui.Border)
+	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
+	dc.Fill()
+	dc.DrawCircle(ui.PlanetSize/2, ui.PlanetSize/2, radius)
+	dc.SetRGB255(int(R), int(G), int(B))
+	dc.Fill()
+	highlighted := ebiten.NewImageFromImage(dc.Image())
 
 	return image, highlighted, black
 }

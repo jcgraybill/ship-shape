@@ -7,7 +7,7 @@ import (
 )
 
 var level05 = Level{
-	title:         "factories and settlements",
+	title:         "factories",
 	W:             2048,
 	H:             2048,
 	startingMoney: 5000,

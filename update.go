@@ -25,10 +25,10 @@ func (g *Game) Update() error {
 	shipsArrive(g)
 
 	updatePopulation(g)
+	structuresGenerateIncome(g)
 
 	if g.count%ui.YearLength == 0 {
 		g.year += 1
-		structuresGenerateIncome(g)
 		payWorkers(g)
 		distributeWorkers(g)
 	}

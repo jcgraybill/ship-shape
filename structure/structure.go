@@ -20,7 +20,7 @@ type Structure struct {
 	resourcesWanted         []int
 	berths, ships, inFlight int
 	workers                 int
-	income                  int
+	income                  float64
 	structureType           int
 }
 

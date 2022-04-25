@@ -67,7 +67,7 @@ func (s *Structure) Class() int {
 }
 
 func (s *Structure) Income() int {
-	return s.income
+	return int(s.income)
 }
 
 func (s *Structure) StructureType() int {

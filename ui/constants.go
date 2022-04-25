@@ -8,8 +8,8 @@ const (
 	PlanetSize     = 32
 	PlanetDistance = 6 // lower numbers are denser
 
-	WindowW           = 800
-	WindowH           = 600
+	WindowW           = 1366
+	WindowH           = 768
 	ArrowKeyMoveSpeed = 4 // larger numbers are faster
 
 	Buffer    = 4
@@ -34,4 +34,5 @@ const (
 
 var FocusedColor = color.RGBA{0x78, 0xcc, 0xe2, 0xff}
 var NonFocusColor = color.RGBA{0x7f, 0x7f, 0x7f, 0xff}
+var LevelProgressColor = color.RGBA{0x80, 0x00, 0x20, 0xff}
 var BackgroundColor = color.RGBA{0x00, 0x00, 0x00, 0xff}

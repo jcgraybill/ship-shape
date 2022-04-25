@@ -43,6 +43,9 @@ func structuresBidForResources(g *Game) {
 							x1, y1 := s.Planet().Center()
 							x2, y2 := bid.Structure.Planet().Center()
 							value := float64(bid.Urgency) / distance(float64(x1), float64(y1), float64(x2), float64(y2))
+							if bid.Urgency == structure.PriorityBidValue {
+								value = structure.PriorityBidValue
+							}
 							if value > topBidValue {
 								topBid = bid
 								topBidValue = value

@@ -38,8 +38,8 @@ func (s *Structure) AssignWorkers(workers int) {
 }
 
 func (s *Structure) CollectIncome() int {
-	income := s.income
-	s.income = 0
+	income := int(s.income)
+	s.income -= float64(income)
 	return income
 }
 
