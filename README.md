@@ -18,6 +18,6 @@ Built in [golang](https://go.dev/) using the [ebiten](https://ebiten.org/) 2D ga
 With go installed, download and run the game with:
 
 ```
-go run -tags=deploy github.com/jcgraybill/ship-shape@latest
+go run github.com/jcgraybill/ship-shape@latest
 ```
 
