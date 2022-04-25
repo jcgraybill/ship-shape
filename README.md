@@ -21,3 +21,7 @@ With go installed, download and run the game with:
 go run github.com/jcgraybill/ship-shape@latest
 ```
 
+To build on Ubuntu, install additional packages:
+```
+apt install libgl1-mesa-dev xorg-dev libasound2-dev
+```
