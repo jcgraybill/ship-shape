@@ -7,7 +7,7 @@ import (
 )
 
 var level01 = Level{
-	title:         "welcome to ship-shape",
+	title:         "welcome!",
 	W:             1366,
 	H:             768,
 	startingMoney: 3200,

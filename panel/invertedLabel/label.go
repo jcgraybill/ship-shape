@@ -28,11 +28,12 @@ func New(x, y, w, h int, message string, style string) *Label {
 	// FIXME text.BoundString underestimates this typeface's height by a few pixels
 	// or I'm using the wrong metric below to locate the dot position
 	l.h = textBounds.Dy() + int(l.ttf.Metrics().Descent/ui.DPI)
+	textWidth := textBounds.Dx()
 
 	image := ebiten.NewImage(l.w, l.h)
 	image.Fill(ui.FocusedColor)
 
-	text.Draw(image, message, l.ttf, 0, int(l.ttf.Metrics().Ascent/ui.DPI), ui.BackgroundColor)
+	text.Draw(image, message, l.ttf, l.w/2-textWidth/2, int(l.ttf.Metrics().Ascent/ui.DPI), ui.BackgroundColor)
 	l.image = image
 
 	l.opts = &ebiten.DrawImageOptions{}
@@ -59,6 +60,9 @@ func (l *Label) Height() int {
 
 func (l *Label) UpdateValue(uint8) { return }
 func (l *Label) UpdateText(newText string) {
+	textBounds := text.BoundString(l.ttf, newText)
+	textWidth := textBounds.Dx()
+
 	l.image.Fill(ui.FocusedColor)
-	text.Draw(l.image, newText, l.ttf, 0, int(l.ttf.Metrics().Ascent/ui.DPI), ui.BackgroundColor)
+	text.Draw(l.image, newText, l.ttf, l.w/2-textWidth/2, int(l.ttf.Metrics().Ascent/ui.DPI), ui.BackgroundColor)
 }

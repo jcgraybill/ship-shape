@@ -10,11 +10,20 @@ import (
 )
 
 func (p *Planet) Draw(image *ebiten.Image) {
+	image.DrawImage(p.blackImage, p.displayOpts)
+	ui.ShaderOpts.Images[1] = p.Image()
+	ui.ShaderOpts.GeoM.Reset()
+	ui.ShaderOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
+	image.DrawRectShader(ui.PlanetSize, ui.PlanetSize, ui.Shader, ui.ShaderOpts)
+
 	if p.visible {
-		image.DrawImage(p.Image(), p.displayOpts)
 		cx, cy := p.Center()
 		textBounds := text.BoundString(p.ttf, p.Name())
-		text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, ui.FocusedColor)
+		if p.highlighted {
+			text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, ui.FocusedColor)
+		} else {
+			text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, ui.NonFocusColor)
+		}
 	}
 }
 
@@ -27,10 +36,11 @@ func (p *Planet) In(x, y int) bool {
 	return false
 }
 
-func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image) {
+func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image, *ebiten.Image) {
 	base := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 	image := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 	highlighted := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
+	black := ebiten.NewImage(ui.PlanetSize, ui.PlanetSize)
 
 	radius := float32(basePlanetRadius + rand.Intn(ui.PlanetSize/2-basePlanetRadius))
 
@@ -63,7 +73,10 @@ func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image) {
 	highlighted.DrawTriangles(v, i, ui.Src, nil)
 	highlighted.DrawImage(base, nil)
 
-	return image, highlighted
+	v, i = ui.Circle(ui.PlanetSize/2, ui.PlanetSize/2, radius, color.RGBA{0x00, 0x00, 0x00, 0xff})
+	black.DrawTriangles(v, i, ui.Src, nil)
+
+	return image, highlighted, black
 }
 
 func (p *Planet) Image() *ebiten.Image {

@@ -7,7 +7,7 @@ import (
 )
 
 var level02 = Level{
-	title:         "upgrades and resources",
+	title:         "upgrading",
 	W:             1366,
 	H:             768,
 	startingMoney: 6000,

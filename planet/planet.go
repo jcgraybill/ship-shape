@@ -22,6 +22,7 @@ type Planet struct {
 	highlighted      bool
 	image            *ebiten.Image
 	highlightedImage *ebiten.Image
+	blackImage       *ebiten.Image
 	name             string
 	displayOpts      *ebiten.DrawImageOptions
 	ttf              font.Face
@@ -39,7 +40,7 @@ func New(x, y int, resources map[int]uint8, resourceData [resource.ResourceDataL
 
 	p.name = p.generateName()
 
-	p.image, p.highlightedImage = p.generatePlanetImages()
+	p.image, p.highlightedImage, p.blackImage = p.generatePlanetImages()
 
 	p.highlighted = false
 

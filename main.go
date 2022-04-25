@@ -55,7 +55,7 @@ func main() {
 	ebiten.SetWindowResizable(true)
 
 	g.load(level.StartingLevel())
-
+	ui.InitializeShader()
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)
 	}
