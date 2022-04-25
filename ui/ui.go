@@ -14,7 +14,7 @@ func GameData(path string) ([]byte, error) {
 	return gd.ReadFile(path)
 }
 
-//go:embed fonts audio
+//go:embed fonts audio images
 var gd embed.FS
 
 func StarField(w, h int) *ebiten.Image {
