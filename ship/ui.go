@@ -1,6 +1,7 @@
 package ship
 
 import (
+	"github.com/fogleman/gg"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/ui"
 )
@@ -14,13 +15,21 @@ func (s *Ship) Draw(image *ebiten.Image) {
 }
 
 func (s *Ship) updateCourseLine() {
-	s.course.Clear()
+
 	x0, y0 := s.origin.Planet().Center()
 	x1, y1 := s.destination.Planet().Center()
-	v, i := ui.Line(float32(s.x)-float32(s.baseX), float32(s.y)-float32(s.baseY), float32(x1)-float32(s.baseX), float32(y1)-float32(s.baseY), ui.Border, ui.FocusedColor)
-	s.course.DrawTriangles(v, i, ui.Src, nil)
-	v, i = ui.Line(float32(x0)-float32(s.baseX), float32(y0)-float32(s.baseY), float32(s.x)-float32(s.baseX), float32(s.y)-float32(s.baseY), ui.Border, ui.NonFocusColor)
-	s.course.DrawTriangles(v, i, ui.Src, nil)
+
+	s.course.Clear()
+	dc := gg.NewContext(s.course.Bounds().Dx(), s.course.Bounds().Dy())
+	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
+	dc.DrawLine(float64(s.x)-float64(s.baseX), float64(s.y)-float64(s.baseY), float64(x1)-float64(s.baseX), float64(y1)-float64(s.baseY))
+	dc.SetLineWidth(ui.Border)
+	dc.Stroke()
+
+	dc.SetRGB255(int(ui.NonFocusColor.R), int(ui.NonFocusColor.G), int(ui.NonFocusColor.B))
+	dc.DrawLine(float64(x0)-float64(s.baseX), float64(y0)-float64(s.baseY), float64(s.x)-float64(s.baseX), float64(s.y)-float64(s.baseY))
+	dc.Stroke()
+	s.course = ebiten.NewImageFromImage(dc.Image())
 
 }
 
