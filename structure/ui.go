@@ -60,11 +60,6 @@ func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor colo
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
 	text.Draw(interior, s.data.DisplayName, *ttf, ui.Buffer, int((*ttf).Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
-
-	//	popts := &ebiten.DrawImageOptions{}
-	//	popts.GeoM.Translate(float64(w/2-ui.PlanetSize/2), float64(ui.Buffer+textBounds.Dy()+ui.Buffer))
-	//	interior.DrawImage(s.planet.Image(), popts)
-
 	image.DrawImage(interior, opts)
 
 	x = planetCenterX - w/2

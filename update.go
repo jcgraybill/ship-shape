@@ -41,8 +41,10 @@ func (g *Game) Update() error {
 func updatePopulation(g *Game) {
 	pop, maxPop, workersNeeded := 0, 0, 0
 	for _, s := range g.player.Structures() {
-		pop += int(s.Storage()[resource.Population].Amount)
-		maxPop += int(s.Storage()[resource.Population].Capacity)
+		if pr, ok := s.Storage()[resource.Population]; ok {
+			pop += int(pr.Amount)
+			maxPop += int(pr.Capacity)
+		}
 		workersNeeded += s.WorkerCapacity()
 	}
 	g.player.SetPopulation(pop, maxPop, workersNeeded)

@@ -48,7 +48,7 @@ func New(w, h int) *Panel {
 	p.displayOptions = &ebiten.DrawImageOptions{}
 	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
 	p.interiorDisplayOptions = &ebiten.DrawImageOptions{}
-	p.interiorDisplayOptions.GeoM.Translate(float64(ui.Border), float64(ui.Border))
+	p.interiorDisplayOptions.GeoM.Translate(float64(p.x+ui.Border), float64(p.y+ui.Border))
 	p.displayOptions.GeoM.Translate(float64(p.x), float64(p.y))
 	p.elements = make([]widget, 0)
 	return &p
@@ -71,9 +71,9 @@ func (p *Panel) Draw(image *ebiten.Image) {
 	for _, ui := range p.elements {
 		p.interior.DrawImage(ui.Draw())
 	}
-	p.background.DrawImage(p.interior, p.interiorDisplayOptions)
 
 	image.DrawImage(p.background, p.displayOptions)
+	image.DrawImage(p.interior, p.interiorDisplayOptions)
 
 }
 
@@ -144,6 +144,8 @@ func (p *Panel) Resize(w, h int) {
 	p.h = h - ui.PanelExternalPadding*2
 	p.displayOptions.GeoM.Reset()
 	p.displayOptions.GeoM.Translate(float64(p.x), float64(p.y))
+	p.interiorDisplayOptions.GeoM.Reset()
+	p.interiorDisplayOptions.GeoM.Translate(float64(p.x+ui.Border), float64(p.y+ui.Border))
 
 	p.background = p.createBackgroundImage(p.w, p.h)
 

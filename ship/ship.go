@@ -35,6 +35,7 @@ type Ship struct {
 
 	origin      *structure.Structure
 	destination *structure.Structure
+	baseCourse  *ebiten.Image
 	course      *ebiten.Image
 	courseOpts  *ebiten.DrawImageOptions
 	cargo       int //TODO - uint
@@ -99,6 +100,7 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 		s.baseY = float64(y0)
 	}
 	s.course = ebiten.NewImage(w, h)
+	s.createBaseCourseLine()
 	s.updateCourseLine()
 
 	s.theta = math.Atan2(float64(y1-y0), float64(x1-x0))

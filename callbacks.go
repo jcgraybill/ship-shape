@@ -7,6 +7,7 @@ import (
 
 func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) func() {
 	return func() {
+		g.redrawUniverse = true
 		g.panel.Clear()
 		s := structure.New(structureType, &g.structureData[structureType], p)
 		g.player.RemoveMoney(uint(g.structureData[structureType].Cost))
@@ -19,6 +20,7 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 
 func generateUpgradeCallBack(g *Game, s *structure.Structure, toStructure int) func() {
 	return func() {
+		g.redrawUniverse = true
 		g.panel.Clear()
 		g.player.RemoveMoney(uint(g.structureData[toStructure].Cost))
 		s.Upgrade(toStructure, &g.structureData[toStructure])

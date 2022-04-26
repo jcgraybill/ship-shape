@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -20,12 +21,13 @@ import (
 )
 
 type Game struct {
-	count    int
-	year     uint
-	level    *level.Level
-	player   *player.Player
-	bg       *ebiten.Image
-	universe *ebiten.Image
+	count          int
+	year           uint
+	level          *level.Level
+	player         *player.Player
+	bg             *ebiten.Image
+	universe       *ebiten.Image
+	redrawUniverse bool
 
 	panel                              *panel.Panel
 	endOfLevelPlayerPanel              bool
@@ -81,11 +83,12 @@ func main() {
 
 func (g *Game) load(lvl *level.Level) {
 	g.count = 0
+	g.player = player.New()
 	g.level = level.New(lvl)
 	g.bg = ui.StarField(lvl.W, lvl.H)
 	g.universe = ebiten.NewImage(lvl.W, lvl.H)
+	g.redrawUniverse = true
 	g.year = g.level.StartingYear()
-	g.player = player.New()
 	g.player.AddMoney(lvl.StartingMoney())
 	g.endOfLevelPlayerPanel = false
 
@@ -93,6 +96,7 @@ func (g *Game) load(lvl *level.Level) {
 	g.panel.Lock(0)
 	g.panel.Clear()
 	g.panel.Lock(showPlayerPanel(g))
+	runtime.GC()
 }
 
 func playAmbientAudio() {

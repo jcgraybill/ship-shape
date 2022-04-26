@@ -22,7 +22,6 @@ func (s *Ship) Update(count int) bool {
 			s.x += s.dx
 			s.y += s.dy
 			s.opts.GeoM.Translate(s.dx, s.dy)
-			s.updateCourseLine()
 		}
 	}
 	return false
