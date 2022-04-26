@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"math/rand"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/wav"
 	"github.com/jcgraybill/ship-shape/level"
 	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/player"
@@ -31,11 +33,12 @@ type Game struct {
 	offsetX, offsetY, windowW, windowH int
 	mouseDragX, mouseDragY             int
 	dragging                           bool
+	ambient                            *audio.Player
 }
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	audio.NewContext(48000)
+	audio.NewContext(24000)
 }
 
 func main() {
@@ -56,6 +59,26 @@ func main() {
 
 	g.load(level.StartingLevel())
 	ui.InitializeShader()
+
+	audioContext := audio.CurrentContext()
+	audioBytes, err := ui.GameData("audio/ambient.wav")
+	if err == nil {
+		d, err := wav.Decode(audioContext, bytes.NewReader(audioBytes))
+		if err == nil {
+			s := audio.NewInfiniteLoop(d, d.Length())
+			g.ambient, err = audioContext.NewPlayer(s)
+			if err == nil {
+				g.ambient.Play()
+			} else {
+				panic(err)
+			}
+		} else {
+			panic(err)
+		}
+	} else {
+		panic(err)
+	}
+
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)
 	}

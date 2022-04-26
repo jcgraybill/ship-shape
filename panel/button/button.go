@@ -63,15 +63,17 @@ func New(x, y, w, h int, message string, action func()) *Button {
 
 	audioContext := audio.CurrentContext()
 	audioBytes, err := ui.GameData("audio/button.wav")
-	if err != nil {
-		panic(err)
-	}
-	d, err := wav.Decode(audioContext, bytes.NewReader(audioBytes))
-	if err != nil {
-		panic(err)
-	}
-	b.audio, err = audioContext.NewPlayer(d)
-	if err != nil {
+	if err == nil {
+		d, err := wav.Decode(audioContext, bytes.NewReader(audioBytes))
+		if err == nil {
+			b.audio, err = audioContext.NewPlayer(d)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			panic(err)
+		}
+	} else {
 		panic(err)
 	}
 
