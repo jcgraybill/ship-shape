@@ -9,7 +9,7 @@ func handleMouseClicks(g *Game) {
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		if !g.panel.LeftMouseButtonPress(ebiten.CursorPosition()) {
-			g.redrawUniverse = true
+			g.redrawPSLayer = true
 			cx, cy := ebiten.CursorPosition()
 			cx -= g.offsetX
 			cy -= g.offsetY
@@ -43,11 +43,11 @@ func handleMouseClicks(g *Game) {
 			}
 		}
 	} else if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
-		g.redrawUniverse = true
+		g.redrawPSLayer = true
 		g.dragging = false
 		g.panel.LeftMouseButtonRelease(ebiten.CursorPosition())
 	} else if g.dragging && ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		g.redrawUniverse = true
+		g.redrawPSLayer = true
 		newX, newY := ebiten.CursorPosition()
 
 		var xMovement, yMovement int

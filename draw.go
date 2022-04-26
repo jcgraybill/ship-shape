@@ -7,31 +7,34 @@ import (
 
 func (g *Game) Draw(screen *ebiten.Image) {
 
-	screen.DrawImage(g.bg, g.opts)
+	screen.DrawImage(g.starfieldLayer, g.opts)
 
+	g.trailsLayer.Clear()
 	for _, s := range g.player.Ships() {
-		s.DrawCourse(screen)
+		s.DrawCourse(g.trailsLayer)
 	}
+	screen.DrawImage(g.trailsLayer, g.opts)
 
-	if g.redrawUniverse {
-		g.universe.Clear()
+	if g.redrawPSLayer {
+		g.planetsAndStructuresLayer.Clear()
 		ui.ShaderOpts.Uniforms["Light"] = []float32{-float32(g.offsetX), -float32(g.offsetY)}
 
 		for _, s := range g.player.Structures() {
-			s.Draw(g.universe)
+			s.Draw(g.planetsAndStructuresLayer)
 		}
 
 		for _, p := range g.level.Planets() {
-			p.Draw(g.universe)
+			p.Draw(g.planetsAndStructuresLayer)
 		}
-		g.redrawUniverse = false
+		g.redrawPSLayer = false
 	}
+	screen.DrawImage(g.planetsAndStructuresLayer, g.opts)
 
-	screen.DrawImage(g.universe, g.opts)
-
+	g.shipsLayer.Clear()
 	for _, s := range g.player.Ships() {
-		s.Draw(screen)
+		s.Draw(g.shipsLayer)
 	}
+	screen.DrawImage(g.shipsLayer, g.opts)
 
 	g.panel.Draw(screen)
 }

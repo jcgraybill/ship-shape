@@ -4,6 +4,7 @@ import (
 	"image/color"
 	"math"
 
+	"github.com/fogleman/gg"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
@@ -35,11 +36,12 @@ type Ship struct {
 
 	origin      *structure.Structure
 	destination *structure.Structure
-	baseCourse  *ebiten.Image
-	course      *ebiten.Image
-	courseOpts  *ebiten.DrawImageOptions
-	cargo       int //TODO - uint
-	shipType    int
+
+	baseCourse *ebiten.Image
+	course     *ebiten.Image
+	courseOpts *ebiten.DrawImageOptions
+	cargo      int
+	shipType   int
 }
 
 func New(origin, destination *structure.Structure, shipType int) *Ship {
@@ -99,9 +101,20 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 		h = ui.Border
 		s.baseY = float64(y0)
 	}
-	s.course = ebiten.NewImage(w, h)
-	s.createBaseCourseLine()
-	s.updateCourseLine()
+
+	dc := gg.NewContext(w, h)
+	dc.SetRGB255(int(ui.NonFocusColor.R), int(ui.NonFocusColor.G), int(ui.NonFocusColor.B))
+	dc.DrawLine(float64(x0)-float64(s.baseX), float64(y0)-float64(s.baseY), float64(x1)-float64(s.baseX), float64(y1)-float64(s.baseY))
+	dc.SetLineWidth(ui.Border)
+	dc.Stroke()
+	s.baseCourse = ebiten.NewImageFromImage(dc.Image())
+
+	dc = gg.NewContext(w, h)
+	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
+	dc.DrawLine(float64(x0)-float64(s.baseX), float64(y0)-float64(s.baseY), float64(x1)-float64(s.baseX), float64(y1)-float64(s.baseY))
+	dc.SetLineWidth(ui.Border)
+	dc.Stroke()
+	s.course = ebiten.NewImageFromImage(dc.Image())
 
 	s.theta = math.Atan2(float64(y1-y0), float64(x1-x0))
 

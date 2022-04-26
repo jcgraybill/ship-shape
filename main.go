@@ -21,13 +21,15 @@ import (
 )
 
 type Game struct {
-	count          int
-	year           uint
-	level          *level.Level
-	player         *player.Player
-	bg             *ebiten.Image
-	universe       *ebiten.Image
-	redrawUniverse bool
+	count                     int
+	year                      uint
+	level                     *level.Level
+	player                    *player.Player
+	trailsLayer               *ebiten.Image
+	starfieldLayer            *ebiten.Image
+	planetsAndStructuresLayer *ebiten.Image
+	shipsLayer                *ebiten.Image
+	redrawPSLayer             bool
 
 	panel                              *panel.Panel
 	endOfLevelPlayerPanel              bool
@@ -85,9 +87,11 @@ func (g *Game) load(lvl *level.Level) {
 	g.count = 0
 	g.player = player.New()
 	g.level = level.New(lvl)
-	g.bg = ui.StarField(lvl.W, lvl.H)
-	g.universe = ebiten.NewImage(lvl.W, lvl.H)
-	g.redrawUniverse = true
+	g.starfieldLayer = ui.StarField(lvl.W, lvl.H)
+	g.trailsLayer = ebiten.NewImage(lvl.W, lvl.H)
+	g.planetsAndStructuresLayer = ebiten.NewImage(lvl.W, lvl.H)
+	g.shipsLayer = ebiten.NewImage(lvl.W, lvl.H)
+	g.redrawPSLayer = true
 	g.year = g.level.StartingYear()
 	g.player.AddMoney(lvl.StartingMoney())
 	g.endOfLevelPlayerPanel = false
