@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/fogleman/gg v1.3.0
-	github.com/hajimehoshi/ebiten/v2 v2.3.1-0.20220425161440-45929e04e11e
+	github.com/hajimehoshi/ebiten/v2 v2.3.1-0.20220426022149-9d9439751f1a
 	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9
 )
 
