@@ -25,7 +25,7 @@ type Planet struct {
 	blackImage       *ebiten.Image
 	name             string
 	displayOpts      *ebiten.DrawImageOptions
-	ttf              font.Face
+	ttf              *font.Face
 	visible          bool
 }
 

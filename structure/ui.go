@@ -43,7 +43,7 @@ func (s *Structure) IsHighlighted() bool {
 func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, int, int, int, int) {
 	var x, y, w, h int
 	ttf := ui.Font(ui.TtfRegular)
-	textBounds := text.BoundString(ttf, s.data.DisplayName)
+	textBounds := text.BoundString(*ttf, s.data.DisplayName)
 	contentWidth := textBounds.Dx()
 	if contentWidth < ui.PlanetSize {
 		contentWidth = ui.PlanetSize
@@ -59,7 +59,7 @@ func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor colo
 	interior.Fill(ui.BackgroundColor)
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
-	text.Draw(interior, s.data.DisplayName, ttf, ui.Buffer, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
+	text.Draw(interior, s.data.DisplayName, *ttf, ui.Buffer, int((*ttf).Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
 
 	//	popts := &ebiten.DrawImageOptions{}
 	//	popts.GeoM.Translate(float64(w/2-ui.PlanetSize/2), float64(ui.Buffer+textBounds.Dy()+ui.Buffer))

@@ -35,7 +35,7 @@ func New(x, y, w, h int, message string, action func()) *Button {
 	}
 
 	ttf := ui.Font(ui.TtfRegular)
-	textBounds := text.BoundString(ttf, message)
+	textBounds := text.BoundString(*ttf, message)
 	b.h = textBounds.Dy() + ui.Buffer*2 + ui.Border + 2
 
 	image := ebiten.NewImage(b.w, b.h)
@@ -43,7 +43,7 @@ func New(x, y, w, h int, message string, action func()) *Button {
 
 	interior := ebiten.NewImage(b.w-ui.Border*2, b.h-ui.Border*2)
 	interior.Fill(ui.BackgroundColor)
-	text.Draw(interior, message, ttf, b.w/2-textBounds.Dx()/2, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, ui.FocusedColor)
+	text.Draw(interior, message, *ttf, b.w/2-textBounds.Dx()/2, int((*ttf).Metrics().Ascent/ui.DPI)+ui.Buffer, ui.FocusedColor)
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
 	image.DrawImage(interior, opts)
@@ -54,7 +54,7 @@ func New(x, y, w, h int, message string, action func()) *Button {
 
 	dinterior := ebiten.NewImage(b.w-ui.Border*2, b.h-ui.Border*2)
 	dinterior.Fill(ui.BackgroundColor)
-	text.Draw(dinterior, message, ttf, b.w/2-textBounds.Dx()/2, int(ttf.Metrics().Ascent/ui.DPI)+ui.Buffer, ui.NonFocusColor)
+	text.Draw(dinterior, message, *ttf, b.w/2-textBounds.Dx()/2, int((*ttf).Metrics().Ascent/ui.DPI)+ui.Buffer, ui.NonFocusColor)
 	dimage.DrawImage(dinterior, opts)
 	b.inactiveImage = dimage
 

@@ -19,11 +19,11 @@ func (p *Planet) Draw(image *ebiten.Image) {
 
 	if p.visible {
 		cx, cy := p.Center()
-		textBounds := text.BoundString(p.ttf, p.Name())
+		textBounds := text.BoundString(*(p.ttf), p.Name())
 		if p.highlighted {
-			text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, ui.FocusedColor)
+			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, cy-16, ui.FocusedColor)
 		} else {
-			text.Draw(image, p.Name(), p.ttf, cx-textBounds.Dx()/2, cy-16, ui.NonFocusColor)
+			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, cy-16, ui.NonFocusColor)
 		}
 	}
 }
