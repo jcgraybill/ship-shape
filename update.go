@@ -34,6 +34,7 @@ func (g *Game) Update() error {
 	}
 
 	g.level.Update(g.player)
+	g.instrument()
 	return nil
 }
 

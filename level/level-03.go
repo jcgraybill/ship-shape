@@ -15,7 +15,7 @@ var level03 = Level{
 	label:         "habitats",
 	goal:          3,
 	progress:      0,
-	nextLevel:     New(&level04),
+	nextLevel:     &level04,
 
 	allowedResources: []int{
 		resource.Habitability,

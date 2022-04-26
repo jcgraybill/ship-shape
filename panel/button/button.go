@@ -5,7 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/wav"
+	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/jcgraybill/ship-shape/ui"
@@ -62,9 +62,9 @@ func New(x, y, w, h int, message string, action func()) *Button {
 	b.opts.GeoM.Translate(float64(b.x), float64(b.y))
 
 	audioContext := audio.CurrentContext()
-	audioBytes, err := ui.GameData("audio/button.wav")
+	audioBytes, err := ui.GameData("audio/button.ogg")
 	if err == nil {
-		d, err := wav.Decode(audioContext, bytes.NewReader(audioBytes))
+		d, err := vorbis.Decode(audioContext, bytes.NewReader(audioBytes))
 		if err == nil {
 			b.audio, err = audioContext.NewPlayer(d)
 			if err != nil {

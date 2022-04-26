@@ -15,7 +15,7 @@ var level01 = Level{
 	label:         "total population",
 	goal:          120,
 	progress:      0,
-	nextLevel:     New(&level02),
+	nextLevel:     &level02,
 
 	allowedResources: []int{
 		resource.Habitability,

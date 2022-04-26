@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
@@ -29,5 +26,4 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 	screen.DrawImage(g.universe, g.opts)
 	g.panel.Draw(screen)
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS %f", ebiten.CurrentTPS()))
 }

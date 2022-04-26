@@ -3,12 +3,14 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/wav"
+	"github.com/hajimehoshi/ebiten/v2/audio/vorbis"
 	"github.com/jcgraybill/ship-shape/level"
 	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/player"
@@ -33,12 +35,22 @@ type Game struct {
 	offsetX, offsetY, windowW, windowH int
 	mouseDragX, mouseDragY             int
 	dragging                           bool
-	ambient                            *audio.Player
 }
+
+var (
+	InfoLogger *log.Logger
+	ambient    *audio.Player
+)
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	audio.NewContext(24000)
+	audio.NewContext(44100)
+
+	file, err := os.OpenFile("info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 func main() {
@@ -60,25 +72,7 @@ func main() {
 
 	g.load(level.StartingLevel())
 	ui.InitializeShader()
-
-	audioContext := audio.CurrentContext()
-	audioBytes, err := ui.GameData("audio/ambient.wav")
-	if err == nil {
-		d, err := wav.Decode(audioContext, bytes.NewReader(audioBytes))
-		if err == nil {
-			s := audio.NewInfiniteLoop(d, d.Length())
-			g.ambient, err = audioContext.NewPlayer(s)
-			if err == nil {
-				g.ambient.Play()
-			} else {
-				panic(err)
-			}
-		} else {
-			panic(err)
-		}
-	} else {
-		panic(err)
-	}
+	playAmbientAudio()
 
 	if err := ebiten.RunGame(&g); err != nil {
 		panic(err)
@@ -87,7 +81,7 @@ func main() {
 
 func (g *Game) load(lvl *level.Level) {
 	g.count = 0
-	g.level = lvl
+	g.level = level.New(lvl)
 	g.bg = ui.StarField(lvl.W, lvl.H)
 	g.universe = ebiten.NewImage(lvl.W, lvl.H)
 	g.year = g.level.StartingYear()
@@ -99,6 +93,27 @@ func (g *Game) load(lvl *level.Level) {
 	g.panel.Lock(0)
 	g.panel.Clear()
 	g.panel.Lock(showPlayerPanel(g))
+}
+
+func playAmbientAudio() {
+	audioContext := audio.CurrentContext()
+	audioBytes, err := ui.GameData("audio/ambient.ogg")
+	if err == nil {
+		d, err := vorbis.Decode(audioContext, bytes.NewReader(audioBytes))
+		if err == nil {
+			s := audio.NewInfiniteLoop(d, d.Length())
+			ambient, err = audioContext.NewPlayer(s)
+			if err == nil {
+				ambient.Play()
+			} else {
+				panic(err)
+			}
+		} else {
+			panic(err)
+		}
+	} else {
+		panic(err)
+	}
 }
 
 func (g *Game) Layout(w, h int) (int, int) {
