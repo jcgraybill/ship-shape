@@ -108,8 +108,10 @@ func (g *Game) Layout(w, h int) (int, int) {
 	if h < ui.WindowH {
 		h = ui.WindowH
 	}
-	g.panel.Resize(w, h)
-	g.windowW = w
-	g.windowH = h
+	if g.windowW != w && g.windowH != h {
+		g.panel.Resize(w, h)
+		g.windowW = w
+		g.windowH = h
+	}
 	return w, h
 }
