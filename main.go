@@ -55,7 +55,8 @@ func main() {
 	}
 
 	ebiten.SetWindowSize(ui.WindowW, ui.WindowH)
-	ebiten.SetWindowResizable(true)
+
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
 	g.load(level.StartingLevel())
 	ui.InitializeShader()
