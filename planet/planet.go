@@ -18,7 +18,7 @@ const (
 type Planet struct {
 	x, y             int
 	resources        map[int]uint8
-	resourceData     [resource.ResourceDataLength]resource.ResourceData
+	resourceData     *[resource.ResourceDataLength]resource.ResourceData
 	highlighted      bool
 	image            *ebiten.Image
 	highlightedImage *ebiten.Image
@@ -29,7 +29,7 @@ type Planet struct {
 	visible          bool
 }
 
-func New(x, y int, resources map[int]uint8, resourceData [resource.ResourceDataLength]resource.ResourceData) *Planet {
+func New(x, y int, resources map[int]uint8, resourceData *[resource.ResourceDataLength]resource.ResourceData) *Planet {
 	var p Planet
 
 	p.x, p.y = x, y

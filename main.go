@@ -27,8 +27,8 @@ type Game struct {
 
 	panel                              *panel.Panel
 	endOfLevelPlayerPanel              bool
-	structureData                      [structure.StructureDataLength]structure.StructureData
-	resourceData                       [resource.ResourceDataLength]resource.ResourceData
+	structureData                      *[structure.StructureDataLength]structure.StructureData
+	resourceData                       *[resource.ResourceDataLength]resource.ResourceData
 	opts                               *ebiten.DrawImageOptions
 	offsetX, offsetY, windowW, windowH int
 	mouseDragX, mouseDragY             int

@@ -29,7 +29,7 @@ func (s *Structure) Produce(count int) bool {
 				if productionRate > 0 {
 					productionRate = ui.BaseProductionRate / productionRate
 					if count%int(productionRate) == 0 {
-						s.storage[s.data.Produces.Resource] = Storage{
+						s.storage[s.data.Produces.Resource] = &Storage{
 							Resource: s.data.Produces.Resource,
 							Capacity: s.storage[s.data.Produces.Resource].Capacity,
 							Amount:   s.storage[s.data.Produces.Resource].Amount + 1,
@@ -38,7 +38,7 @@ func (s *Structure) Produce(count int) bool {
 						for _, ingredient := range s.data.Produces.Requires {
 							if s.Planet().Resources()[ingredient.Resource] == 0 {
 								if s.storage[ingredient.Resource].Resource == ingredient.Resource {
-									s.storage[ingredient.Resource] = Storage{
+									s.storage[ingredient.Resource] = &Storage{
 										Resource: s.storage[ingredient.Resource].Resource,
 										Capacity: s.storage[ingredient.Resource].Capacity,
 										Amount:   s.storage[ingredient.Resource].Amount - ingredient.Quantity,
@@ -80,7 +80,7 @@ func (s *Structure) LaunchShip(resource int) {
 	s.ships -= 1
 	s.inFlight += 1
 	if s.Class() != Tax {
-		s.storage[resource] = Storage{
+		s.storage[resource] = &Storage{
 			Resource: resource,
 			Capacity: s.storage[resource].Capacity,
 			Amount:   s.storage[resource].Amount - 1,
@@ -90,7 +90,7 @@ func (s *Structure) LaunchShip(resource int) {
 
 func (s *Structure) ReceiveCargo(resource int) {
 	if s.storage[resource].Amount < s.storage[resource].Capacity {
-		s.storage[resource] = Storage{
+		s.storage[resource] = &Storage{
 			Resource: resource,
 			Capacity: s.storage[resource].Capacity,
 			Amount:   s.storage[resource].Amount + 1,
@@ -117,7 +117,7 @@ func (s *Structure) Consume(count int) (bool, int) {
 		productionRate = ui.BaseProductionRate / productionRate
 		if count%int(productionRate) == 0 {
 			if s.storage[c.Resource].Amount > 0 {
-				s.storage[c.Resource] = Storage{
+				s.storage[c.Resource] = &Storage{
 					Resource: c.Resource,
 					Capacity: s.storage[c.Resource].Capacity,
 					Amount:   s.storage[c.Resource].Amount - 1,

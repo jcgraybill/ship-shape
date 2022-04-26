@@ -15,8 +15,8 @@ type Structure struct {
 	highlightedImage        *ebiten.Image
 	displayOpts             *ebiten.DrawImageOptions
 	planet                  *planet.Planet
-	data                    StructureData
-	storage                 map[int]Storage
+	data                    *StructureData
+	storage                 map[int]*Storage
 	resourcesWanted         []int
 	berths, ships, inFlight int
 	workers                 int
@@ -24,7 +24,7 @@ type Structure struct {
 	structureType           int
 }
 
-func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
+func New(structureType int, sd *StructureData, p *planet.Planet) *Structure {
 	s := Structure{
 		data:        sd,
 		planet:      p,
@@ -45,11 +45,11 @@ func New(structureType int, sd StructureData, p *planet.Planet) *Structure {
 	if s.Class() == Tax {
 		s.ships = s.workers
 	}
-	s.storage = make(map[int]Storage)
+	s.storage = make(map[int]*Storage)
 
 	s.resourcesWanted = make([]int, 0)
 	for _, st := range s.data.Storage {
-		s.storage[st.Resource] = Storage{
+		s.storage[st.Resource] = &Storage{
 			Resource: st.Resource,
 			Capacity: st.Capacity,
 			Amount:   st.Amount,

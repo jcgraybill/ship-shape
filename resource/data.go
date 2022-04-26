@@ -40,13 +40,13 @@ type ResourceData struct {
 //go:embed resources.json
 var resourceJSON embed.FS
 
-func GetResourceData() [ResourceDataLength]ResourceData {
+func GetResourceData() *[ResourceDataLength]ResourceData {
 	var rd [ResourceDataLength]ResourceData
 	data, err := resourceJSON.ReadFile(ResourcesJSONFile)
 	if err == nil {
 		err := json.Unmarshal(data, &rd)
 		if err == nil {
-			return rd
+			return &rd
 		}
 	}
 	panic(err)

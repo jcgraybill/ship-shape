@@ -61,7 +61,7 @@ func structuresConsume(g *Game) {
 	for _, s := range g.player.Structures() {
 		consumed, downgrade := s.Consume(g.count)
 		if downgrade > 0 {
-			s.Upgrade(downgrade, g.structureData[downgrade])
+			s.Upgrade(downgrade, &g.structureData[downgrade])
 		}
 
 		if (consumed || downgrade > 0) && s.IsHighlighted() {

@@ -12,7 +12,7 @@ func (s *Structure) Planet() *planet.Planet {
 	return s.planet
 }
 
-func (s *Structure) Storage() map[int]Storage {
+func (s *Structure) Storage() map[int]*Storage {
 	return s.storage
 }
 

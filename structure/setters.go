@@ -25,7 +25,7 @@ func (s *Structure) Deprioritize() {
 func (s *Structure) adjustPopulationCapacity() {
 	if s.data.Class == Residential {
 		cap := float64(s.storage[resource.Population].Capacity) * (float64(s.planet.Resources()[resource.Habitability]) / 255)
-		s.storage[resource.Population] = Storage{
+		s.storage[resource.Population] = &Storage{
 			Resource: resource.Population,
 			Amount:   s.storage[resource.Population].Amount,
 			Capacity: uint8(math.Ceil(cap)),
@@ -43,7 +43,7 @@ func (s *Structure) CollectIncome() int {
 	return income
 }
 
-func (s *Structure) Upgrade(st int, sd StructureData) {
+func (s *Structure) Upgrade(st int, sd *StructureData) {
 	s.structureType = st
 	s.data = sd
 	s.image, _, _, s.w, s.h = s.generateImage(s.x, s.x, ui.NonFocusColor)
@@ -56,7 +56,7 @@ func (s *Structure) Upgrade(st int, sd StructureData) {
 		carryover[st.Resource] = st.Amount
 	}
 
-	s.storage = make(map[int]Storage)
+	s.storage = make(map[int]*Storage)
 	s.resourcesWanted = make([]int, 0)
 
 	for _, st := range s.data.Storage {
@@ -65,7 +65,7 @@ func (s *Structure) Upgrade(st int, sd StructureData) {
 			amount = st.Capacity
 		}
 
-		s.storage[st.Resource] = Storage{
+		s.storage[st.Resource] = &Storage{
 			Resource: st.Resource,
 			Capacity: st.Capacity,
 			Amount:   amount,

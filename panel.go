@@ -81,7 +81,7 @@ func updatePlayerPanel(g *Game) {
 
 }
 
-func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDataLength]resource.ResourceData, allowed []int) {
+func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd *[resource.ResourceDataLength]resource.ResourceData, allowed []int) {
 	pl.AddLabel(fmt.Sprintf("planet: %s", p.Name()), ui.TtfBold)
 	for _, resource := range allowed {
 		if level, exists := p.Resources()[resource]; exists {
@@ -91,7 +91,7 @@ func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd [resource.ResourceDat
 	}
 }
 
-func showStructure(pl *panel.Panel, s *structure.Structure, rd [resource.ResourceDataLength]resource.ResourceData, allowed []int) {
+func showStructure(pl *panel.Panel, s *structure.Structure, rd *[resource.ResourceDataLength]resource.ResourceData, allowed []int) {
 	pl.AddLabel(s.Name(), ui.TtfBold)
 	if s.WorkerCapacity() > 0 {
 		pl.AddLabel(fmt.Sprintf("%d/%d workers ($%d/year)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost()), ui.TtfRegular)

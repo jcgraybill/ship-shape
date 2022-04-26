@@ -81,13 +81,13 @@ type Storage struct {
 var structureJSON embed.FS
 
 //.
-func GetStructureData() [StructureDataLength]StructureData {
+func GetStructureData() *[StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)
 	if err == nil {
 		err := json.Unmarshal(data, &sd)
 		if err == nil {
-			return sd
+			return &sd
 		}
 	}
 	panic(err)
