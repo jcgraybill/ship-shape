@@ -3,6 +3,7 @@ package panel
 import (
 	"image/color"
 
+	"github.com/fogleman/gg"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/panel/bar"
 	"github.com/jcgraybill/ship-shape/panel/button"
@@ -42,8 +43,8 @@ func New(w, h int) *Panel {
 	p.y = ui.PanelExternalPadding
 	p.w = ui.PanelWidth
 	p.h = h - ui.PanelExternalPadding*2
-	p.background = ebiten.NewImage(p.w, p.h)
-	p.background.Fill(ui.FocusedColor)
+
+	p.background = p.createBackgroundImage(p.w, p.h)
 	p.displayOptions = &ebiten.DrawImageOptions{}
 	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
 	p.interiorDisplayOptions = &ebiten.DrawImageOptions{}
@@ -53,8 +54,20 @@ func New(w, h int) *Panel {
 	return &p
 }
 
+func (p *Panel) createBackgroundImage(w, h int) *ebiten.Image {
+	dc := gg.NewContext(w, h)
+	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
+	dc.DrawRoundedRectangle(0, 0, float64(w), float64(h), 10)
+	dc.Fill()
+	dc.SetRGB255(int(ui.BackgroundColor.R), int(ui.BackgroundColor.G), int(ui.BackgroundColor.B))
+	dc.DrawRoundedRectangle(ui.Border, ui.Border, float64(w-ui.Border*2), float64(h-ui.Border*2), 10)
+	dc.Fill()
+
+	return ebiten.NewImageFromImage(dc.Image())
+}
+
 func (p *Panel) Draw(image *ebiten.Image) {
-	p.interior.Fill(ui.BackgroundColor)
+	p.interior.Clear()
 	for _, ui := range p.elements {
 		p.interior.DrawImage(ui.Draw())
 	}
@@ -132,8 +145,8 @@ func (p *Panel) Resize(w, h int) {
 	p.displayOptions.GeoM.Reset()
 	p.displayOptions.GeoM.Translate(float64(p.x), float64(p.y))
 
-	p.background = ebiten.NewImage(p.w, p.h)
-	p.background.Fill(ui.FocusedColor)
+	p.background = p.createBackgroundImage(p.w, p.h)
+
 	p.interior = ebiten.NewImage(p.w-ui.Border*2, p.h-ui.Border*2)
 }
 
