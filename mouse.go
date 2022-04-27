@@ -74,7 +74,5 @@ func handleMouseClicks(g *Game) {
 		g.mouseDragX = newX
 		g.mouseDragY = newY
 
-		g.opts.GeoM.Translate(float64(xMovement), float64(yMovement))
-
 	}
 }

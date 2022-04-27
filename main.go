@@ -35,7 +35,6 @@ type Game struct {
 	endOfLevelPlayerPanel              bool
 	structureData                      *[structure.StructureDataLength]structure.StructureData
 	resourceData                       *[resource.ResourceDataLength]resource.ResourceData
-	opts                               *ebiten.DrawImageOptions
 	offsetX, offsetY, windowW, windowH int
 	mouseDragX, mouseDragY             int
 	dragging                           bool
@@ -59,7 +58,6 @@ func init() {
 
 func main() {
 	g := Game{
-		opts:          &ebiten.DrawImageOptions{},
 		panel:         panel.New(ui.WindowW, ui.WindowH),
 		structureData: structure.GetStructureData(),
 		resourceData:  resource.GetResourceData(),

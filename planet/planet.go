@@ -2,6 +2,7 @@ package planet
 
 import (
 	"fmt"
+	"image"
 	"math/rand"
 
 	"golang.org/x/image/font"
@@ -27,6 +28,7 @@ type Planet struct {
 	displayOpts      *ebiten.DrawImageOptions
 	ttf              *font.Face
 	visible          bool
+	Bounds           image.Rectangle
 }
 
 func New(x, y int, resources map[int]uint8, resourceData *[resource.ResourceDataLength]resource.ResourceData) *Planet {
@@ -47,6 +49,7 @@ func New(x, y int, resources map[int]uint8, resourceData *[resource.ResourceData
 	p.displayOpts = &ebiten.DrawImageOptions{}
 	p.displayOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
 	p.ttf = ui.Font(ui.TtfRegular)
+	p.Bounds = image.Rect(p.x-ui.PlanetSize/2, p.y-ui.PlanetSize/2, p.x+ui.PlanetSize/2, p.y+ui.PlanetSize/2)
 	return &p
 }
 

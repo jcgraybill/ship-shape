@@ -1,6 +1,8 @@
 package structure
 
 import (
+	"image"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/planet"
 	"github.com/jcgraybill/ship-shape/ui"
@@ -22,6 +24,7 @@ type Structure struct {
 	workers                 int
 	income                  float64
 	structureType           int
+	Bounds                  image.Rectangle
 }
 
 func New(structureType int, sd *StructureData, p *planet.Planet) *Structure {
@@ -60,6 +63,7 @@ func New(structureType int, sd *StructureData, p *planet.Planet) *Structure {
 		}
 	}
 
+	s.Bounds = image.Rect(s.x, s.y, s.x+s.w, s.y+s.h)
 	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
 
 	s.adjustPopulationCapacity()

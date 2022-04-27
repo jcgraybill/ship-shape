@@ -1,6 +1,7 @@
 package ship
 
 import (
+	"image"
 	"image/color"
 	"math"
 
@@ -33,13 +34,13 @@ type Ship struct {
 	plume              *ebiten.Image
 	plumeVisible       bool
 	opts               *ebiten.DrawImageOptions
+	Bounds             image.Rectangle
 
 	origin      *structure.Structure
 	destination *structure.Structure
 
 	baseCourse *ebiten.Image
 	course     *ebiten.Image
-	courseOpts *ebiten.DrawImageOptions
 	cargo      int
 	shipType   int
 }
@@ -102,6 +103,7 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 		s.baseY = float64(y0)
 	}
 
+	s.Bounds = image.Rect(int(s.baseX), int(s.baseY), int(s.baseX)+w, int(s.baseY)+h)
 	dc := gg.NewContext(w, h)
 	dc.SetRGB255(int(ui.NonFocusColor.R), int(ui.NonFocusColor.G), int(ui.NonFocusColor.B))
 	dc.DrawLine(float64(x0)-float64(s.baseX), float64(y0)-float64(s.baseY), float64(x1)-float64(s.baseX), float64(y1)-float64(s.baseY))
@@ -117,9 +119,6 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 	s.course = ebiten.NewImageFromImage(dc.Image())
 
 	s.theta = math.Atan2(float64(y1-y0), float64(x1-x0))
-
-	s.courseOpts = &ebiten.DrawImageOptions{}
-	s.courseOpts.GeoM.Translate(s.baseX, s.baseY)
 
 	s.opts = &ebiten.DrawImageOptions{}
 	s.opts.GeoM.Translate(-(plumeW + shipW/2), -shipH/2)
