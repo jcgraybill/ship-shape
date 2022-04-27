@@ -10,31 +10,32 @@ import (
 
 type Bar struct {
 	Bounds image.Rectangle
+	value  uint8
 
-	image   *ebiten.Image
-	opts    *ebiten.DrawImageOptions
-	bar     *ebiten.Image
-	barOpts *ebiten.DrawImageOptions
+	bar  *ebiten.Image
+	fill *ebiten.Image
+	opts *ebiten.DrawImageOptions
 }
 
 func New(x, y, w int, value uint8, barColor color.RGBA) *Bar {
 	var b Bar
+	b.value = value
 	b.Bounds = image.Rect(x, y, x+w, y+ui.BarHeight)
 
-	b.image = ebiten.NewImage(b.Bounds.Dx(), b.Bounds.Dy())
-	b.image.Fill(ui.NonFocusColor)
+	b.fill = ebiten.NewImage(b.Bounds.Dx(), b.Bounds.Dy())
+	b.bar = ebiten.NewImage(b.Bounds.Dx(), b.Bounds.Dy())
+
+	b.bar.Fill(ui.NonFocusColor)
+	b.fill.Fill(barColor)
 
 	barWidth := (int(value) * b.Bounds.Dx()) / 255
-	b.bar = ebiten.NewImage(1, b.Bounds.Dy())
-	b.bar.Fill(barColor)
-	b.barOpts = &ebiten.DrawImageOptions{}
+
 	if barWidth > 0 {
-		b.barOpts.GeoM.Scale(float64(barWidth), 1)
-		b.image.DrawImage(b.bar, b.barOpts)
+		b.bar.DrawImage(b.fill.SubImage(image.Rect(0, 0, barWidth, ui.BarHeight)).(*ebiten.Image), nil)
 	}
+
 	b.opts = &ebiten.DrawImageOptions{}
 	b.opts.GeoM.Translate(float64(b.Bounds.Min.X), float64(b.Bounds.Min.Y))
-
 	return &b
 }
 
@@ -46,7 +47,7 @@ func (b *Bar) LeftMouseButtonRelease(int, int) bool {
 }
 
 func (b *Bar) Draw() (*ebiten.Image, *ebiten.DrawImageOptions) {
-	return b.image, b.opts
+	return b.bar, b.opts
 }
 
 func (b *Bar) Height() int {
@@ -54,15 +55,14 @@ func (b *Bar) Height() int {
 }
 
 func (b *Bar) UpdateValue(value uint8) {
-	b.image.Fill(ui.NonFocusColor)
-	barWidth := (int(value) * b.Bounds.Dx()) / 255
+	if value != b.value {
+		b.bar.Fill(ui.NonFocusColor)
+		barWidth := (int(value) * b.Bounds.Dx()) / 255
 
-	if barWidth > 0 {
-		b.barOpts.GeoM.Reset()
-		b.barOpts.GeoM.Scale(float64(barWidth), 1)
-		b.image.DrawImage(b.bar, b.barOpts)
+		if barWidth > 0 {
+			b.bar.DrawImage(b.fill.SubImage(image.Rect(0, 0, barWidth, ui.BarHeight)).(*ebiten.Image), nil)
+		}
 	}
-
 }
 
 func (b *Bar) UpdateText(string) { return }

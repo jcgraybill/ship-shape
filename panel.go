@@ -78,7 +78,6 @@ func updatePlayerPanel(g *Game) {
 		g.panel.UpdateLabel(7, fmt.Sprintf("%s (%d/%d):", label, progress, goal))
 		g.panel.UpdateBar(8, uint8(255*float32(progress)/float32(goal)))
 	}
-
 }
 
 func showPlanetPanel(pl *panel.Panel, p *planet.Planet, rd *[resource.ResourceDataLength]resource.ResourceData, allowed []int) {

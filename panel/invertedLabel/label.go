@@ -13,8 +13,9 @@ type Label struct {
 	Bounds image.Rectangle
 	ttf    *font.Face
 
-	image *ebiten.Image
-	opts  *ebiten.DrawImageOptions
+	image   *ebiten.Image
+	opts    *ebiten.DrawImageOptions
+	message string
 }
 
 func New(x, y, w, h int, message string, style string) *Label {
@@ -36,7 +37,7 @@ func New(x, y, w, h int, message string, style string) *Label {
 
 	l.opts = &ebiten.DrawImageOptions{}
 	l.opts.GeoM.Translate(float64(l.Bounds.Min.X), float64(l.Bounds.Min.Y))
-
+	l.message = message
 	return &l
 }
 
@@ -58,9 +59,11 @@ func (l *Label) Height() int {
 
 func (l *Label) UpdateValue(uint8) { return }
 func (l *Label) UpdateText(newText string) {
-	textBounds := text.BoundString(*l.ttf, newText)
-	textWidth := textBounds.Dx()
+	if newText != l.message {
+		textBounds := text.BoundString(*l.ttf, newText)
+		textWidth := textBounds.Dx()
 
-	l.image.Fill(ui.FocusedColor)
-	text.Draw(l.image, newText, *l.ttf, l.Bounds.Dx()/2-textWidth/2, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.BackgroundColor)
+		l.image.Fill(ui.FocusedColor)
+		text.Draw(l.image, newText, *l.ttf, l.Bounds.Dx()/2-textWidth/2, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.BackgroundColor)
+	}
 }
