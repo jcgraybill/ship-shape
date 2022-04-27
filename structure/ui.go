@@ -17,10 +17,8 @@ func (s *Structure) Draw(image *ebiten.Image) {
 }
 
 func (s *Structure) MouseButton(x, y int) bool {
-	if s.x < x && s.x+s.w > x {
-		if s.y < y && s.y+s.h > y {
-			return true
-		}
+	if s.Bounds.At(x, y) == color.Opaque {
+		return true
 	}
 	return false
 }

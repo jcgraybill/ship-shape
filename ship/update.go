@@ -1,6 +1,7 @@
 package ship
 
 import (
+	"image/color"
 	"math/rand"
 
 	"github.com/jcgraybill/ship-shape/ui"
@@ -15,7 +16,7 @@ func (s *Ship) Update(count int) bool {
 		}
 	}
 
-	if s.destination.Planet().In(int(s.x), int(s.y)) {
+	if s.destination.Planet().Bounds.At(int(s.x), int(s.y)) == color.Opaque {
 		return true
 	} else {
 		if count%ui.ShipSpeed == 0 {

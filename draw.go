@@ -7,10 +7,6 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-//  viewPortOffset := g.player.X - (sys.ScreenWidth/2 + sys.FrameWidth/2)
-//	levelViewFinder := image.Rect(viewPortOffset, 0, viewPortOffset+sys.ScreenWidth, sys.ScreenHeight)
-//	frameBuffer.DrawImage(g.level.LevelBackgroundImage.SubImage(levelViewFinder).(*ebiten.Image), nil)
-
 func (g *Game) Draw(screen *ebiten.Image) {
 
 	viewport := image.Rect(-g.offsetX, -g.offsetY, -g.offsetX+g.windowW, -g.offsetY+g.windowH)

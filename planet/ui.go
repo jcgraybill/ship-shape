@@ -1,6 +1,7 @@
 package planet
 
 import (
+	"image/color"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -26,15 +27,6 @@ func (p *Planet) Draw(image *ebiten.Image) {
 			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, cy-16, ui.NonFocusColor)
 		}
 	}
-}
-
-func (p *Planet) In(x, y int) bool {
-	if p.x-ui.PlanetSize/2 < x && p.x+ui.PlanetSize/2 > x {
-		if p.y-ui.PlanetSize/2 < y && p.y+ui.PlanetSize/2 > y {
-			return true
-		}
-	}
-	return false
 }
 
 func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image, *ebiten.Image) {
@@ -93,10 +85,8 @@ func (p *Planet) Unhighlight() {
 }
 
 func (p *Planet) MouseButton(x, y int) bool {
-	if p.visible && p.x-ui.PlanetSize/2 < x && p.x+ui.PlanetSize/2 > x {
-		if p.y-ui.PlanetSize/2 < y && p.y+ui.PlanetSize/2 > y {
-			return true
-		}
+	if p.visible && p.Bounds.At(x, y) == color.Opaque {
+		return true
 	}
 	return false
 }
