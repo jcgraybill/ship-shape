@@ -6,6 +6,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ui"
 
 	"github.com/fogleman/gg"
@@ -15,16 +16,16 @@ func (p *Planet) Draw(image *ebiten.Image) {
 	image.DrawImage(p.blackImage, p.displayOpts)
 	ui.ShaderOpts.Images[1] = p.Image()
 	ui.ShaderOpts.GeoM.Reset()
-	ui.ShaderOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
+	ui.ShaderOpts.GeoM.Translate(float64(p.Bounds.Min.X), float64(p.Bounds.Min.Y))
 	image.DrawRectShader(ui.PlanetSize, ui.PlanetSize, ui.Shader, ui.ShaderOpts)
 
 	if p.visible {
-		cx, cy := p.Center()
+		cx, _ := p.Center()
 		textBounds := text.BoundString(*(p.ttf), p.Name())
 		if p.highlighted {
-			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, cy-16, ui.FocusedColor)
+			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, p.Bounds.Min.Y, ui.FocusedColor)
 		} else {
-			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, cy-16, ui.NonFocusColor)
+			text.Draw(image, p.Name(), *(p.ttf), cx-textBounds.Dx()/2, p.Bounds.Min.Y, ui.NonFocusColor)
 		}
 	}
 }
@@ -33,12 +34,12 @@ func (p *Planet) generatePlanetImages() (*ebiten.Image, *ebiten.Image, *ebiten.I
 	radius := float64(basePlanetRadius + rand.Intn(ui.PlanetSize/2-basePlanetRadius))
 
 	var R, G, B float64
-
+	rd := resource.GetResourceData()
 	n := float64(len(p.resources) * 255)
 	for resource, level := range p.resources {
-		R = R + float64(level)*float64(p.resourceData[resource].Color.R)/n
-		G = G + float64(level)*float64(p.resourceData[resource].Color.G)/n
-		B = B + float64(level)*float64(p.resourceData[resource].Color.B)/n
+		R = R + float64(level)*float64(rd[resource].Color.R)/n
+		G = G + float64(level)*float64(rd[resource].Color.G)/n
+		B = B + float64(level)*float64(rd[resource].Color.B)/n
 	}
 
 	dc := gg.NewContext(ui.PlanetSize, ui.PlanetSize)

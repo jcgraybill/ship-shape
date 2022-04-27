@@ -1,7 +1,7 @@
 package planet
 
 func (p *Planet) Center() (int, int) {
-	return p.x, p.y
+	return p.Bounds.Min.X + p.Bounds.Dx()/2, p.Bounds.Min.Y + p.Bounds.Dy()/2
 }
 
 func (p *Planet) Name() string {

@@ -49,7 +49,7 @@ func New(lvl *Level) *Level {
 					planetResources[r] = uint8(rand.Intn(255))
 				}
 			}
-			lvl.planets = append(lvl.planets, planet.New(x, y, planetResources, rd))
+			lvl.planets = append(lvl.planets, planet.New(x, y, planetResources))
 		}
 	}
 

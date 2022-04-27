@@ -8,7 +8,6 @@ import (
 	"golang.org/x/image/font"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/jcgraybill/ship-shape/resource"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
@@ -17,9 +16,7 @@ const (
 )
 
 type Planet struct {
-	x, y             int
 	resources        map[int]uint8
-	resourceData     *[resource.ResourceDataLength]resource.ResourceData
 	highlighted      bool
 	image            *ebiten.Image
 	highlightedImage *ebiten.Image
@@ -31,14 +28,14 @@ type Planet struct {
 	Bounds           image.Rectangle
 }
 
-func New(x, y int, resources map[int]uint8, resourceData *[resource.ResourceDataLength]resource.ResourceData) *Planet {
+func New(x, y int, resources map[int]uint8) *Planet {
 	var p Planet
 
-	p.x, p.y = x, y
+	p.Bounds = image.Rect(x, y, x+ui.PlanetSize, y+ui.PlanetSize)
+
 	p.visible = true
 
 	p.resources = resources
-	p.resourceData = resourceData
 
 	p.name = p.generateName()
 
@@ -47,9 +44,8 @@ func New(x, y int, resources map[int]uint8, resourceData *[resource.ResourceData
 	p.highlighted = false
 
 	p.displayOpts = &ebiten.DrawImageOptions{}
-	p.displayOpts.GeoM.Translate(float64(p.x-ui.PlanetSize/2), float64(p.y-ui.PlanetSize/2))
+	p.displayOpts.GeoM.Translate(float64(x), float64(y))
 	p.ttf = ui.Font(ui.TtfRegular)
-	p.Bounds = image.Rect(p.x-ui.PlanetSize/2, p.y-ui.PlanetSize/2, p.x+ui.PlanetSize/2, p.y+ui.PlanetSize/2)
 	return &p
 }
 
