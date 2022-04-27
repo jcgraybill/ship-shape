@@ -1,31 +1,27 @@
 package divider
 
 import (
+	"image"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
 type Divider struct {
-	x, y int
-	w, h int
+	Bounds image.Rectangle
 
 	image *ebiten.Image
 	opts  *ebiten.DrawImageOptions
 }
 
 func New(x, y, w int) *Divider {
-	d := Divider{
-		x: x,
-		y: y,
-		w: w,
-		h: ui.Border,
-	}
-
-	d.image = ebiten.NewImage(d.w, d.h)
+	var d Divider
+	d.Bounds = image.Rect(x, y, x+w, y+ui.Border)
+	d.image = ebiten.NewImage(d.Bounds.Dx(), d.Bounds.Dy())
 	d.image.Fill(ui.FocusedColor)
 
 	d.opts = &ebiten.DrawImageOptions{}
-	d.opts.GeoM.Translate(float64(d.x), float64(d.y))
+	d.opts.GeoM.Translate(float64(d.Bounds.Min.X), float64(d.Bounds.Min.Y))
 
 	return &d
 }
@@ -42,7 +38,7 @@ func (d *Divider) Draw() (*ebiten.Image, *ebiten.DrawImageOptions) {
 }
 
 func (d *Divider) Height() int {
-	return d.h
+	return d.Bounds.Dy()
 }
 
 func (d *Divider) UpdateValue(uint8) { return }

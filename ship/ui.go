@@ -58,11 +58,11 @@ func (s *Ship) DrawCourse(targetImage *ebiten.Image) {
 
 	trailOpts := &ebiten.DrawImageOptions{}
 	trailOpts.GeoM.Translate(float64(ax), float64(ay))
-	trailRect := image.Rect(ax-int(s.baseX), ay-int(s.baseY), bx-int(s.baseX), by-int(s.baseY))
+	trailRect := image.Rect(ax-s.Bounds.Min.X, ay-s.Bounds.Min.Y, bx-s.Bounds.Min.X, by-s.Bounds.Min.Y)
 	targetImage.DrawImage(s.baseCourse.SubImage(trailRect).(*ebiten.Image), trailOpts)
 
 	headingOpts := &ebiten.DrawImageOptions{}
 	headingOpts.GeoM.Translate(float64(cx), float64(cy))
-	headingRect := image.Rect(cx-int(s.baseX), cy-int(s.baseY), dx-int(s.baseX), dy-int(s.baseY))
+	headingRect := image.Rect(cx-s.Bounds.Min.X, cy-s.Bounds.Min.Y, dx-s.Bounds.Min.X, dy-s.Bounds.Min.Y)
 	targetImage.DrawImage(s.course.SubImage(headingRect).(*ebiten.Image), headingOpts)
 }

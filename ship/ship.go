@@ -28,13 +28,13 @@ const plumeCycleTime = 20
 const plumeFrequency = 4
 
 type Ship struct {
-	x, y, baseX, baseY float64
-	dx, dy, theta      float64
-	image              *ebiten.Image
-	plume              *ebiten.Image
-	plumeVisible       bool
-	opts               *ebiten.DrawImageOptions
-	Bounds             image.Rectangle
+	x, y          float64
+	dx, dy, theta float64
+	image         *ebiten.Image
+	plume         *ebiten.Image
+	plumeVisible  bool
+	opts          *ebiten.DrawImageOptions
+	Bounds        image.Rectangle
 
 	origin      *structure.Structure
 	destination *structure.Structure
@@ -80,40 +80,40 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 	v, i = ui.Triangle(plumeW, 4, -plumeW, shipH-8, plumeInner)
 	s.plume.DrawTriangles(v, i, ui.Src, nil)
 
-	var w, h int
+	var baseX, baseY, w, h int
 
 	if x0 > x1 {
 		w = x0 - x1
-		s.baseX = float64(x1)
+		baseX = x1
 	} else if x1 > x0 {
 		w = x1 - x0
-		s.baseX = float64(x0)
+		baseX = x0
 	} else {
 		w = ui.Border
-		s.baseX = float64(x0)
+		baseX = x0
 	}
 	if y0 > y1 {
 		h = y0 - y1
-		s.baseY = float64(y1)
+		baseY = y1
 	} else if y1 > y0 {
 		h = y1 - y0
-		s.baseY = float64(y0)
+		baseY = y0
 	} else {
 		h = ui.Border
-		s.baseY = float64(y0)
+		baseY = y0
 	}
 
-	s.Bounds = image.Rect(int(s.baseX), int(s.baseY), int(s.baseX)+w, int(s.baseY)+h)
+	s.Bounds = image.Rect(baseX, baseY, baseX+w, baseY+h)
 	dc := gg.NewContext(w, h)
 	dc.SetRGB255(int(ui.NonFocusColor.R), int(ui.NonFocusColor.G), int(ui.NonFocusColor.B))
-	dc.DrawLine(float64(x0)-float64(s.baseX), float64(y0)-float64(s.baseY), float64(x1)-float64(s.baseX), float64(y1)-float64(s.baseY))
+	dc.DrawLine(float64(x0)-float64(baseX), float64(y0)-float64(baseY), float64(x1)-float64(baseX), float64(y1)-float64(baseY))
 	dc.SetLineWidth(ui.Border)
 	dc.Stroke()
 	s.baseCourse = ebiten.NewImageFromImage(dc.Image())
 
 	dc = gg.NewContext(w, h)
 	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
-	dc.DrawLine(float64(x0)-float64(s.baseX), float64(y0)-float64(s.baseY), float64(x1)-float64(s.baseX), float64(y1)-float64(s.baseY))
+	dc.DrawLine(float64(x0)-float64(baseX), float64(y0)-float64(baseY), float64(x1)-float64(baseX), float64(y1)-float64(baseY))
 	dc.SetLineWidth(ui.Border)
 	dc.Stroke()
 	s.course = ebiten.NewImageFromImage(dc.Image())
