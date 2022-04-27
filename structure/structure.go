@@ -9,7 +9,6 @@ import (
 )
 
 type Structure struct {
-	x, y, w, h              int
 	highlighted             bool
 	paused                  bool
 	prioritized             bool
@@ -42,8 +41,8 @@ func New(structureType int, sd *StructureData, p *planet.Planet) *Structure {
 
 	s.planet.ReplaceWithStructure()
 	px, py := s.planet.Center()
-	s.image, s.x, s.y, s.w, s.h = s.generateImage(px, py, ui.NonFocusColor)
-	s.highlightedImage, _, _, _, _ = s.generateImage(px, py, ui.FocusedColor)
+	s.image, s.Bounds = s.generateImage(px, py, ui.NonFocusColor)
+	s.highlightedImage, _ = s.generateImage(px, py, ui.FocusedColor)
 	s.berths, s.ships, s.inFlight = s.data.Berths, s.data.Berths, 0
 	if s.Class() == Tax {
 		s.ships = s.workers
@@ -63,8 +62,7 @@ func New(structureType int, sd *StructureData, p *planet.Planet) *Structure {
 		}
 	}
 
-	s.Bounds = image.Rect(s.x, s.y, s.x+s.w, s.y+s.h)
-	s.displayOpts.GeoM.Translate(float64(s.x), float64(s.y))
+	s.displayOpts.GeoM.Translate(float64(s.Bounds.Min.X), float64(s.Bounds.Min.Y))
 
 	s.adjustPopulationCapacity()
 

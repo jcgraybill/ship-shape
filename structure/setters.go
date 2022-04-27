@@ -46,8 +46,9 @@ func (s *Structure) CollectIncome() int {
 func (s *Structure) Upgrade(st int, sd *StructureData) {
 	s.structureType = st
 	s.data = sd
-	s.image, _, _, s.w, s.h = s.generateImage(s.x, s.x, ui.NonFocusColor)
-	s.highlightedImage, _, _, _, _ = s.generateImage(s.x, s.x, ui.FocusedColor)
+	cx, cy := s.planet.Center()
+	s.image, s.Bounds = s.generateImage(cx, cy, ui.NonFocusColor)
+	s.highlightedImage, _ = s.generateImage(cx, cy, ui.FocusedColor)
 	s.berths, s.ships = sd.Berths, sd.Berths
 
 	carryover := make(map[int]uint8)

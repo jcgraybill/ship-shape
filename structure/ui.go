@@ -1,6 +1,7 @@
 package structure
 
 import (
+	"image"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -38,7 +39,7 @@ func (s *Structure) IsHighlighted() bool {
 	return s.highlighted
 }
 
-func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, int, int, int, int) {
+func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, image.Rectangle) {
 	var x, y, w, h int
 	ttf := ui.Font(ui.TtfRegular)
 	textBounds := text.BoundString(*ttf, s.data.DisplayName)
@@ -50,17 +51,17 @@ func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor colo
 	w = ui.Border + ui.Buffer + contentWidth + ui.Buffer + ui.Border
 	h = ui.Border + ui.Buffer + textBounds.Dy() + ui.Buffer + ui.PlanetSize + ui.Buffer + ui.Border
 
-	image := ebiten.NewImage(w, h)
-	image.Fill(uiColor)
+	structureImage := ebiten.NewImage(w, h)
+	structureImage.Fill(uiColor)
 
 	interior := ebiten.NewImage(w-ui.Border*2, h-ui.Border*2)
 	interior.Fill(ui.BackgroundColor)
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
 	text.Draw(interior, s.data.DisplayName, *ttf, ui.Buffer, int((*ttf).Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
-	image.DrawImage(interior, opts)
+	structureImage.DrawImage(interior, opts)
 
 	x = planetCenterX - w/2
 	y = planetCenterY - ui.PlanetSize/2 - ui.Buffer - textBounds.Dy() - ui.Buffer - ui.Border
-	return image, x, y, w, h
+	return structureImage, image.Rect(x, y, x+w, y+h)
 }
