@@ -5,7 +5,7 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-func (s *Structure) Produce(count int) bool {
+func (s *Structure) Produce(count uint) bool {
 	if s.IsPaused() {
 		return false
 	}
@@ -28,7 +28,7 @@ func (s *Structure) Produce(count int) bool {
 
 				if productionRate > 0 {
 					productionRate = ui.BaseProductionRate / productionRate
-					if count%int(productionRate) == 0 {
+					if count%uint(productionRate) == 0 {
 						s.storage[s.data.Produces.Resource] = &Storage{
 							Resource: s.data.Produces.Resource,
 							Capacity: s.storage[s.data.Produces.Resource].Capacity,
@@ -109,13 +109,13 @@ func (s *Structure) GenerateIncome() {
 	s.income += (float64(s.Storage()[resource.Population].Amount) * ui.IncomeRate) / ui.YearLength
 }
 
-func (s *Structure) Consume(count int) (bool, int) {
+func (s *Structure) Consume(count uint) (bool, int) {
 	var consumed bool
 	var downgrade int
 	for _, c := range s.data.Consumes {
 		productionRate := float32(c.Rate)
 		productionRate = ui.BaseProductionRate / productionRate
-		if count%int(productionRate) == 0 {
+		if count%uint(productionRate) == 0 {
 			if s.storage[c.Resource].Amount > 0 {
 				s.storage[c.Resource] = &Storage{
 					Resource: c.Resource,

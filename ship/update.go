@@ -7,7 +7,7 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-func (s *Ship) Update(count int) bool {
+func (s *Ship) Update(count uint) bool {
 	if count%plumeCycleTime == 0 {
 		if rand.Intn(plumeFrequency) == 0 {
 			s.plumeVisible = false

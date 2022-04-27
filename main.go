@@ -21,7 +21,7 @@ import (
 )
 
 type Game struct {
-	count                     int
+	count                     uint
 	year                      uint
 	level                     *level.Level
 	player                    *player.Player

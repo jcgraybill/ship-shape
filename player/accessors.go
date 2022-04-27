@@ -9,7 +9,7 @@ func (p *Player) Structures() []*structure.Structure {
 	return p.structures
 }
 
-func (p *Player) Ships() map[int]*ship.Ship {
+func (p *Player) Ships() map[uint]*ship.Ship {
 	return p.ships
 }
 
