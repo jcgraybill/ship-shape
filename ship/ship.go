@@ -80,6 +80,7 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 	v, i = ui.Triangle(plumeW, 4, -plumeW, shipH-8, plumeInner)
 	s.plume.DrawTriangles(v, i, ui.Src, nil)
 
+	// TODO - simplify
 	var baseX, baseY, w, h int
 
 	if x0 > x1 {

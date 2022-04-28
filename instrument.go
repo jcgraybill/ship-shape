@@ -34,9 +34,14 @@ func (g *Game) instrument() {
 	}
 }
 
-func (g *Game) measure(f func(*Game)) time.Duration {
+func (g *Game) measure(f func(*Game)) (time.Duration, uint64) {
+	var mem runtime.MemStats
+	runtime.ReadMemStats(&mem)
 	start := time.Now()
+	startMem := mem.HeapAlloc
 	f(g)
 	end := time.Now()
-	return end.Sub(start)
+	runtime.ReadMemStats(&mem)
+	endMem := mem.HeapAlloc
+	return end.Sub(start), endMem - startMem
 }

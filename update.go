@@ -15,8 +15,8 @@ import (
 func (g *Game) Update() error {
 	g.count++
 
-	t := g.measure(updatePlayerPanel)
-	UpdateLogger.Printf("%d", t.Milliseconds())
+	t, m := g.measure(updatePlayerPanel)
+	UpdateLogger.Printf("%d %d", t.Microseconds(), m)
 
 	handleMouseClicks(g)
 	handleKeyPresses(g)
