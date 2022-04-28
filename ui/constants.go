@@ -28,7 +28,7 @@ const (
 
 	YearLength         = 1800 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster
-	BidFrequency       = 20   // smaller numbers are more frequent
+	BroadcastFrequency = 20   // smaller numbers are more frequent
 	ShipSpeed          = 1    // smaller numbers are faster
 )
 

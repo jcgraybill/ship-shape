@@ -14,14 +14,21 @@ import (
 // become available.
 func (g *Game) Update() error {
 	g.count++
-	updatePlayerPanel(g)
+
+	t := g.measure(updatePlayerPanel)
+	UpdateLogger.Printf("%d", t.Milliseconds())
+
 	handleMouseClicks(g)
 	handleKeyPresses(g)
 
 	structuresProduce(g)
 	structuresConsume(g)
-	structuresBidForResources(g)
-	collectIncome(g)
+
+	if g.count%ui.BroadcastFrequency == 0 {
+		structuresBidForResources(g)
+		collectIncome(g)
+	}
+
 	shipsArrive(g)
 
 	updatePopulation(g)

@@ -3,9 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"math/rand"
-	"os"
 	"runtime"
 	"time"
 
@@ -41,19 +39,12 @@ type Game struct {
 }
 
 var (
-	InfoLogger *log.Logger
-	ambient    *audio.Player
+	ambient *audio.Player
 )
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
 	audio.NewContext(44100)
-
-	file, err := os.OpenFile("info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
-	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 func main() {

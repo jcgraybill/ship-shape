@@ -4,7 +4,6 @@ import (
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/jcgraybill/ship-shape/ui"
 )
 
 func (s *Ship) Draw(targetImage *ebiten.Image) {
@@ -17,52 +16,16 @@ func (s *Ship) Draw(targetImage *ebiten.Image) {
 
 func (s *Ship) DrawCourse(targetImage *ebiten.Image) {
 
-	var ax, ay, bx, by, cx, cy, dx, dy int
-
 	x0, y0 := s.origin.Planet().Center()
 	x1, y1 := s.destination.Planet().Center()
 
-	if x1 > x0 {
-		ax = x0
-		bx = int(s.x)
-		cx = int(s.x)
-		dx = x1
-	} else if x1 < x0 {
-		ax = int(s.x)
-		bx = x0
-		cx = x1
-		dx = int(s.x)
-	} else if x1 == x0 {
-		ax = x0
-		bx = x0 + ui.Border
-		cx = x0
-		dx = x0 + ui.Border
-	}
-
-	if y1 > y0 {
-		ay = y0
-		by = int(s.y)
-		cy = int(s.y)
-		dy = y1
-	} else if y1 < y0 {
-		ay = int(s.y)
-		by = y0
-		cy = y1
-		dy = int(s.y)
-	} else if y1 == y0 {
-		ay = y0
-		by = y0 + ui.Border
-		cy = y0
-		dy = y0 + ui.Border
-	}
-
 	trailOpts := &ebiten.DrawImageOptions{}
-	trailOpts.GeoM.Translate(float64(ax), float64(ay))
-	trailRect := image.Rect(ax-s.Bounds.Min.X, ay-s.Bounds.Min.Y, bx-s.Bounds.Min.X, by-s.Bounds.Min.Y)
+	trailRect := image.Rect(x0-s.Bounds.Min.X, y0-s.Bounds.Min.Y, int(s.x)-s.Bounds.Min.X, int(s.y)-s.Bounds.Min.Y)
+	trailOpts.GeoM.Translate(float64(s.Bounds.Min.X+trailRect.Min.X), float64(s.Bounds.Min.Y+trailRect.Min.Y))
 	targetImage.DrawImage(s.baseCourse.SubImage(trailRect).(*ebiten.Image), trailOpts)
 
 	headingOpts := &ebiten.DrawImageOptions{}
-	headingOpts.GeoM.Translate(float64(cx), float64(cy))
-	headingRect := image.Rect(cx-s.Bounds.Min.X, cy-s.Bounds.Min.Y, dx-s.Bounds.Min.X, dy-s.Bounds.Min.Y)
+	headingRect := image.Rect(int(s.x)-s.Bounds.Min.X, int(s.y)-s.Bounds.Min.Y, x1-s.Bounds.Min.X, y1-s.Bounds.Min.Y)
+	headingOpts.GeoM.Translate(float64(s.Bounds.Min.X+headingRect.Min.X), float64(s.Bounds.Min.Y+headingRect.Min.Y))
 	targetImage.DrawImage(s.course.SubImage(headingRect).(*ebiten.Image), headingOpts)
 }

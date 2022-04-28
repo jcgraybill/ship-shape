@@ -1,7 +1,7 @@
 # Ship shape
 Supply chain management indie game ... IN SPACE! Current state is beyond preliminary - there isn't actually a game yet. 
 
-Built in [golang](https://go.dev/) using the [ebiten](https://ebiten.org/) 2D game library and [gg](https://github.com/fogleman/gg) graphics library.
+Built in [golang](https://go.dev/) using the [ebiten](https://ebiten.org/) 2D game library and [gg](https://github.com/fogleman/gg) 2D graphics library.
 
 # Objectives
 * It's real time. The objective is to produce a surplus of materials within a time limit.

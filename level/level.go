@@ -24,6 +24,10 @@ type Level struct {
 	nextLevel         *Level
 }
 
+func StartingLevel() *Level {
+	return &level01
+}
+
 func New(lvl *Level) *Level {
 	lvl.planets = make([]*planet.Planet, 0)
 
@@ -54,10 +58,6 @@ func New(lvl *Level) *Level {
 	}
 
 	return lvl
-}
-
-func StartingLevel() *Level {
-	return &level01
 }
 
 func (lvl *Level) Update(p *player.Player) {
