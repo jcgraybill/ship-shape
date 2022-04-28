@@ -13,7 +13,7 @@ type Bid struct {
 	Urgency   uint8
 }
 
-func structuresBidForResources(g *Game) {
+func (g *Game) structuresBidForResources() {
 	bids := make([]*Bid, 0)
 	for _, s := range g.player.Structures() {
 		for resource, urgency := range s.Bid() {

@@ -5,7 +5,7 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-func handleKeyPresses(g *Game) {
+func (g *Game) handleKeyPresses() {
 
 	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) && -1*g.offsetX+g.windowW < g.level.W {
 		g.redrawPSLayer = true

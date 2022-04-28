@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"image"
 	"math/rand"
 	"runtime"
 	"time"
@@ -27,6 +28,8 @@ type Game struct {
 	starfieldLayer            *ebiten.Image
 	planetsAndStructuresLayer *ebiten.Image
 	shipsLayer                *ebiten.Image
+	panelLayer                *ebiten.Image
+	viewport                  image.Rectangle
 	redrawPSLayer             bool
 
 	panel                              *panel.Panel
@@ -80,6 +83,7 @@ func (g *Game) load(lvl *level.Level) {
 	g.trailsLayer = ebiten.NewImage(lvl.W, lvl.H)
 	g.planetsAndStructuresLayer = ebiten.NewImage(lvl.W, lvl.H)
 	g.shipsLayer = ebiten.NewImage(lvl.W, lvl.H)
+	g.panelLayer = ebiten.NewImage(ui.WindowW, ui.WindowH)
 	g.redrawPSLayer = true
 	g.year = g.level.StartingYear()
 	g.player.AddMoney(lvl.StartingMoney())
@@ -124,6 +128,7 @@ func (g *Game) Layout(w, h int) (int, int) {
 		g.panel.Resize(w, h)
 		g.windowW = w
 		g.windowH = h
+		g.panelLayer = ebiten.NewImage(w, h)
 	}
 	return w, h
 }

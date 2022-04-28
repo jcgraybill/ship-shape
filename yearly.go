@@ -2,7 +2,7 @@ package main
 
 import "github.com/jcgraybill/ship-shape/structure"
 
-func structuresGenerateIncome(g *Game) {
+func (g *Game) structuresGenerateIncome() {
 	for _, s := range g.player.Structures() {
 		if s.Class() == structure.Residential {
 			s.GenerateIncome()
@@ -10,14 +10,14 @@ func structuresGenerateIncome(g *Game) {
 	}
 }
 
-func payWorkers(g *Game) {
+func (g *Game) payWorkers() {
 
 	for _, s := range g.player.Structures() {
 		g.player.RemoveMoney(uint(s.LaborCost()))
 	}
 }
 
-func distributeWorkers(g *Game) {
+func (g *Game) distributeWorkers() {
 	for _, s := range g.player.Structures() {
 		s.AssignWorkers(0)
 	}

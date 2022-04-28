@@ -5,7 +5,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-func handleMouseClicks(g *Game) {
+func (g *Game) handleMouseClicks() {
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		if !g.panel.LeftMouseButtonPress(ebiten.CursorPosition()) {

@@ -10,7 +10,7 @@ type income struct {
 	amount int
 }
 
-func collectIncome(g *Game) {
+func (g *Game) collectIncome() {
 	if exists, cap := g.player.Capitol(); exists {
 		avail := make([]*income, 0)
 		for _, s := range g.player.Structures() {

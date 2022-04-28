@@ -12,40 +12,53 @@ import (
 // FIXME - reactivate any buttons that were
 // deactivated for lack of funds, when funds
 // become available.
+
+var ut [13]uint64
+var um [13]uint64
+
 func (g *Game) Update() error {
 	g.count++
 
-	t, m := g.measure(updatePlayerPanel)
-	UpdateLogger.Printf("%d %d", t.Microseconds(), m)
+	ut[0], um[0] = g.measure(g.updatePlayerPanel)
 
-	handleMouseClicks(g)
-	handleKeyPresses(g)
+	ut[1], um[1] = g.measure(g.handleMouseClicks)
+	ut[2], um[2] = g.measure(g.handleKeyPresses)
 
-	structuresProduce(g)
-	structuresConsume(g)
+	ut[3], um[3] = g.measure(g.structuresProduce)
+	ut[4], um[4] = g.measure(g.structuresConsume)
 
 	if g.count%ui.BroadcastFrequency == 0 {
-		structuresBidForResources(g)
-		collectIncome(g)
+		ut[5], um[5] = g.measure(g.structuresBidForResources)
+		ut[6], um[6] = g.measure(g.collectIncome)
+	} else {
+		ut[5], um[5], ut[6], um[6] = 0, 0, 0, 0
 	}
 
-	shipsArrive(g)
+	ut[7], um[7] = g.measure(g.shipsArrive)
 
-	updatePopulation(g)
-	structuresGenerateIncome(g)
+	ut[8], um[8] = g.measure(g.updatePopulation)
+	ut[9], um[9] = g.measure(g.structuresGenerateIncome)
 
 	if g.count%ui.YearLength == 0 {
 		g.year += 1
-		payWorkers(g)
-		distributeWorkers(g)
+		ut[10], um[10] = g.measure(g.payWorkers)
+		ut[11], um[11] = g.measure(g.distributeWorkers)
+	} else {
+		ut[10], um[10], ut[11], um[11] = 0, 0, 0, 0
 	}
 
-	g.level.Update(g.player)
+	ut[12], ut[12] = g.measure(g.updateLevel)
+	UpdateLogger.Printf("update tick %d time %v", g.count, ut)
+	UpdateLogger.Printf("update tick %d mem %v", g.count, um)
 	g.instrument()
 	return nil
 }
 
-func updatePopulation(g *Game) {
+func (g *Game) updateLevel() {
+	g.level.Update(g.player)
+}
+
+func (g *Game) updatePopulation() {
 	pop, maxPop, workersNeeded := 0, 0, 0
 	for _, s := range g.player.Structures() {
 		if pr, ok := s.Storage()[resource.Population]; ok {
@@ -57,17 +70,17 @@ func updatePopulation(g *Game) {
 	g.player.SetPopulation(pop, maxPop, workersNeeded)
 }
 
-func structuresProduce(g *Game) {
+func (g *Game) structuresProduce() {
 	for _, s := range g.player.Structures() {
 		if s.Produce(g.count) && s.IsHighlighted() {
 			g.panel.Clear()
-			updatePopulation(g)
+			g.updatePopulation()
 			showStructurePanel(g, s)
 		}
 	}
 }
 
-func structuresConsume(g *Game) {
+func (g *Game) structuresConsume() {
 	for _, s := range g.player.Structures() {
 		consumed, downgrade := s.Consume(g.count)
 		if downgrade > 0 {
@@ -76,13 +89,13 @@ func structuresConsume(g *Game) {
 
 		if (consumed || downgrade > 0) && s.IsHighlighted() {
 			g.panel.Clear()
-			updatePopulation(g)
+			g.updatePopulation()
 			showStructurePanel(g, s)
 		}
 	}
 }
 
-func shipsArrive(g *Game) {
+func (g *Game) shipsArrive() {
 	for key, sh := range g.player.Ships() {
 		if sh.Update(g.count) { //ship has arrived
 			cargo, origin, destination := sh.Manifest()

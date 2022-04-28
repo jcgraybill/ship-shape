@@ -12,7 +12,7 @@ func generateConstructionCallback(g *Game, p *planet.Planet, structureType int) 
 		s := structure.New(structureType, &g.structureData[structureType], p)
 		g.player.RemoveMoney(uint(g.structureData[structureType].Cost))
 		g.player.AddStructure(s)
-		updatePopulation(g)
+		g.updatePopulation()
 		showStructurePanel(g, s)
 		s.Highlight()
 	}
@@ -24,7 +24,7 @@ func generateUpgradeCallBack(g *Game, s *structure.Structure, toStructure int) f
 		g.panel.Clear()
 		g.player.RemoveMoney(uint(g.structureData[toStructure].Cost))
 		s.Upgrade(toStructure, &g.structureData[toStructure])
-		updatePopulation(g)
+		g.updatePopulation()
 		showStructurePanel(g, s)
 		s.Highlight()
 	}
@@ -35,7 +35,7 @@ func generatePauseCallback(g *Game, s *structure.Structure) func() {
 	return func() {
 		s.Pause()
 		g.panel.Clear()
-		updatePopulation(g)
+		g.updatePopulation()
 		showStructurePanel(g, s)
 		s.Highlight()
 	}
@@ -45,7 +45,7 @@ func generateUnPauseCallback(g *Game, s *structure.Structure) func() {
 	return func() {
 		s.Unpause()
 		g.panel.Clear()
-		updatePopulation(g)
+		g.updatePopulation()
 		showStructurePanel(g, s)
 		s.Highlight()
 	}
@@ -56,7 +56,7 @@ func generatePrioritizeCallback(g *Game, s *structure.Structure) func() {
 		s.Prioritize()
 		g.player.RemoveMoney(uint(g.structureData[s.StructureType()].Prioritize))
 		g.panel.Clear()
-		updatePopulation(g)
+		g.updatePopulation()
 		showStructurePanel(g, s)
 		s.Highlight()
 	}
@@ -66,7 +66,7 @@ func generateUnPrioritizeCallback(g *Game, s *structure.Structure) func() {
 	return func() {
 		s.Deprioritize()
 		g.panel.Clear()
-		updatePopulation(g)
+		g.updatePopulation()
 		showStructurePanel(g, s)
 		s.Highlight()
 	}

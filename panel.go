@@ -48,7 +48,7 @@ func showPlayerPanel(g *Game) int {
 	return 10
 }
 
-func updatePlayerPanel(g *Game) {
+func (g *Game) updatePlayerPanel() {
 
 	var year float32
 	year = float32(g.count % ui.YearLength)
