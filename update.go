@@ -48,8 +48,8 @@ func (g *Game) Update() error {
 	}
 
 	ut[12], ut[12] = g.measure(g.updateLevel)
-	UpdateLogger.Printf("update tick %d time %v", g.count, ut)
-	UpdateLogger.Printf("update tick %d mem %v", g.count, um)
+	UpdateLogger.Println("updateTime,", g.count, ",", g.SplitToString(ut[:], ","))
+	UpdateLogger.Println("updateMem,", g.count, ",", g.SplitToString(um[:], ","))
 	g.instrument()
 	return nil
 }

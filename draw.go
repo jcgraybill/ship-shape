@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -20,13 +21,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.DrawImage(g.trailsLayer.SubImage(g.viewport).(*ebiten.Image), nil)
 
 	if g.redrawPSLayer {
+		fmt.Printf("tick %d %t\n", g.count, g.redrawPSLayer)
 		g.planetsAndStructuresLayer.Clear()
 		ui.ShaderOpts.Uniforms["Light"] = []float32{-float32(g.offsetX), -float32(g.offsetY)}
 		dt[1], dm[1] = g.measure(g.drawStructures)
 		dt[2], dm[2] = g.measure(g.drawPlanets)
 		g.redrawPSLayer = false
 	} else {
-		ut[1], um[1], ut[2], um[2] = 0, 0, 0, 0
+		dt[1], dm[1], dt[2], dm[2] = 0, 0, 0, 0
 	}
 	screen.DrawImage(g.planetsAndStructuresLayer.SubImage(g.viewport).(*ebiten.Image), nil)
 
@@ -36,8 +38,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.panelLayer.Clear()
 	dt[4], dm[4] = g.measure(g.drawPanel)
 	screen.DrawImage(g.panelLayer, nil)
-	UpdateLogger.Printf("draw tick %d time %v", g.count, dt)
-	UpdateLogger.Printf("draw tick %d mem %v", g.count, dm)
+	UpdateLogger.Println("drawTime,", g.count, ",", g.SplitToString(dt[:], ","))
+	UpdateLogger.Println("drawMem,", g.count, ",", g.SplitToString(dm[:], ","))
 
 }
 

@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -17,11 +19,18 @@ var (
 )
 
 func init() {
-	file, err := os.OpenFile("info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	tm, err := os.OpenFile("tm.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+
 	if err == nil {
-		InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-		UpdateLogger = log.New(file, "UPDATE: ", log.Ldate|log.Ltime|log.Lshortfile)
-		DrawLogger = log.New(file, "DRAW: ", log.Ldate|log.Ltime|log.Lshortfile)
+		UpdateLogger = log.New(tm, "", log.Ldate|log.Ltime|log.Lshortfile)
+		DrawLogger = log.New(tm, "", log.Ldate|log.Ltime|log.Lshortfile)
+	} else {
+		log.Fatal(err)
+	}
+
+	info, err := os.OpenFile("info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err == nil {
+		InfoLogger = log.New(info, "", log.Ldate|log.Ltime|log.Lshortfile)
 	} else {
 		log.Fatal(err)
 	}
@@ -43,4 +52,16 @@ func (g *Game) measure(f func()) (uint64, uint64) {
 	runtime.ReadMemStats(&mem)
 	m1 := mem.HeapAlloc
 	return uint64(t1.Sub(t0).Microseconds()), m1 - m0
+}
+
+func (g *Game) SplitToString(a []uint64, sep string) string {
+	if len(a) == 0 {
+		return ""
+	}
+
+	b := make([]string, len(a))
+	for i, v := range a {
+		b[i] = strconv.Itoa(int(v))
+	}
+	return strings.Join(b, sep)
 }

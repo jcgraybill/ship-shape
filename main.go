@@ -84,10 +84,10 @@ func (g *Game) load(lvl *level.Level) {
 	g.planetsAndStructuresLayer = ebiten.NewImage(lvl.W, lvl.H)
 	g.shipsLayer = ebiten.NewImage(lvl.W, lvl.H)
 	g.panelLayer = ebiten.NewImage(ui.WindowW, ui.WindowH)
-	g.redrawPSLayer = true
 	g.year = g.level.StartingYear()
 	g.player.AddMoney(lvl.StartingMoney())
 	g.endOfLevelPlayerPanel = false
+	g.redrawPSLayer = true
 
 	ebiten.SetWindowTitle(fmt.Sprintf("%s: %s", ui.NameofGame, lvl.Title()))
 	g.panel.Lock(0)
@@ -129,6 +129,7 @@ func (g *Game) Layout(w, h int) (int, int) {
 		g.windowW = w
 		g.windowH = h
 		g.panelLayer = ebiten.NewImage(w, h)
+		g.redrawPSLayer = true
 	}
 	return w, h
 }
