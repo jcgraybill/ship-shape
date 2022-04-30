@@ -4,7 +4,7 @@
 		"Storage": [{ "Resource": 11, "Capacity": 8  }] ,
 		"Upgrade": { "Structure": 12, "Required": [ 11 ]},
 		"Workers": 4,
-		"WorkerCost": 10,
+		"WorkerCost": 6,
 		"Cost": 900,
 		"Berths": 4,
 		"MinShips": 1,
@@ -30,7 +30,7 @@
 		"Storage": [{ "Resource": 3, "Capacity": 10 }],
 		"Berths": 4,
 		"Workers": 60,
-		"WorkerCost": 2,
+		"WorkerCost": 1,
 		"Cost": 450,
 		"Buildable": true
 	},
@@ -79,7 +79,7 @@
 		"Storage": [{ "Resource": 5, "Capacity": 8 }],
 		"Berths": 2,
 		"Workers": 40,
-		"WorkerCost": 2,
+		"WorkerCost": 1,
 		"Cost": 500,
 		"Buildable": true
 	},
@@ -92,7 +92,7 @@
 					],
 		"Berths": 2,
 		"Workers": 80,
-		"WorkerCost": 2,
+		"WorkerCost": 1,
 		"Cost": 950,
 		"Prioritize": 50,
 		"Buildable": true
@@ -108,7 +108,7 @@
 						"Required": [ 10 ]},
 		"Berths": 2,
 		"Workers": 60,
-		"WorkerCost": 3,
+		"WorkerCost": 2,
 		"Cost": 1200,
 		"Prioritize": 4,
 		"Buildable": true	
@@ -119,7 +119,7 @@
 		"Storage": [{ "Resource": 9, "Capacity": 8 }],
 		"Berths": 2,
 		"Workers": 40,
-		"WorkerCost": 2,
+		"WorkerCost": 1,
 		"Cost": 650,
 		"Buildable": true
 	},
@@ -145,7 +145,7 @@
 				],
 		"Berths": 2,
 		"Workers": 100,
-		"WorkerCost": 4,
+		"WorkerCost": 3,
 		"Cost": 1250,
 		"Prioritize": 80,
 		"Buildable": false	
@@ -174,7 +174,7 @@
 		"Consumes": [{ "Resource": 11, "Rate": 1 }],
 		"Downgrade": { "Structure": 0, "Required": [ 11 ]},
 		"Workers": 10,
-		"WorkerCost": 8,
+		"WorkerCost": 4,
 		"Cost": 1600,
 		"Berths": 10,
 		"Prioritize": 45,

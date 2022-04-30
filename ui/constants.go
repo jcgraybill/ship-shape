@@ -26,9 +26,8 @@ const (
 
 	IncomeRate = 3
 
-	YearLength         = 600  // smaller numbers are faster
+	YearLength         = 1200 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster
-	BroadcastFrequency = 20   // smaller numbers are more frequent
 	ShipSpeed          = 1    // smaller numbers are faster
 )
 

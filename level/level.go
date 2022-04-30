@@ -24,7 +24,7 @@ type Level struct {
 }
 
 func StartingLevel() *Level {
-	return &level02
+	return &level01
 }
 
 func New(lvl *Level) *Level {

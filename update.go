@@ -20,22 +20,13 @@ func (g *Game) Update() error {
 	g.count++
 
 	ut[0], um[0] = g.measure(g.updatePlayerPanel)
-
 	ut[1], um[1] = g.measure(g.handleMouseClicks)
 	ut[2], um[2] = g.measure(g.handleKeyPresses)
-
 	ut[3], um[3] = g.measure(g.structuresProduce)
 	ut[4], um[4] = g.measure(g.structuresConsume)
-
-	if g.count%ui.BroadcastFrequency == 0 {
-		ut[5], um[5] = g.measure(g.structuresBidForResources)
-		ut[6], um[6] = g.measure(g.collectIncome)
-	} else {
-		ut[5], um[5], ut[6], um[6] = 0, 0, 0, 0
-	}
-
+	ut[5], um[5] = g.measure(g.structuresBidForResources)
+	ut[6], um[6] = g.measure(g.collectIncome)
 	ut[7], um[7] = g.measure(g.shipsArrive)
-
 	ut[8], um[8] = g.measure(g.updatePopulation)
 	ut[9], um[9] = g.measure(g.structuresGenerateIncome)
 
