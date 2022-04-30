@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -21,7 +20,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.DrawImage(g.trailsLayer.SubImage(g.viewport).(*ebiten.Image), nil)
 
 	if g.redrawPSLayer {
-		fmt.Printf("tick %d %t\n", g.count, g.redrawPSLayer)
 		g.planetsAndStructuresLayer.Clear()
 		ui.ShaderOpts.Uniforms["Light"] = []float32{-float32(g.offsetX), -float32(g.offsetY)}
 		dt[1], dm[1] = g.measure(g.drawStructures)

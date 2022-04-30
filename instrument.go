@@ -28,9 +28,9 @@ func init() {
 		log.Fatal(err)
 	}
 
-	info, err := os.OpenFile("info.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	summary, err := os.OpenFile("summary.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err == nil {
-		InfoLogger = log.New(info, "", log.Ldate|log.Ltime|log.Lshortfile)
+		InfoLogger = log.New(summary, "", log.Ldate|log.Ltime|log.Lshortfile)
 	} else {
 		log.Fatal(err)
 	}
