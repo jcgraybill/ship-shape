@@ -75,12 +75,12 @@ type Storage struct {
 	Resource int
 	Capacity uint8
 	Amount   uint8
+	Incoming uint8
 }
 
 //go:embed structures.json
 var structureJSON embed.FS
 
-//.
 func GetStructureData() *[StructureDataLength]StructureData {
 	var sd [StructureDataLength]StructureData
 	data, err := structureJSON.ReadFile(StructuresJSONFile)

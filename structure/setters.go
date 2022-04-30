@@ -58,7 +58,6 @@ func (s *Structure) Upgrade(st int, sd *StructureData) {
 	}
 
 	s.storage = make(map[int]*Storage)
-	s.resourcesWanted = make([]int, 0)
 
 	for _, st := range s.data.Storage {
 		amount := carryover[st.Resource]
@@ -71,10 +70,10 @@ func (s *Structure) Upgrade(st int, sd *StructureData) {
 			Capacity: st.Capacity,
 			Amount:   amount,
 		}
-
-		if st.Resource != s.data.Produces.Resource {
-			s.resourcesWanted = append(s.resourcesWanted, st.Resource)
-		}
 	}
 	s.adjustPopulationCapacity()
+}
+
+func (s *Structure) AwaitDelivery(resource int) {
+	s.storage[resource].Incoming += 1
 }

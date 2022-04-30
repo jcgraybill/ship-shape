@@ -7,65 +7,67 @@ import (
 	"github.com/jcgraybill/ship-shape/structure"
 )
 
-type Bid struct {
-	Structure *structure.Structure
-	Resource  int
-	Urgency   uint8
-}
+const PriorityBidValue = 255
 
 func (g *Game) structuresBidForResources() {
-	bids := make([]*Bid, 0)
-	for _, s := range g.player.Structures() {
-		for resource, urgency := range s.Bid() {
-			bids = append(bids, &Bid{Structure: s, Resource: resource, Urgency: urgency})
-		}
-	}
+	for _, s0 := range g.player.Structures() {
+		if s0.Class() == structure.Extractor || s0.Class() == structure.Processor {
+			if s0.Storage()[s0.Produces()].Amount > 0 && s0.HasShips() {
+				var topBidStructure *structure.Structure
+				var topBidValue float64 = 0
+				for _, s1 := range g.player.Structures() {
+					if !s1.IsPaused() {
+						if s0.Produces() != s1.Produces() {
+							if _, ok := s1.Storage()[s0.Produces()]; ok {
+								if s1.Storage()[s0.Produces()].Amount+s1.Storage()[s0.Produces()].Incoming < s1.Storage()[s0.Produces()].Capacity {
+									var bidValue float64
+									if s1.IsPrioritized() {
+										bidValue = PriorityBidValue
+									} else {
+										bidValue = float64(s1.Storage()[s0.Produces()].Capacity - s1.Storage()[s0.Produces()].Amount - s1.Storage()[s0.Produces()].Incoming)
+										bidValue = bidValue * (255 / float64(s1.Storage()[s0.Produces()].Capacity))
 
-	for _, s := range g.player.Structures() {
-		if s.HasShips() {
-			var topBid *Bid
-			var topBidValue float64 = 0
-			for _, bid := range bids {
-				if bid.Resource == s.Produces() && s.Storage()[bid.Resource].Amount > 0 {
+										x1, y1 := s0.Planet().Center()
+										x2, y2 := s1.Planet().Center()
+										bidValue = bidValue / distance(x1, y1, x2, y2)
+									}
 
-					shipAlreadyInLane := false
-					for _, sh := range g.player.Ships() {
-						_, origin, destination := sh.Manifest()
-						if (origin == s && destination == bid.Structure) ||
-							(origin == bid.Structure && destination == s) {
-							shipAlreadyInLane = true
-						}
-					}
-					if !shipAlreadyInLane {
-						x1, y1 := s.Planet().Center()
-						x2, y2 := bid.Structure.Planet().Center()
-						value := float64(bid.Urgency) / distance(float64(x1), float64(y1), float64(x2), float64(y2))
-						if bid.Urgency == structure.PriorityBidValue {
-							value = structure.PriorityBidValue
-						}
-						if value > topBidValue {
-							topBid = bid
-							topBidValue = value
+									if bidValue > topBidValue {
+										shipAlreadyInLane := false
+										for _, sh := range g.player.Ships() {
+											_, origin, destination := sh.Manifest()
+											if (origin == s0 && destination == s1) ||
+												(origin == s1 && destination == s0) {
+												shipAlreadyInLane = true
+											}
+										}
+										if !shipAlreadyInLane {
+											topBidStructure = s1
+											topBidValue = bidValue
+										}
+
+									}
+								}
+							}
 						}
 					}
 				}
-			}
-			if topBidValue > 0 {
-
-				sh := ship.New(s, topBid.Structure, ship.Cargo)
-				sh.LoadCargo(topBid.Resource, g.resourceData[topBid.Resource].Color)
-				s.LaunchShip(topBid.Resource)
-				g.player.Ships()[g.count] = sh
-				if s.IsHighlighted() {
-					g.panel.Clear()
-					showStructurePanel(g, s)
+				if topBidValue > 0 {
+					sh := ship.New(s0, topBidStructure, ship.Cargo)
+					sh.LoadCargo(s0.Produces(), g.resourceData[s0.Produces()].Color)
+					s0.LaunchShip(s0.Produces())
+					topBidStructure.AwaitDelivery(s0.Produces())
+					g.player.Ships()[g.count] = sh
+					if s0.IsHighlighted() {
+						g.panel.Clear()
+						showStructurePanel(g, s0)
+					}
 				}
-				break // prevents another structure from accepting the same bid
 			}
 		}
 	}
 }
 
-func distance(x1, y1, x2, y2 float64) float64 {
-	return math.Sqrt(math.Pow(math.Abs(x1-x2), 2) + math.Pow(math.Abs(y1-y2), 2))
+func distance(x1, y1, x2, y2 int) float64 {
+	return math.Sqrt(math.Pow(math.Abs(float64(x1-x2)), 2) + math.Pow(math.Abs(float64(y1-y2)), 2))
 }

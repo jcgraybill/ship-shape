@@ -35,7 +35,7 @@ func (g *Game) collectIncome() {
 				if !shipAlreadyInLane {
 					x1, y1 := cap.Planet().Center()
 					x2, y2 := offer.s.Planet().Center()
-					value := float64(offer.amount) / distance(float64(x1), float64(y1), float64(x2), float64(y2))
+					value := float64(offer.amount) / distance(x1, y1, x2, y2)
 					if value > topOfferValue {
 						topOffer = offer
 						topOfferValue = value

@@ -18,7 +18,6 @@ type Structure struct {
 	planet                  *planet.Planet
 	data                    *StructureData
 	storage                 map[int]*Storage
-	resourcesWanted         []int
 	berths, ships, inFlight int
 	workers                 int
 	income                  float64
@@ -47,18 +46,14 @@ func New(structureType int, sd *StructureData, p *planet.Planet) *Structure {
 	if s.Class() == Tax {
 		s.ships = s.workers
 	}
+
 	s.storage = make(map[int]*Storage)
 
-	s.resourcesWanted = make([]int, 0)
 	for _, st := range s.data.Storage {
 		s.storage[st.Resource] = &Storage{
 			Resource: st.Resource,
 			Capacity: st.Capacity,
 			Amount:   st.Amount,
-		}
-
-		if st.Resource != s.data.Produces.Resource {
-			s.resourcesWanted = append(s.resourcesWanted, st.Resource)
 		}
 	}
 
