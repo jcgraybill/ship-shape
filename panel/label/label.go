@@ -60,5 +60,6 @@ func (l *Label) UpdateText(newText string) {
 	if newText != l.message {
 		l.image.Fill(ui.BackgroundColor)
 		text.Draw(l.image, newText, *l.ttf, 0, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.FocusedColor)
+		l.message = newText
 	}
 }

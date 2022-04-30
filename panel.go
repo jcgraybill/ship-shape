@@ -50,12 +50,14 @@ func showPlayerPanel(g *Game) int {
 
 func (g *Game) updatePlayerPanel() {
 
-	var year float32
-	year = float32(g.count % ui.YearLength)
-	year = year / float32(ui.YearLength)
-	year = year * 255
-	g.panel.UpdateBar(0, uint8(year))
-	g.panel.UpdateLabel(1, fmt.Sprintf("%s  | year: %d", g.level.Title(), g.year))
+	if g.count%30 == 0 {
+		var year float32
+		year = float32(g.count % ui.YearLength)
+		year = year / float32(ui.YearLength)
+		year = year * 255
+		g.panel.UpdateBar(0, uint8(year))
+		g.panel.UpdateLabel(1, fmt.Sprintf("%s  | year: %d", g.level.Title(), g.year))
+	}
 	pop, maxPop, workersNeeded := g.player.Population()
 	g.panel.UpdateLabel(2, fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded))
 	g.panel.UpdateLabel(3, fmt.Sprintf("bank: $%d", g.player.Money()))

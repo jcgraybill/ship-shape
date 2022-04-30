@@ -58,10 +58,10 @@ func (b *Bar) UpdateValue(value uint8) {
 	if value != b.value {
 		b.bar.Fill(ui.NonFocusColor)
 		barWidth := (int(value) * b.Bounds.Dx()) / 255
-
 		if barWidth > 0 {
 			b.bar.DrawImage(b.fill.SubImage(image.Rect(0, 0, barWidth, ui.BarHeight)).(*ebiten.Image), nil)
 		}
+		b.value = value
 	}
 }
 

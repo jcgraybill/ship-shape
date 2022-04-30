@@ -61,7 +61,7 @@ func (g *Game) SplitToString(a []uint64, sep string) string {
 
 	b := make([]string, len(a))
 	for i, v := range a {
-		b[i] = strconv.Itoa(int(v))
+		b[i] = strconv.FormatUint(v, 10)
 	}
 	return strings.Join(b, sep)
 }
