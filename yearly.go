@@ -31,15 +31,17 @@ func (g *Game) distributeWorkers() {
 					s.AssignWorkers(s.ActiveWorkers() + 1)
 					workersToAssign -= 1
 					workersAssigned = true
-					if s.IsHighlighted() {
-						g.panel.Clear()
-						showStructurePanel(g, s)
-					}
 				}
 			}
 		}
 		if !workersAssigned {
 			workersToAssign = 0
+		}
+	}
+	for _, s := range g.player.Structures() {
+		if s.IsHighlighted() {
+			g.panel.Clear()
+			showStructurePanel(g, s)
 		}
 	}
 }
