@@ -1,5 +1,13 @@
 package panel
 
+// TODO - widgets take a callback that provides their value
+// They redraw themselves if the value changes and they're
+// visible.
+
+// All widgets create their first image only when first
+// displayed, to remove all display code from Update()
+// loop.
+
 import (
 	"image"
 	"image/color"

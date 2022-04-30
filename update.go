@@ -16,6 +16,11 @@ import (
 var ut [13]uint64
 var um [13]uint64
 
+// TODO remove all display code from
+// Update() loop. Only update values, then
+// update images for anything visible in the
+// Draw() loop.
+
 func (g *Game) Update() error {
 	g.count++
 

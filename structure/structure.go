@@ -1,5 +1,9 @@
 package structure
 
+// TODO - don't create image when created,
+// only on first update, to remove all display
+// code from Update() loop.
+
 import (
 	"image"
 

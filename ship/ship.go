@@ -1,5 +1,8 @@
 package ship
 
+// TODO - don't create images when created, only
+// when displayed for the first time.
+
 import (
 	"image"
 	"image/color"
