@@ -20,10 +20,6 @@ func (lvl *Level) StartingMoney() uint {
 	return lvl.startingMoney
 }
 
-func (lvl *Level) StartingYear() uint {
-	return lvl.startingYear
-}
-
 func (lvl *Level) ShowStatus() (string, string, uint, uint) {
 	if lvl.goalMet {
 		return lvl.message, lvl.label, lvl.goal, lvl.goal

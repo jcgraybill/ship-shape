@@ -11,7 +11,6 @@ var level03 = Level{
 	W:             1366,
 	H:             768,
 	startingMoney: 4000,
-	startingYear:  2280,
 	label:         "habitats",
 	goal:          3,
 	progress:      0,

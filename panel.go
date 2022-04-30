@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image/color"
 
 	"github.com/jcgraybill/ship-shape/panel"
 	"github.com/jcgraybill/ship-shape/planet"
@@ -33,8 +32,7 @@ func showBuildOptionsPanel(p *planet.Planet, g *Game) {
 }
 
 func showPlayerPanel(g *Game) int {
-	g.panel.AddBar(0, color.RGBA{0x00, 0x00, 0x00, 0xff})
-	g.panel.AddInvertedLabel(fmt.Sprintf("year: %d", g.year), ui.TtfBold)
+	g.panel.AddInvertedLabel(g.level.Title(), ui.TtfBold)
 	pop, maxPop, workersNeeded := g.player.Population()
 	g.panel.AddLabel(fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded), ui.TtfRegular)
 	g.panel.AddLabel(fmt.Sprintf("bank: $%d", g.player.Money()), ui.TtfRegular)
@@ -45,40 +43,31 @@ func showPlayerPanel(g *Game) int {
 	g.panel.AddLabel(fmt.Sprintf("%s (%d/%d):", label, progress, goal), ui.TtfRegular)
 	g.panel.AddBar(uint8(255*float32(progress)/float32(goal)), ui.LevelProgressColor)
 	g.panel.AddDivider()
-	return 10
+	return 9
 }
 
 func (g *Game) updatePlayerPanel() {
-
-	if g.count%30 == 0 {
-		var year float32
-		year = float32(g.count % ui.YearLength)
-		year = year / float32(ui.YearLength)
-		year = year * 255
-		g.panel.UpdateBar(0, uint8(year))
-		g.panel.UpdateLabel(1, fmt.Sprintf("%s  | year: %d", g.level.Title(), g.year))
-	}
 	pop, maxPop, workersNeeded := g.player.Population()
-	g.panel.UpdateLabel(2, fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded))
-	g.panel.UpdateLabel(3, fmt.Sprintf("bank: $%d", g.player.Money()))
+	g.panel.UpdateLabel(1, fmt.Sprintf("population: %d/%d (need %d)", pop, maxPop, workersNeeded))
+	g.panel.UpdateLabel(2, fmt.Sprintf("bank: $%d", g.player.Money()))
 
 	message, label, progress, goal := g.level.ShowStatus()
-	g.panel.UpdateLabel(5, message)
+	g.panel.UpdateLabel(3, message)
 	if progress == goal {
 		if !g.endOfLevelPlayerPanel {
-			g.panel.UpdateLabel(7, fmt.Sprintf("%s (%d/%d): DONE", label, progress, goal))
-			g.panel.Lock(8)
+			g.panel.UpdateLabel(6, fmt.Sprintf("%s (%d/%d): DONE", label, progress, goal))
+			g.panel.Lock(7)
 			g.panel.Clear()
 			if g.level.NextLevel() != nil {
 				g.panel.AddButton("NEXT", func() { g.load(g.level.NextLevel()) })
 			}
 			g.panel.AddDivider()
-			g.panel.Lock(10)
+			g.panel.Lock(9)
 			g.endOfLevelPlayerPanel = true
 		}
 	} else {
-		g.panel.UpdateLabel(7, fmt.Sprintf("%s (%d/%d):", label, progress, goal))
-		g.panel.UpdateBar(8, uint8(255*float32(progress)/float32(goal)))
+		g.panel.UpdateLabel(6, fmt.Sprintf("%s (%d/%d):", label, progress, goal))
+		g.panel.UpdateBar(7, uint8(255*float32(progress)/float32(goal)))
 	}
 }
 

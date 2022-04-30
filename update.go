@@ -40,7 +40,6 @@ func (g *Game) Update() error {
 	ut[9], um[9] = g.measure(g.structuresGenerateIncome)
 
 	if g.count%ui.YearLength == 0 {
-		g.year += 1
 		ut[10], um[10] = g.measure(g.payWorkers)
 		ut[11], um[11] = g.measure(g.distributeWorkers)
 	} else {

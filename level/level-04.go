@@ -11,7 +11,6 @@ var level04 = Level{
 	W:             1900,
 	H:             1080,
 	startingMoney: 5000,
-	startingYear:  2300,
 	label:         "metal",
 	goal:          16,
 	progress:      0,

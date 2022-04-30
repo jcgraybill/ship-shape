@@ -21,7 +21,6 @@ import (
 
 type Game struct {
 	count                     uint
-	year                      uint
 	level                     *level.Level
 	player                    *player.Player
 	trailsLayer               *ebiten.Image
@@ -84,7 +83,6 @@ func (g *Game) load(lvl *level.Level) {
 	g.planetsAndStructuresLayer = ebiten.NewImage(lvl.W, lvl.H)
 	g.shipsLayer = ebiten.NewImage(lvl.W, lvl.H)
 	g.panelLayer = ebiten.NewImage(ui.WindowW, ui.WindowH)
-	g.year = g.level.StartingYear()
 	g.player.AddMoney(lvl.StartingMoney())
 	g.endOfLevelPlayerPanel = false
 	g.redrawPSLayer = true

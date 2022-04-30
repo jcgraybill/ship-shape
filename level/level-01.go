@@ -11,7 +11,6 @@ var level01 = Level{
 	W:             1366,
 	H:             768,
 	startingMoney: 3200,
-	startingYear:  2250,
 	label:         "total population",
 	goal:          120,
 	progress:      0,

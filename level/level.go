@@ -13,7 +13,6 @@ type Level struct {
 	title             string
 	W, H              int
 	startingMoney     uint
-	startingYear      uint
 	allowedResources  []int
 	allowedStructures []int
 	update            func(*Level, *player.Player) bool
@@ -25,7 +24,7 @@ type Level struct {
 }
 
 func StartingLevel() *Level {
-	return &level01
+	return &level02
 }
 
 func New(lvl *Level) *Level {

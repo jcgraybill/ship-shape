@@ -11,7 +11,6 @@ var level05 = Level{
 	W:             2048,
 	H:             2048,
 	startingMoney: 5000,
-	startingYear:  2350,
 	label:         "settlements",
 	goal:          2,
 	progress:      0,
