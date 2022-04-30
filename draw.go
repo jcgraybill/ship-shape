@@ -36,8 +36,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.panelLayer.Clear()
 	dt[4], dm[4] = g.measure(g.drawPanel)
 	screen.DrawImage(g.panelLayer, nil)
-	UpdateLogger.Println("drawTime,", g.count, ",", g.SplitToString(dt[:], ","))
-	UpdateLogger.Println("drawMem,", g.count, ",", g.SplitToString(dm[:], ","))
+	DrawTimeLogger.Println(g.count, ",", g.csv(dt[:]))
+	DrawMemLogger.Println(g.count, ",", g.csv(dm[:]))
 
 }
 
