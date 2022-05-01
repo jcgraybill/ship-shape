@@ -46,7 +46,6 @@ var (
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-	audio.NewContext(44100)
 }
 
 func main() {
