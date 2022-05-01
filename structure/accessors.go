@@ -1,6 +1,8 @@
 package structure
 
 import (
+	"fmt"
+
 	"github.com/jcgraybill/ship-shape/planet"
 )
 
@@ -82,7 +84,11 @@ func (s *Structure) IsPrioritized() bool {
 	return s.prioritized
 }
 
-func (s *Structure) Upgradeable() (bool, int) {
+func (s *Structure) UpgradeTo() int {
+	return s.data.Upgrade.Structure
+}
+
+func (s *Structure) Upgradeable() bool {
 	if s.data.Upgrade.Structure > 0 {
 		upgradeable := true
 		for _, r := range s.data.Upgrade.Required {
@@ -91,10 +97,10 @@ func (s *Structure) Upgradeable() (bool, int) {
 			}
 		}
 		if upgradeable {
-			return true, s.data.Upgrade.Structure
+			return true
 		}
 	}
-	return false, s.data.Upgrade.Structure
+	return false
 }
 
 func (s *Structure) ActiveWorkers() int {
@@ -105,4 +111,20 @@ func (s *Structure) WorkerCapacity() int {
 		return 0
 	}
 	return s.data.Workers
+}
+
+func (s *Structure) WorkersLabel() string {
+	return fmt.Sprintf("%d/%d workers ($%d/year)", s.ActiveWorkers(), s.WorkerCapacity(), s.LaborCost())
+}
+
+func (s *Structure) ResourceLabelCallback(displayName string, resource int) func() string {
+	return func() string {
+		return fmt.Sprintf("%s (%d/%d)", displayName, s.Storage()[resource].Amount, s.Storage()[resource].Capacity)
+	}
+}
+
+func (s *Structure) ResourceBarCallback(resource int) func() uint8 {
+	return func() uint8 {
+		return uint8((255 * int(s.Storage()[resource].Amount)) / int(s.Storage()[resource].Capacity))
+	}
 }

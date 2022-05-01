@@ -22,7 +22,7 @@ func (g *Game) distributeWorkers() {
 		s.AssignWorkers(0)
 	}
 	budget := g.player.Money()
-	for workersToAssign, _, _ := g.player.Population(); workersToAssign > 0; {
+	for workersToAssign := g.player.Population(); workersToAssign > 0; {
 		workersAssigned := false
 		for _, s := range g.player.Structures() {
 			if s.ActiveWorkers() < s.WorkerCapacity() && workersToAssign > 0 && s.CanProduce() && !s.IsPaused() {
@@ -36,12 +36,6 @@ func (g *Game) distributeWorkers() {
 		}
 		if !workersAssigned {
 			workersToAssign = 0
-		}
-	}
-	for _, s := range g.player.Structures() {
-		if s.IsHighlighted() {
-			g.panel.Clear()
-			showStructurePanel(g, s)
 		}
 	}
 }

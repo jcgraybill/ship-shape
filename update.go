@@ -9,22 +9,13 @@ import (
 	"github.com/jcgraybill/ship-shape/ui"
 )
 
-// FIXME - reactivate any buttons that were
-// deactivated for lack of funds, when funds
-// become available.
-
 var ut [13]uint64
 var um [13]uint64
-
-// TODO remove all display code from
-// Update() loop. Only update values, then
-// update images for anything visible in the
-// Draw() loop.
 
 func (g *Game) Update() error {
 	g.count++
 
-	ut[0], um[0] = g.measure(g.updatePlayerPanel)
+	ut[0], um[0] = 0, 0
 	ut[1], um[1] = g.measure(g.handleMouseClicks)
 	ut[2], um[2] = g.measure(g.handleKeyPresses)
 	ut[3], um[3] = g.measure(g.structuresProduce)
@@ -50,7 +41,16 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) updateLevel() {
-	g.level.Update(g.player)
+	if g.level.Update(g.player) && !g.endOfLevelPlayerPanel {
+		g.panel.Lock(7)
+		g.panel.Clear()
+		if g.level.NextLevel() != nil {
+			g.panel.AddButton("NEXT", func() { g.load(g.level.NextLevel()) }, func() bool { return true })
+		}
+		g.panel.AddDivider()
+		g.panel.Lock(9)
+		g.endOfLevelPlayerPanel = true
+	}
 }
 
 func (g *Game) updatePopulation() {
@@ -67,25 +67,20 @@ func (g *Game) updatePopulation() {
 
 func (g *Game) structuresProduce() {
 	for _, s := range g.player.Structures() {
-		if s.Produce(g.count) && s.IsHighlighted() {
-			g.panel.Clear()
-			g.updatePopulation()
-			showStructurePanel(g, s)
-		}
+		s.Produce(g.count)
 	}
 }
 
 func (g *Game) structuresConsume() {
 	for _, s := range g.player.Structures() {
-		consumed, downgrade := s.Consume(g.count)
+		_, downgrade := s.Consume(g.count)
 		if downgrade > 0 {
 			s.Upgrade(downgrade, &g.structureData[downgrade])
-		}
-
-		if (consumed || downgrade > 0) && s.IsHighlighted() {
-			g.panel.Clear()
-			g.updatePopulation()
-			showStructurePanel(g, s)
+			if s.IsHighlighted() {
+				g.panel.Clear()
+				g.updatePopulation()
+				showStructurePanel(g, s)
+			}
 		}
 	}
 }
@@ -111,10 +106,6 @@ func (g *Game) shipsArrive() {
 
 			if cargo > 0 {
 				destination.ReceiveCargo(cargo)
-				if destination.IsHighlighted() {
-					g.panel.Clear()
-					showStructurePanel(g, destination)
-				}
 				returnShip := ship.New(destination, origin, ship.Cargo)
 				g.player.Ships()[key] = returnShip
 			} else {

@@ -4,7 +4,6 @@ import (
 	"math"
 
 	"github.com/jcgraybill/ship-shape/resource"
-	"github.com/jcgraybill/ship-shape/ui"
 )
 
 func (s *Structure) Pause() {
@@ -46,9 +45,8 @@ func (s *Structure) CollectIncome() int {
 func (s *Structure) Upgrade(st int, sd *StructureData) {
 	s.structureType = st
 	s.data = sd
-	cx, cy := s.planet.Center()
-	s.image, s.Bounds = s.generateImage(cx, cy, ui.NonFocusColor)
-	s.highlightedImage, _ = s.generateImage(cx, cy, ui.FocusedColor)
+	s.createBounds()
+	s.image, s.highlightedImage = nil, nil
 	s.berths, s.ships = sd.Berths, sd.Berths
 
 	carryover := make(map[int]uint8)

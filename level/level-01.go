@@ -72,8 +72,8 @@ the  money you have available?`
 		}
 
 		if outposts > 1 {
-			if _, mp, _ := p.Population(); p.Money() < 800 {
-				if mp < 120 {
+			if p.Money() < 800 {
+				if p.MaxPopulation() < 120 {
 					p.AddMoney(800)
 					lvl.message = `Uh oh. Looks like you're
 running low on funds. 

@@ -21,6 +21,7 @@ var (
 )
 
 func init() {
+
 	ut, err := os.OpenFile("ut.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err == nil {
 		UpdateTimeLogger = log.New(ut, "", 0)
@@ -59,6 +60,7 @@ func init() {
 	} else {
 		log.Fatal(err)
 	}
+
 }
 
 func (g *Game) instrument() {

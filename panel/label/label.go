@@ -10,33 +10,43 @@ import (
 )
 
 type Label struct {
-	Bounds  image.Rectangle
-	ttf     *font.Face
-	message string
+	bounds   image.Rectangle
+	ttf      *font.Face
+	message  string
+	source   func() string
+	inverted bool
 
 	image *ebiten.Image
 	opts  *ebiten.DrawImageOptions
 }
 
-func New(x, y, w, h int, message string, style string) *Label {
-	var l Label
-	l.ttf = ui.Font(style)
+func New(x, y, w, h int, style string, inverted bool, source func() string) *Label {
+	l := Label{
+		ttf:      ui.Font(style),
+		inverted: inverted,
+		source:   source,
+	}
 
-	// FIXME text.BoundString underestimates this typeface's height by a few pixels
-	// or I'm using the wrong metric below to locate the dot position
-	textBounds := text.BoundString(*(l.ttf), message)
-	l.Bounds = image.Rect(x, y, x+w, y+textBounds.Dy()+int((*l.ttf).Metrics().Descent/ui.DPI))
+	l.message = l.source()
+	textBounds := text.BoundString(*(l.ttf), l.message)
+	l.bounds = image.Rect(x, y, x+w, y+textBounds.Dy()+int((*l.ttf).Metrics().Descent/ui.DPI))
 
-	image := ebiten.NewImage(l.Bounds.Dx(), l.Bounds.Dy())
-	image.Fill(ui.BackgroundColor)
-
-	text.Draw(image, message, *l.ttf, 0, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.FocusedColor)
-	l.image = image
-
-	l.opts = &ebiten.DrawImageOptions{}
-	l.opts.GeoM.Translate(float64(l.Bounds.Min.X), float64(l.Bounds.Min.Y))
-	l.message = message
 	return &l
+}
+
+func (l *Label) Draw() (*ebiten.Image, *ebiten.DrawImageOptions) {
+	if l.image == nil {
+		l.createImages()
+	}
+	if newMessage := l.source(); newMessage != l.message {
+		l.message = newMessage
+		l.updateText()
+	}
+	return l.image, l.opts
+}
+
+func (l *Label) Height() int {
+	return l.bounds.Dy()
 }
 
 func (l *Label) LeftMouseButtonPress(x, y int) bool {
@@ -47,19 +57,19 @@ func (l *Label) LeftMouseButtonRelease(x, y int) bool {
 	return false
 }
 
-func (l *Label) Draw() (*ebiten.Image, *ebiten.DrawImageOptions) {
-	return l.image, l.opts
+func (l *Label) createImages() {
+	l.image = ebiten.NewImage(l.bounds.Dx(), l.bounds.Dy())
+	l.updateText()
+	l.opts = &ebiten.DrawImageOptions{}
+	l.opts.GeoM.Translate(float64(l.bounds.Min.X), float64(l.bounds.Min.Y))
 }
 
-func (l *Label) Height() int {
-	return l.Bounds.Dy()
-}
-
-func (l *Label) UpdateValue(uint8) { return }
-func (l *Label) UpdateText(newText string) {
-	if newText != l.message {
+func (l *Label) updateText() {
+	if l.inverted {
+		l.image.Fill(ui.FocusedColor)
+		text.Draw(l.image, l.message, *l.ttf, ui.Border, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.BackgroundColor)
+	} else {
 		l.image.Fill(ui.BackgroundColor)
-		text.Draw(l.image, newText, *l.ttf, 0, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.FocusedColor)
-		l.message = newText
+		text.Draw(l.image, l.message, *l.ttf, ui.Border, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.FocusedColor)
 	}
 }

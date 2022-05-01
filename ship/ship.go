@@ -1,14 +1,10 @@
 package ship
 
-// TODO - don't create images when created, only
-// when displayed for the first time.
-
 import (
 	"image"
 	"image/color"
 	"math"
 
-	"github.com/fogleman/gg"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/jcgraybill/ship-shape/structure"
 	"github.com/jcgraybill/ship-shape/ui"
@@ -45,6 +41,7 @@ type Ship struct {
 	baseCourse *ebiten.Image
 	course     *ebiten.Image
 	cargo      int
+	cargoColor color.RGBA
 	shipType   int
 }
 
@@ -59,31 +56,12 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 
 	s.shipType = shipType
 
-	x0, y0 := origin.Planet().Center()
-	x1, y1 := destination.Planet().Center()
+	var baseX, baseY, w, h int
+
+	x0, y0 := s.origin.Planet().Center()
+	x1, y1 := s.destination.Planet().Center()
 	s.x = float64(x0)
 	s.y = float64(y0)
-
-	var v []ebiten.Vertex
-	var i []uint16
-
-	if s.shipType == Cargo {
-		v, i = ui.Triangle(plumeW, 0, shipW, shipH, shipColor)
-	} else {
-		v, i = ui.Triangle(plumeW, 0, shipW, shipH, incomeShipColor)
-	}
-	s.image = ebiten.NewImage(shipW+plumeW, shipH)
-	s.image.DrawTriangles(v, i, ui.Src, nil)
-
-	s.plume = ebiten.NewImage(shipW+plumeW, shipH)
-	s.plume.DrawImage(s.image, nil)
-	v, i = ui.Triangle(plumeW, 1, -plumeW, shipH-2, plumeOuter)
-	s.plume.DrawTriangles(v, i, ui.Src, nil)
-
-	v, i = ui.Triangle(plumeW, 4, -plumeW, shipH-8, plumeInner)
-	s.plume.DrawTriangles(v, i, ui.Src, nil)
-
-	var baseX, baseY, w, h int
 
 	if x0 > x1 {
 		w = x0 - x1
@@ -107,29 +85,16 @@ func New(origin, destination *structure.Structure, shipType int) *Ship {
 	}
 
 	s.Bounds = image.Rect(baseX, baseY, baseX+w, baseY+h)
-	dc := gg.NewContext(w, h)
-	dc.SetRGB255(int(ui.NonFocusColor.R), int(ui.NonFocusColor.G), int(ui.NonFocusColor.B))
-	dc.DrawLine(float64(x0)-float64(baseX), float64(y0)-float64(baseY), float64(x1)-float64(baseX), float64(y1)-float64(baseY))
-	dc.SetLineWidth(ui.Border)
-	dc.Stroke()
-	s.baseCourse = ebiten.NewImageFromImage(dc.Image())
-
-	dc = gg.NewContext(w, h)
-	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
-	dc.DrawLine(float64(x0)-float64(baseX), float64(y0)-float64(baseY), float64(x1)-float64(baseX), float64(y1)-float64(baseY))
-	dc.SetLineWidth(ui.Border)
-	dc.Stroke()
-	s.course = ebiten.NewImageFromImage(dc.Image())
 
 	s.theta = math.Atan2(float64(y1-y0), float64(x1-x0))
+
+	s.dx = math.Cos(s.theta)
+	s.dy = math.Sin(s.theta)
 
 	s.opts = &ebiten.DrawImageOptions{}
 	s.opts.GeoM.Translate(-(plumeW + shipW/2), -shipH/2)
 	s.opts.GeoM.Rotate(s.theta)
 	s.opts.GeoM.Translate(s.x, s.y)
-
-	s.dx = math.Cos(s.theta)
-	s.dy = math.Sin(s.theta)
 
 	return &s
 }

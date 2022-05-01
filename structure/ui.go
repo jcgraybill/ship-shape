@@ -1,7 +1,6 @@
 package structure
 
 import (
-	"image"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -10,6 +9,12 @@ import (
 )
 
 func (s *Structure) Draw(image *ebiten.Image) {
+	if s.image == nil || s.highlightedImage == nil {
+		s.image = s.generateImage(ui.NonFocusColor)
+		s.highlightedImage = s.generateImage(ui.FocusedColor)
+		s.displayOpts = &ebiten.DrawImageOptions{}
+		s.displayOpts.GeoM.Translate(float64(s.Bounds.Min.X), float64(s.Bounds.Min.Y))
+	}
 	if s.IsHighlighted() {
 		image.DrawImage(s.highlightedImage, s.displayOpts)
 	} else {
@@ -39,29 +44,18 @@ func (s *Structure) IsHighlighted() bool {
 	return s.highlighted
 }
 
-func (s *Structure) generateImage(planetCenterX, planetCenterY int, uiColor color.Color) (*ebiten.Image, image.Rectangle) {
-	var x, y, w, h int
-	ttf := ui.Font(ui.TtfRegular)
-	textBounds := text.BoundString(*ttf, s.data.DisplayName)
-	contentWidth := textBounds.Dx()
-	if contentWidth < ui.PlanetSize {
-		contentWidth = ui.PlanetSize
-	}
-
-	w = ui.Border + ui.Buffer + contentWidth + ui.Buffer + ui.Border
-	h = ui.Border + ui.Buffer + textBounds.Dy() + ui.Buffer + ui.PlanetSize + ui.Buffer + ui.Border
-
-	structureImage := ebiten.NewImage(w, h)
+func (s *Structure) generateImage(uiColor color.Color) *ebiten.Image {
+	structureImage := ebiten.NewImage(s.Bounds.Dx(), s.Bounds.Dy())
 	structureImage.Fill(uiColor)
 
-	interior := ebiten.NewImage(w-ui.Border*2, h-ui.Border*2)
+	interior := ebiten.NewImage(s.Bounds.Dx()-ui.Border*2, s.Bounds.Dy()-ui.Border*2)
 	interior.Fill(ui.BackgroundColor)
 	opts := &ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(ui.Border, ui.Border)
+
+	ttf := ui.Font(ui.TtfRegular)
 	text.Draw(interior, s.data.DisplayName, *ttf, ui.Buffer, int((*ttf).Metrics().Ascent/ui.DPI)+ui.Buffer, uiColor)
 	structureImage.DrawImage(interior, opts)
 
-	x = planetCenterX - w/2
-	y = planetCenterY - ui.PlanetSize/2 - ui.Buffer - textBounds.Dy() - ui.Buffer - ui.Border
-	return structureImage, image.Rect(x, y, x+w, y+h)
+	return structureImage
 }

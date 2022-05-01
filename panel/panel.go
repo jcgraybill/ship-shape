@@ -1,13 +1,5 @@
 package panel
 
-// TODO - widgets take a callback that provides their value
-// They redraw themselves if the value changes and they're
-// visible.
-
-// All widgets create their first image only when first
-// displayed, to remove all display code from Update()
-// loop.
-
 import (
 	"image"
 	"image/color"
@@ -17,7 +9,6 @@ import (
 	"github.com/jcgraybill/ship-shape/panel/bar"
 	"github.com/jcgraybill/ship-shape/panel/button"
 	"github.com/jcgraybill/ship-shape/panel/divider"
-	"github.com/jcgraybill/ship-shape/panel/invertedLabel"
 	"github.com/jcgraybill/ship-shape/panel/label"
 	"github.com/jcgraybill/ship-shape/ui"
 )
@@ -34,15 +25,10 @@ type Panel struct {
 }
 
 type widget interface {
-	LeftMouseButtonPress(int, int) bool
-	LeftMouseButtonRelease(int, int) bool
 	Draw() (*ebiten.Image, *ebiten.DrawImageOptions)
 	Height() int
-	UpdateText(string)
-	UpdateValue(uint8)
-}
-
-type updateableLabel interface {
+	LeftMouseButtonPress(int, int) bool
+	LeftMouseButtonRelease(int, int) bool
 }
 
 func New(w, h int) *Panel {
@@ -59,16 +45,30 @@ func New(w, h int) *Panel {
 	return &p
 }
 
-func (p *Panel) createBackgroundImage(w, h int) *ebiten.Image {
-	dc := gg.NewContext(w, h)
-	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
-	dc.DrawRoundedRectangle(0, 0, float64(w), float64(h), 10)
-	dc.Fill()
-	dc.SetRGB255(int(ui.BackgroundColor.R), int(ui.BackgroundColor.G), int(ui.BackgroundColor.B))
-	dc.DrawRoundedRectangle(ui.Border, ui.Border, float64(w-ui.Border*2), float64(h-ui.Border*2), 10)
-	dc.Fill()
+func (p *Panel) AddBar(source func() uint8, color color.RGBA) {
+	p.elements = append(p.elements, bar.New(ui.Buffer, p.firstAvailableSpot(), p.Bounds.Dx()-ui.Buffer*2-ui.Border*2, source, color))
+}
 
-	return ebiten.NewImageFromImage(dc.Image())
+func (p *Panel) AddButton(text string, callback func(), source func() bool) *button.Button {
+	b := button.New(ui.Buffer, p.firstAvailableSpot(), p.Bounds.Dx()-ui.Buffer*2-ui.Border*2, p.Bounds.Dy()-p.firstAvailableSpot()-ui.Buffer*2, text, callback, source)
+	p.elements = append(p.elements, b)
+	return b
+}
+
+func (p *Panel) AddDivider() {
+	p.elements = append(p.elements, divider.New(0, p.firstAvailableSpot(), p.Bounds.Dx()))
+}
+
+func (p *Panel) AddInvertedLabel(source func() string, style string) {
+	p.elements = append(p.elements, label.New(0, p.firstAvailableSpot(), p.Bounds.Dx(), p.Bounds.Dy()-p.firstAvailableSpot()-ui.Buffer*2, style, true, source))
+}
+
+func (p *Panel) AddLabel(source func() string, style string) {
+	p.elements = append(p.elements, label.New(0, p.firstAvailableSpot(), p.Bounds.Dx(), p.Bounds.Dy()-p.firstAvailableSpot()-ui.Buffer*2, style, false, source))
+}
+
+func (p *Panel) Clear() {
+	p.elements = p.elements[:p.locked]
 }
 
 func (p *Panel) Draw(image *ebiten.Image) {
@@ -106,39 +106,10 @@ func (p *Panel) LeftMouseButtonRelease(x, y int) bool {
 	return false
 }
 
-func (p *Panel) AddInvertedLabel(text string, style string) {
-	p.elements = append(p.elements, invertedLabel.New(0, p.firstAvailableSpot(), p.Bounds.Dx(), p.Bounds.Dy()-p.firstAvailableSpot()-ui.Buffer*2, text, style))
-}
-
-func (p *Panel) AddLabel(text string, style string) {
-	p.elements = append(p.elements, label.New(ui.Buffer, p.firstAvailableSpot(), p.Bounds.Dx()-ui.Buffer*2-ui.Border*2, p.Bounds.Dy()-p.firstAvailableSpot()-ui.Buffer*2, text, style))
-}
-
-func (p *Panel) AddButton(text string, callback func()) *button.Button {
-	b := button.New(ui.Buffer, p.firstAvailableSpot(), p.Bounds.Dx()-ui.Buffer*2-ui.Border*2, p.Bounds.Dy()-p.firstAvailableSpot()-ui.Buffer*2, text, callback)
-	p.elements = append(p.elements, b)
-	return b
-}
-
-func (p *Panel) AddBar(value uint8, color color.RGBA) {
-	p.elements = append(p.elements, bar.New(ui.Buffer, p.firstAvailableSpot(), p.Bounds.Dx()-ui.Buffer*2-ui.Border*2, value, color))
-}
-
-func (p *Panel) AddDivider() {
-	p.elements = append(p.elements, divider.New(0, p.firstAvailableSpot(), p.Bounds.Dx()))
-}
-
-func (p *Panel) firstAvailableSpot() int {
-	i := ui.Buffer
-	for _, element := range p.elements {
-		i += element.Height()
-		i += ui.Buffer
+func (p *Panel) Lock(n int) {
+	if len(p.elements) >= n {
+		p.locked = n
 	}
-	return i
-}
-
-func (p *Panel) Clear() {
-	p.elements = p.elements[:p.locked]
 }
 
 func (p *Panel) Resize(w, h int) {
@@ -154,20 +125,23 @@ func (p *Panel) Resize(w, h int) {
 	p.interior = ebiten.NewImage(p.Bounds.Dx()-ui.Border*2, p.Bounds.Dy()-ui.Border*2)
 }
 
-func (p *Panel) Lock(n int) {
-	if len(p.elements) >= n {
-		p.locked = n
-	}
+func (p *Panel) createBackgroundImage(w, h int) *ebiten.Image {
+	dc := gg.NewContext(w, h)
+	dc.SetRGB255(int(ui.FocusedColor.R), int(ui.FocusedColor.G), int(ui.FocusedColor.B))
+	dc.DrawRoundedRectangle(0, 0, float64(w), float64(h), 10)
+	dc.Fill()
+	dc.SetRGB255(int(ui.BackgroundColor.R), int(ui.BackgroundColor.G), int(ui.BackgroundColor.B))
+	dc.DrawRoundedRectangle(ui.Border, ui.Border, float64(w-ui.Border*2), float64(h-ui.Border*2), 10)
+	dc.Fill()
+
+	return ebiten.NewImageFromImage(dc.Image())
 }
 
-func (p *Panel) UpdateLabel(n int, newText string) {
-	if n <= p.locked {
-		p.elements[n].UpdateText(newText)
+func (p *Panel) firstAvailableSpot() int {
+	i := ui.Buffer
+	for _, element := range p.elements {
+		i += element.Height()
+		i += ui.Buffer
 	}
-}
-
-func (p *Panel) UpdateBar(n int, newValue uint8) {
-	if n <= p.locked {
-		p.elements[n].UpdateValue(newValue)
-	}
+	return i
 }
