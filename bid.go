@@ -58,10 +58,6 @@ func (g *Game) structuresBidForResources() {
 					s0.LaunchShip(s0.Produces())
 					topBidStructure.AwaitDelivery(s0.Produces())
 					g.player.Ships()[g.count] = sh
-					if s0.IsHighlighted() {
-						g.panel.Clear()
-						showStructurePanel(g, s0)
-					}
 				}
 			}
 		}

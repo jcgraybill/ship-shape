@@ -18,13 +18,7 @@ const (
 
 	PanelWidth           = 200
 	PanelExternalPadding = 10
-
-	TtfRegular = "fonts/OpenSans_SemiCondensed-Regular.ttf"
-	TtfBold    = "fonts/OpenSans_SemiCondensed-Bold.ttf"
-	fontSize   = 13
-	DPI        = 72
-
-	IncomeRate = 3
+	IncomeRate           = 3
 
 	YearLength         = 1200 // smaller numbers are faster
 	BaseProductionRate = 3600 // smaller numbers are faster

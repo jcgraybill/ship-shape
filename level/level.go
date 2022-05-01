@@ -19,7 +19,6 @@ type Level struct {
 	planets           []*planet.Planet
 	message, label    string
 	progress, goal    uint
-	goalMet           bool
 	nextLevel         *Level
 }
 
@@ -59,8 +58,6 @@ func New(lvl *Level) *Level {
 	return lvl
 }
 
-func (lvl *Level) Update(p *player.Player) {
-	if lvl.update(lvl, p) {
-		lvl.goalMet = true
-	}
+func (lvl *Level) Update(p *player.Player) bool {
+	return lvl.update(lvl, p)
 }
