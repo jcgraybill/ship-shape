@@ -6,8 +6,6 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
 )
 
 func GameData(path string) ([]byte, error) {
@@ -35,24 +33,4 @@ func StarField(w, h int) *ebiten.Image {
 		}
 	}
 	return field
-}
-
-func Font(which string) *font.Face {
-	ttbytes, err := GameData(which)
-	if err == nil {
-		tt, err := opentype.Parse(ttbytes)
-		if err == nil {
-			fontface, err := opentype.NewFace(tt, &opentype.FaceOptions{
-				Size:    fontSize,
-				DPI:     DPI,
-				Hinting: font.HintingFull,
-			})
-			if err == nil {
-				return &fontface
-			}
-			panic(err)
-		}
-		panic(err)
-	}
-	panic(err)
 }
