@@ -2,6 +2,7 @@ package ship
 
 import (
 	"image"
+	"image/color"
 
 	"github.com/fogleman/gg"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -39,30 +40,24 @@ func (s *Ship) DrawCourse(targetImage *ebiten.Image) {
 }
 
 func (s *Ship) createShipImages() {
-	var v []ebiten.Vertex
-	var i []uint16
+	dc := gg.NewContext(shipW+plumeW, shipH)
 
 	if s.shipType == Cargo {
-		v, i = ui.Triangle(plumeW, 0, shipW, shipH, shipColor)
+		triangle(dc, plumeW, 0, shipW, shipH, shipColor)
 	} else {
-		v, i = ui.Triangle(plumeW, 0, shipW, shipH, incomeShipColor)
+		triangle(dc, plumeW, 0, shipW, shipH, incomeShipColor)
 	}
-	s.image = ebiten.NewImage(shipW+plumeW, shipH)
-	s.image.DrawTriangles(v, i, ui.Src, nil)
-
-	s.plume = ebiten.NewImage(shipW+plumeW, shipH)
-	s.plume.DrawImage(s.image, nil)
-	v, i = ui.Triangle(plumeW, 1, -plumeW, shipH-2, plumeOuter)
-	s.plume.DrawTriangles(v, i, ui.Src, nil)
-
-	v, i = ui.Triangle(plumeW, 4, -plumeW, shipH-8, plumeInner)
-	s.plume.DrawTriangles(v, i, ui.Src, nil)
 
 	if s.cargo > 0 {
-		v, i := ui.Triangle(plumeW+2, 2, shipW-6, shipH-4, s.cargoColor)
-		s.image.DrawTriangles(v, i, ui.Src, nil)
-		s.plume.DrawTriangles(v, i, ui.Src, nil)
+		triangle(dc, plumeW+2, 2, shipW-6, shipH-4, s.cargoColor)
 	}
+
+	s.image = ebiten.NewImageFromImage(dc.Image())
+
+	triangle(dc, plumeW, 1, -plumeW, shipH-2, plumeOuter)
+	triangle(dc, plumeW, 4, -plumeW, shipH-8, plumeInner)
+
+	s.plume = ebiten.NewImageFromImage(dc.Image())
 }
 
 func (s *Ship) createCourseImages() {
@@ -99,4 +94,13 @@ func (s *Ship) createCourseImages() {
 	dc.Stroke()
 	s.course = ebiten.NewImageFromImage(dc.Image())
 
+}
+
+func triangle(dc *gg.Context, x, y, w, h int, fillColor color.RGBA) {
+	dc.LineTo(float64(x), float64(y))
+	dc.LineTo(float64(x+w), float64(y+h/2))
+	dc.LineTo(float64(x), float64(y+h))
+	dc.LineTo(float64(x), float64(y))
+	dc.SetColor(fillColor)
+	dc.Fill()
 }
