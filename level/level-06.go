@@ -75,10 +75,10 @@ Create 4 COLONIES. Good luck!`,
 		if lvl.progress >= lvl.goal {
 			lvl.message = `Congratulations!
 
-That was no small feat. Note the
-year (above) - this shows how 
-quickly you beat the final level
-of this demo. 
+That was no small feat. You've 
+completed the demo and 
+learned the basics of playing
+ship-shape.
 
 Visit us on Github at
 github.com/jcgraybill/ship-shape

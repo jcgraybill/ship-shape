@@ -67,7 +67,8 @@ func (l *Label) createImages() {
 func (l *Label) updateText() {
 	if l.inverted {
 		l.image.Fill(ui.FocusedColor)
-		text.Draw(l.image, l.message, *l.ttf, ui.Border, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.BackgroundColor)
+		textBounds := text.BoundString(*(l.ttf), l.message)
+		text.Draw(l.image, l.message, *l.ttf, l.bounds.Dx()/2-textBounds.Dx()/2, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.BackgroundColor)
 	} else {
 		l.image.Fill(ui.BackgroundColor)
 		text.Draw(l.image, l.message, *l.ttf, ui.Border, int((*l.ttf).Metrics().Ascent/ui.DPI), ui.FocusedColor)
