@@ -8,8 +8,8 @@ import (
 
 var level03 = Level{
 	title:         "earning money",
-	W:             1366,
-	H:             768,
+	W:             1900,
+	H:             1080,
 	startingMoney: 4000,
 	label:         "habitats",
 	goal:          3,
@@ -58,6 +58,29 @@ HEADQUARTERS to afford them.
 				hq = true
 			}
 		}
+		if !hq && p.Money() <= 900 {
+			lvl.message = `Here's a bit more money
+you can use to build a 
+HEADQUARTERS. This should
+always be one of the first
+structures you build, since
+you need it to earn money
+from your OUTPOSTS.`
+			p.AddMoney(uint(900 - p.Money()))
+		}
+
+		if !hq && p.Money() <= 1350 && p.Money() > 900 {
+			lvl.message = `The next structure you
+build should probably be a 
+HEADQUARTERS. 
+
+Remember, to earn money from
+your OUTPOSTS you need a 
+HEADQUARTERS. Without one, you
+are at risk of running out of
+funds.`
+		}
+
 		if hq {
 			lvl.message = `The headquarters collects
 revenue by sending ships to 

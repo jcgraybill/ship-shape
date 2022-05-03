@@ -8,8 +8,8 @@ import (
 
 var level02 = Level{
 	title:         "upgrading",
-	W:             1366,
-	H:             768,
+	W:             1900,
+	H:             1080,
 	startingMoney: 6000,
 	label:         "habitats",
 	goal:          3,

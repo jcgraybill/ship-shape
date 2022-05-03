@@ -8,8 +8,8 @@ import (
 
 var level01 = Level{
 	title:         "welcome!",
-	W:             1366,
-	H:             768,
+	W:             1900,
+	H:             1080,
 	startingMoney: 3200,
 	label:         "total population",
 	goal:          120,
