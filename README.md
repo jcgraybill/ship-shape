@@ -1,5 +1,5 @@
 # Ship shape
-Supply chain management indie game ... IN SPACE! Current state is beyond preliminary - there isn't actually a game yet. 
+Supply chain management indie game ... IN SPACE! Current state is preliminary - there's a six-level tutorial, about an hour's worth of gameplay. You can try it out in your browser [here](https://jcgraybill.github.io/ship-shape/).
 
 Built in [golang](https://go.dev/) using the [ebiten](https://ebiten.org/) 2D game library and [gg](https://github.com/fogleman/gg) 2D graphics library.
 
@@ -13,7 +13,7 @@ Built in [golang](https://go.dev/) using the [ebiten](https://ebiten.org/) 2D ga
 
 ![screenshot](https://github.com/jcgraybill/ship-shape/blob/main/screenshot.png)
 
-# Running it
+# Building it locally
 
 With go installed, download and run the game with:
 
