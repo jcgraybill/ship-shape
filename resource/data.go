@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	Habitability int = iota
+	Environment int = iota
 	Ice
 	Iron
 	Water

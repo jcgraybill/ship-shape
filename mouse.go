@@ -48,6 +48,9 @@ func (g *Game) handleMouseClicks() {
 		g.panel.LeftMouseButtonRelease(ebiten.CursorPosition())
 	} else if g.dragging && ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		g.redrawPSLayer = true
+		// FIXME continuing to drag mouse after you reach the screen edge moves
+		// the cursor position but not the viewport, so planet selection targets
+		// are wrong
 		newX, newY := ebiten.CursorPosition()
 
 		var xMovement, yMovement int
@@ -55,24 +58,25 @@ func (g *Game) handleMouseClicks() {
 		if newX < g.mouseDragX && -1*g.offsetX+g.windowW < g.level.W {
 			xMovement = newX - g.mouseDragX
 			g.offsetX += xMovement
+			g.mouseDragX = newX
 		}
 
 		if newX > g.mouseDragX && g.offsetX < 0 {
 			xMovement = newX - g.mouseDragX
 			g.offsetX += xMovement
+			g.mouseDragX = newX
 		}
 
 		if newY > g.mouseDragY && g.offsetY < 0 {
 			yMovement = newY - g.mouseDragY
 			g.offsetY += yMovement
+			g.mouseDragY = newY
 		}
 		if newY < g.mouseDragY && -1*g.offsetY+g.windowH < g.level.H {
 			yMovement = newY - g.mouseDragY
 			g.offsetY += yMovement
+			g.mouseDragY = newY
 		}
-
-		g.mouseDragX = newX
-		g.mouseDragY = newY
 
 	}
 }

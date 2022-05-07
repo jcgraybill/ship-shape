@@ -17,7 +17,7 @@ var level02 = Level{
 	nextLevel:     &level03,
 
 	allowedResources: []int{
-		resource.Habitability,
+		resource.Environment,
 		resource.Population,
 		resource.Ice,
 		resource.Water,

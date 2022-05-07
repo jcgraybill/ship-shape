@@ -17,7 +17,7 @@ var level01 = Level{
 	nextLevel:     &level02,
 
 	allowedResources: []int{
-		resource.Habitability,
+		resource.Environment,
 		resource.Population,
 	},
 	allowedStructures: []int{
@@ -33,14 +33,15 @@ To do so, you build STRUCTURES
 on PLANETS. Click on a planet to see
 more about it.
 
-Planets have different levels of
-HABITABILITY. Planets with higher
-habitability can support larger
-populations. 
+Planets have better or worse 
+ENVIRONMENT ratings. Planets with 
+better environments can support 
+larger populations. 
 
-Find a planet with high habitability
-and try building an OUTPOST. Hint: 
-Look for a bar that's mostly green.`,
+Find a planet with a good
+ENVIRONMENT and try building an 
+OUTPOST. Hint: look for a bar 
+that's mostly green.`,
 
 	update: func(lvl *Level, p *player.Player) bool {
 		lvl.progress = 0
@@ -82,7 +83,7 @@ Here's a bit more money. Keep
 building outposts. 
 
 Remember, look for planets with
-high HABITABILITY ratings to get
+high ENVIRONMENT ratings to get
 the largest population in your
 outposts.
 

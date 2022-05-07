@@ -23,7 +23,7 @@ func (s *Structure) Deprioritize() {
 
 func (s *Structure) adjustPopulationCapacity() {
 	if s.data.Class == Residential {
-		cap := float64(s.storage[resource.Population].Capacity) * (float64(s.planet.Resources()[resource.Habitability]) / 255)
+		cap := float64(s.storage[resource.Population].Capacity) * (float64(s.planet.Resources()[resource.Environment]) / 255)
 		s.storage[resource.Population] = &Storage{
 			Resource: resource.Population,
 			Amount:   s.storage[resource.Population].Amount,
