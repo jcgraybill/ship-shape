@@ -8,7 +8,7 @@ const (
 	PlanetSize     = 32
 	PlanetDistance = 6 // lower numbers are denser
 
-	WindowW           = 1366
+	WindowW           = 1024
 	WindowH           = 768
 	ArrowKeyMoveSpeed = 4 // larger numbers are faster
 
