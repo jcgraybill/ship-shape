@@ -47,8 +47,8 @@ build an outpost or two.
 
 Look for planets with high ICE
 ratings for your ice harvester, 
-and planets with HABITABILITY
-for your outposts.,`,
+and planets with ENVIRONMENT
+for your outposts.`,
 
 	update: func(lvl *Level, p *player.Player) bool {
 		lvl.progress = 0
