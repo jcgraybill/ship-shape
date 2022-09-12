@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/fogleman/gg v1.3.0
-	github.com/hajimehoshi/ebiten/v2 v2.4.1
+	github.com/hajimehoshi/ebiten/v2 v2.4.2
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69
 )
 
