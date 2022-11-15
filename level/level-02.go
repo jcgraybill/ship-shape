@@ -108,8 +108,8 @@ water, upgrade it to a HABITAT!`
 		if lvl.progress >= lvl.goal {
 			lvl.message = `Nice!
 
-The same way planets with more
-HABITABILITY yield more productive
+The same way planets with a better
+ENVIRONMENT yield more productive
 outposts, planets with more ICE
 improve the productivity of
 ICE HARVESTERS.
