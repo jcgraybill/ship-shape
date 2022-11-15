@@ -109,10 +109,10 @@ water, upgrade it to a HABITAT!`
 			lvl.message = `Nice!
 
 The same way planets with a better
-ENVIRONMENT yield more productive
-outposts, planets with more ICE
-improve the productivity of
-ICE HARVESTERS.
+ENVIRONMENT yield more 
+productive outposts, planets with
+more ICEimprove the productivity
+of ICE HARVESTERS.
 
 Click 'next' to learn about earning
 money.`
