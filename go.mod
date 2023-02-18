@@ -1,10 +1,10 @@
 module github.com/jcgraybill/ship-shape
 
-go 1.19
+go 1.20
 
 require (
 	github.com/fogleman/gg v1.3.0
-	github.com/hajimehoshi/ebiten/v2 v2.4.12
+	github.com/hajimehoshi/ebiten/v2 v2.4.16
 	golang.org/x/image v0.5.0
 )
 
@@ -17,8 +17,8 @@ require (
 	github.com/jezek/xgb v1.1.0 // indirect
 	github.com/jfreymuth/oggvorbis v1.0.4 // indirect
 	github.com/jfreymuth/vorbis v1.0.2 // indirect
-	golang.org/x/exp/shiny v0.0.0-20221114191408-850992195362 // indirect
+	golang.org/x/exp/shiny v0.0.0-20230213192124-5e25df0256eb // indirect
 	golang.org/x/mobile v0.0.0-20221110043201-43a038452099 // indirect
-	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 )
